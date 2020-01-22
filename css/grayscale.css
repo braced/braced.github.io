@@ -27,7 +27,7 @@
 }
 
 #mainNav .navbar-nav .nav-item:hover {
-  color: fade(white, 80%);
+  color: fade(white, 90%);
   outline: none;
   background-color: transparent;
 }
@@ -54,7 +54,7 @@
     -webkit-transition: none;
     transition: none;
     padding: 2rem 1.5rem;
-    color: rgba(255, 255, 255, 0.5);
+    color: rgb(255, 255, 255);
   }
   #mainNav .nav-link:hover {
     color: rgba(255, 255, 255, 0.75);
@@ -92,8 +92,8 @@
   height: auto;
   min-height: 35rem;
   padding: 15rem 0;
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(22, 22, 22, 0.1)), color-stop(75%, rgba(22, 22, 22, 0.4)), to(#161616)), url("../img/steel-glass-ceiling.jpg");
-  background: linear-gradient(to bottom, rgba(22, 22, 22, 0.1) 0%, rgba(22, 22, 22, 0.4) 75%, #161616 100%), url("../img/steel-glass-ceiling.jpg");
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(22, 22, 22, 0.1)), color-stop(75%, rgba(22, 22, 22, 0.4)), to(#161616)), url("../img/steel.jpg");
+  background: linear-gradient(to bottom, rgba(22, 22, 22, 0.1) 0%, rgba(22, 22, 22, 0.4) 75%, #161616 100%), url("../img/steel.jpg");
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: scroll;
@@ -168,7 +168,7 @@
 
 .about-section {
   padding-top: 10rem;
-  background: #272822;
+  background:#161616;
 }
 
 .about-section p {

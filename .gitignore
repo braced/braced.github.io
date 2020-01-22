@@ -1,5 +1,6 @@
 *.sublime-workspace
 *.sublime-project
+*.code-workspace
 node_modules
 .sass-cache
 bower_components
