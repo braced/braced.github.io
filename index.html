@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Custom software for BIM and Engineering Companies">
+    <meta name="description" content="Braced Engineering - Software for engineering and construction">
     <meta name="author" content="Braced Engineering S.L.">
 
     <title>Braced Engineering</title>
@@ -32,34 +32,73 @@
             margin-right: 10%;
         }
 
-        h1 {
-            font-size: 5em;
-            font-weight: 200;
+
+
+        /* Big screen */
+        @media (min-width: 631px) {
+
+            h1 {
+                font-size: 5em;
+                font-weight: 200;
+            }
+
+            h2 {
+                font-size: 2em;
+                font-weight: 200;
+                margin-top: 2em;
+                margin-bottom: 1em;
+            }
+
+            p {
+                font-size: 1.2em;
+                font-weight: 300;
+                max-width: 700px;
+                margin: auto;
+                margin-top: 1em;
+                margin-bottom: 1em;
+            }
+
+            .tekla-partners {
+                margin: auto;
+                width: 500px;
+            }
+
+            .pr-pic {
+                max-width: 700px;
+            }
         }
 
-        h2 {
-            font-size: 2em;
-            font-weight: 200;
-            margin-top: 2em;
-            margin-bottom: 1em;
-        }
+        /* Small screen */
+        @media (max-width: 630px) {
 
-        p {
-            font-size: 1.2em;
-            font-weight: 300;
-            max-width: 700px;
-            margin: auto;
-            margin-top: 1em;
-            margin-bottom: 1em;
-        }
+            h1 {
+                font-size: 3em;
+                font-weight: 200;
+            }
 
-        .tekla-partners {
-            margin: auto;
-            width: 500px;
-        }
+            h2 {
+                font-size: 1.8em;
+                font-weight: 200;
+                margin-top: 2em;
+                margin-bottom: 1em;
+            }
 
-        .pr-pic {
-            max-width: 700px;
+            p {
+                font-size: 1em;
+                font-weight: 300;
+                margin: auto;
+                margin-top: 1em;
+                margin-bottom: 1em;
+            }
+
+            .tekla-partners {
+                margin: auto;
+                max-width: 70%;
+            }
+
+            .pr-pic {
+                max-width: 100%;
+            }
         }
     </style>
 
