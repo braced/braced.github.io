@@ -291,7 +291,9 @@
   // --- Language toggle ---
   function setLang(newLang) {
     lang = newLang;
-    langBtn.textContent = lang === 'es' ? 'EN' : 'ES';
+    langBtn.innerHTML = lang === 'es'
+      ? '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#012169"/><path d="M0 0L20 14M20 0L0 14" stroke="#fff" stroke-width="2.5"/><path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1.5"/><path d="M10 0V14M0 7H20" stroke="#fff" stroke-width="4"/><path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2.5"/></svg> EN'
+      : '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#c60b1e"/><rect y="4" width="20" height="6" fill="#ffc400"/></svg> ES';
     document.documentElement.lang = lang;
 
     document.querySelectorAll('[data-es]').forEach(el => {
