@@ -268,7 +268,7 @@
   document.querySelectorAll('[data-go-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.getAttribute('data-go-tab');
-      const tabNames = ['inicio', 'como-trabajamos', 'casos', 'contacto'];
+      const tabNames = ['inicio', 'como-trabajamos', 'casos', 'faq', 'contacto'];
       const idx = tabNames.indexOf(target);
       if (idx !== -1) goToPanel(idx);
     });
@@ -310,27 +310,162 @@
 
   langBtn.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
 
-  // --- Particles ---
-  function createParticles(containerId, count) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
+  // --- Hero canvas background ---
+  (function() {
+    const canvas = document.getElementById('hero-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let cW, cH;
+    const CDIST = 90;
+    const ANG = 60 * Math.PI / 180;
+    const cosA = Math.cos(ANG), sinA = Math.sin(ANG);
 
-    for (let i = 0; i < count; i++) {
-      const particle = document.createElement('div');
-      particle.className = 'particle';
-      const size = Math.random() * 3 + 1;
-      particle.style.width = size + 'px';
-      particle.style.height = size + 'px';
-      particle.style.left = Math.random() * 100 + '%';
-      particle.style.top = (Math.random() * 100 + 100) + '%';
-      particle.style.opacity = Math.random() * 0.5 + 0.1;
-      particle.style.animationDuration = (Math.random() * 15 + 10) + 's';
-      particle.style.animationDelay = (Math.random() * 10) + 's';
-      container.appendChild(particle);
+    function cResize() {
+      const hero = canvas.closest('.hero');
+      cW = canvas.width = hero ? hero.offsetWidth : window.innerWidth;
+      cH = canvas.height = hero ? hero.offsetHeight : window.innerHeight;
     }
-  }
 
-  createParticles('particles-hero', 30);
+    function sampleBrace(cx, cy, h, count) {
+      const w = h*0.16, tipW = h*0.25, pts = [];
+      for (let i = 0; i <= count; i++) {
+        const t = i/count; let x, y;
+        if (t<=0.08){const l=t/0.08;x=cx+w*0.3+w*0.7*(1-l);y=cy-h/2+h*0.02*l*l;}
+        else if(t<=0.42){const l=(t-0.08)/0.34;x=cx+w*0.3-w*0.05*Math.sin(l*Math.PI);y=cy-h/2+h*0.02+h*0.44*l;}
+        else if(t<=0.5){const l=(t-0.42)/0.08,e=l*l*(3-2*l);x=cx+w*0.3-tipW*e;y=cy-h*0.04+h*0.08*e;}
+        else if(t<=0.58){const l=(t-0.5)/0.08,e=l*l*(3-2*l);x=cx+w*0.3-tipW*(1-e);y=cy+h*0.04-h*0.08*(1-e);}
+        else if(t<=0.92){const l=(t-0.58)/0.34;x=cx+w*0.3-w*0.05*Math.sin(l*Math.PI);y=cy+h*0.04+h*0.44*l;}
+        else{const l=(t-0.92)/0.08;x=cx+w*0.3+w*0.7*l;y=cy+h/2-h*0.02*(1-l)*(1-l);}
+        const rx=cx+(x-cx)*cosA-(y-cy)*sinA, ry=cy+(x-cx)*sinA+(y-cy)*cosA;
+        pts.push({x:rx,y:ry});
+      }
+      return pts;
+    }
+
+    let gCols, gRows, gGrid;
+    function buildGrid(nodes) {
+      gCols=Math.ceil(cW/CDIST)+1; gRows=Math.ceil(cH/CDIST)+1;
+      gGrid=new Array(gCols*gRows);
+      for(let i=0;i<gGrid.length;i++) gGrid[i]=[];
+      for(let i=0;i<nodes.length;i++){
+        const n=nodes[i],col=Math.floor(n.x/CDIST),row=Math.floor(n.y/CDIST);
+        if(col>=0&&col<gCols&&row>=0&&row<gRows) gGrid[row*gCols+col].push(i);
+      }
+    }
+
+    let hNodes=[], bTargets=[], hStart, hTime=0, hLastAssign=0;
+    const CONV_MS=10000;
+
+    function hInit() {
+      hNodes=[]; bTargets=[];
+      const cx=cW*0.5, cy=cH*0.47, bH=Math.min(cH*0.76,640);
+      sampleBrace(cx,cy,bH,55).forEach(p=>{
+        bTargets.push({x:p.x,y:p.y});
+        if(Math.random()<0.35) bTargets.push({x:p.x+(Math.random()-0.5)*8,y:p.y+(Math.random()-0.5)*8});
+      });
+      const total=Math.min(Math.floor(cW*cH/1800),1500);
+      for(let i=0;i<total;i++){
+        const gx=(Math.random()+Math.random()+Math.random())/3;
+        const gy=(Math.random()+Math.random()+Math.random())/3;
+        hNodes.push({
+          x:cx+(gx-0.5)*cW*1.4, y:cy+(gy-0.5)*cH*1.4,
+          vx:(Math.random()-0.5)*0.25, vy:(Math.random()-0.5)*0.25,
+          r:Math.random()*1.4+0.2, baseAlpha:Math.random()*0.38+0.02, alpha:0,
+          phase:Math.random()*Math.PI*2, braceIdx:-1,
+          driftR:Math.random()*7+2, driftSpd:Math.random()*0.15+0.06
+        });
+      }
+      hStart=performance.now(); hLastAssign=0;
+    }
+
+    function assignBrace() {
+      hNodes.forEach(n=>n.braceIdx=-1);
+      const taken=new Uint8Array(hNodes.length);
+      for(let ti=0;ti<bTargets.length;ti++){
+        const t=bTargets[ti]; let best=Infinity,bi=-1;
+        for(let ni=0;ni<hNodes.length;ni++){
+          if(taken[ni]) continue;
+          const dx=hNodes[ni].x-t.x,dy=hNodes[ni].y-t.y,d=dx*dx+dy*dy;
+          if(d<best){best=d;bi=ni;}
+        }
+        if(bi!==-1){hNodes[bi].braceIdx=ti;taken[bi]=1;}
+      }
+    }
+
+    function hDraw() {
+      ctx.clearRect(0,0,cW,cH);
+      const elapsed=performance.now()-hStart;
+      const conv=Math.pow(Math.min(elapsed/CONV_MS,1),2);
+      if(elapsed-hLastAssign>2000){assignBrace();hLastAssign=elapsed;}
+
+      const cx=cW/2,cy=cH*0.47;
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,cH*0.55);
+      g.addColorStop(0,`rgba(0,180,216,${0.008+conv*0.018})`);
+      g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,cW,cH);
+
+      hTime+=0.01;
+      for(let i=0;i<hNodes.length;i++){
+        const n=hNodes[i];
+        if(n.braceIdx>=0&&conv>0.01){
+          const t=bTargets[n.braceIdx];
+          const bx=Math.sin(hTime*n.driftSpd+n.phase)*n.driftR;
+          const by=Math.cos(hTime*n.driftSpd*0.7+n.phase)*n.driftR*0.5;
+          const str=conv*0.01;
+          n.x+=(t.x+bx-n.x)*str; n.y+=(t.y+by-n.y)*str;
+          n.x+=n.vx*(1-conv*0.7); n.y+=n.vy*(1-conv*0.7);
+        } else { n.x+=n.vx; n.y+=n.vy; }
+        if(n.x<-20)n.x=cW+20;if(n.x>cW+20)n.x=-20;
+        if(n.y<-20)n.y=cH+20;if(n.y>cH+20)n.y=-20;
+        n.alpha=n.baseAlpha+Math.sin(hTime*0.7+n.phase)*0.02;
+      }
+
+      buildGrid(hNodes);
+      const maxD2=CDIST*CDIST;
+      ctx.lineWidth=0.4;
+      for(let row=0;row<gRows;row++){
+        for(let col=0;col<gCols;col++){
+          const cell=gGrid[row*gCols+col];
+          for(let dc=0;dc<=1;dc++){for(let dr=0;dr<=1;dr++){
+            if(dc===0&&dr===0){
+              for(let a=0;a<cell.length;a++)for(let b=a+1;b<cell.length;b++){
+                const ni=hNodes[cell[a]],nj=hNodes[cell[b]];
+                const dx=ni.x-nj.x,dy=ni.y-nj.y,d2=dx*dx+dy*dy;
+                if(d2<maxD2){ctx.beginPath();ctx.moveTo(ni.x,ni.y);ctx.lineTo(nj.x,nj.y);ctx.strokeStyle=`rgba(0,180,216,${(1-Math.sqrt(d2)/CDIST)*0.06})`;ctx.stroke();}
+              }
+            } else {
+              const nr=row+dr,nc=col+dc;
+              if(nr<0||nr>=gRows||nc<0||nc>=gCols) continue;
+              const other=gGrid[nr*gCols+nc];
+              for(let a=0;a<cell.length;a++)for(let b=0;b<other.length;b++){
+                const ni=hNodes[cell[a]],nj=hNodes[other[b]];
+                const dx=ni.x-nj.x,dy=ni.y-nj.y,d2=dx*dx+dy*dy;
+                if(d2<maxD2){ctx.beginPath();ctx.moveTo(ni.x,ni.y);ctx.lineTo(nj.x,nj.y);ctx.strokeStyle=`rgba(0,180,216,${(1-Math.sqrt(d2)/CDIST)*0.06})`;ctx.stroke();}
+              }
+            }
+          }}
+          if(row+1<gRows&&col-1>=0){
+            const other=gGrid[(row+1)*gCols+(col-1)];
+            for(let a=0;a<cell.length;a++)for(let b=0;b<other.length;b++){
+              const ni=hNodes[cell[a]],nj=hNodes[other[b]];
+              const dx=ni.x-nj.x,dy=ni.y-nj.y,d2=dx*dx+dy*dy;
+              if(d2<maxD2){ctx.beginPath();ctx.moveTo(ni.x,ni.y);ctx.lineTo(nj.x,nj.y);ctx.strokeStyle=`rgba(0,180,216,${(1-Math.sqrt(d2)/CDIST)*0.06})`;ctx.stroke();}
+            }
+          }
+        }
+      }
+
+      for(let i=0;i<hNodes.length;i++){
+        const n=hNodes[i],a=n.alpha;
+        if(a>0.1){ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.5,0,Math.PI*2);ctx.fillStyle=`rgba(0,180,216,${a*0.05})`;ctx.fill();}
+        ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,180,216,${a})`;ctx.fill();
+      }
+      requestAnimationFrame(hDraw);
+    }
+
+    cResize(); hInit(); hDraw();
+    window.addEventListener('resize', () => { cResize(); hInit(); });
+  })();
 
   // --- Contact form ---
   const form = document.getElementById('contact-form');

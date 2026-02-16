@@ -25,6 +25,7 @@
         <button class="nav-tab active" data-tab="inicio" data-es="Inicio" data-en="Home">Inicio</button>
         <button class="nav-tab" data-tab="como-trabajamos" data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</button>
         <button class="nav-tab" data-tab="casos" data-es="Experiencia" data-en="Experience">Experiencia</button>
+        <button class="nav-tab" data-tab="faq" data-es="FAQ" data-en="FAQ">FAQ</button>
         <button class="nav-tab" data-tab="contacto" data-es="Contacto" data-en="Contact">Contacto</button>
       </nav>
       <div class="header-actions">
@@ -47,20 +48,7 @@
           <!-- SLIDE 1: Hero -->
           <div class="hero">
             <div class="hero-bg">
-              <svg class="hero-grid" viewBox="0 0 1200 800" preserveAspectRatio="none">
-                <defs>
-                  <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                    <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(0,180,216,0.06)" stroke-width="1"/>
-                  </pattern>
-                  <radialGradient id="glow" cx="50%" cy="40%" r="50%">
-                    <stop offset="0%" stop-color="rgba(0,180,216,0.12)"/>
-                    <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
-                  </radialGradient>
-                </defs>
-                <rect width="1200" height="800" fill="url(#grid)"/>
-                <rect width="1200" height="800" fill="url(#glow)"/>
-              </svg>
-              <div class="particles" id="particles-hero"></div>
+              <canvas id="hero-canvas"></canvas>
             </div>
             <div class="hero-content">
               <div class="hero-logo">
@@ -600,7 +588,72 @@
         </div>
       </section>
 
-      <!-- ========== PANEL 4: CONTACTO (1 slide) ========== -->
+      <!-- ========== PANEL 4: FAQ (1 slide) ========== -->
+      <section class="panel" id="panel-faq">
+        <div class="panel-scroll">
+
+          <div class="content-block">
+            <div class="container">
+              <div class="section-header">
+                <h1 data-es="Preguntas frecuentes" data-en="Frequently asked questions">Preguntas frecuentes</h1>
+              </div>
+              
+              <div class="faq-grid">
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="7" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><rect x="13" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><line x1="3" y1="10" x2="21" y2="10" stroke="#00b4d8" stroke-width="1.5"/></svg>
+                  </div>
+                  <h3 data-es="¿Encaja este modelo para cualquier empresa?" data-en="Does this model fit any company?">¿Encaja este modelo para cualquier empresa?</h3>
+                  <p data-es="Este servicio está diseñado para organizaciones que dependen de procesos internos relevantes y necesitan estructurarlos de forma estable en el tiempo. Funciona especialmente bien cuando el sistema forma parte de la operación diaria y requiere evolución continua, no un proyecto puntual. No está orientado a productos digitales abiertos al mercado ni a plataformas públicas con usuarios masivos." data-en="This service is designed for organizations that depend on relevant internal processes and need to structure them stably over time. It works especially well when the system is part of daily operations and requires continuous evolution, not a one-time project. It is not oriented towards open market digital products or public platforms with massive users.">Este servicio está diseñado para organizaciones que dependen de procesos internos relevantes y necesitan estructurarlos de forma estable en el tiempo. Funciona especialmente bien cuando el sistema forma parte de la operación diaria y requiere evolución continua, no un proyecto puntual. No está orientado a productos digitales abiertos al mercado ni a plataformas públicas con usuarios masivos.</p>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M6 20 C6 15 9 13 12 13 C15 13 18 15 18 20" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="17" cy="9" r="2" fill="#00b4d8" opacity="0.4"/></svg>
+                  </div>
+                  <h3 data-es="¿En qué se diferencia de contratar un perfil interno?" data-en="How is it different from hiring an internal profile?">¿En qué se diferencia de contratar un perfil interno?</h3>
+                  <p data-es="Contratar un perfil interno o construir un departamento tecnológico implica asumir estructura, gestión y dependencia individual. Nuestro modelo proporciona un equipo técnico y diseño completo bajo una suscripción estable, sin necesidad de crear ni gestionar un departamento propio. La diferencia no es solo coste, es escala, especialización y continuidad." data-en="Hiring an internal profile or building a tech department means taking on structure, management, and individual dependency. Our model provides a complete technical team and design under a stable subscription, without the need to create or manage your own department. The difference is not just cost, it's scale, specialization, and continuity.">Contratar un perfil interno o construir un departamento tecnológico implica asumir estructura, gestión y dependencia individual. Nuestro modelo proporciona un equipo técnico y diseño completo bajo una suscripción estable, sin necesidad de crear ni gestionar un departamento propio. La diferencia no es solo coste, es escala, especialización y continuidad.</p>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="8" y1="10" x2="16" y2="10" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="8" y1="14" x2="14" y2="14" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="8" cy="10" r="1" fill="#00b4d8"/><circle cx="8" cy="14" r="1" fill="#00b4d8"/></svg>
+                  </div>
+                  <h3 data-es="¿Qué incluye exactamente la suscripción?" data-en="What exactly does the subscription include?">¿Qué incluye exactamente la suscripción?</h3>
+                  <p data-es="La suscripción cubre la evolución estructurada del sistema mes a mes. Incluye desarrollo evolutivo priorizado, ajustes funcionales y mejoras operativas, automatizaciones e integraciones básicas, mantenimiento técnico y estabilidad, infraestructura para uso interno estándar, y backups y monitorización. El objetivo no es realizar tareas aisladas, sino consolidar el sistema de forma progresiva y coherente." data-en="The subscription covers the structured evolution of the system month by month. It includes prioritized evolutionary development, functional adjustments and operational improvements, basic automations and integrations, technical maintenance and stability, infrastructure for standard internal use, and backups and monitoring. The goal is not to perform isolated tasks, but to consolidate the system progressively and coherently.">La suscripción cubre la evolución estructurada del sistema mes a mes. Incluye desarrollo evolutivo priorizado, ajustes funcionales y mejoras operativas, automatizaciones e integraciones básicas, mantenimiento técnico y estabilidad, infraestructura para uso interno estándar, y backups y monitorización. El objetivo no es realizar tareas aisladas, sino consolidar el sistema de forma progresiva y coherente.</p>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2 L22 8 L22 14 C22 19 17 23 12 23 C7 23 2 19 2 14 L2 8 Z" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="10" y="10" width="4" height="4" rx="0.5" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="8" y="14" width="8" height="6" rx="1" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.1)"/><circle cx="12" cy="17" r="1.2" fill="#00b4d8"/></svg>
+                  </div>
+                  <h3 data-es="¿Quién es propietario de la información?" data-en="Who owns the information?">¿Quién es propietario de la información?</h3>
+                  <p data-es="El cliente mantiene en todo momento la propiedad completa de sus datos. La información puede exportarse en formatos estándar y permanece bajo su control. La confidencialidad y la protección del dato forman parte esencial del servicio." data-en="The client maintains complete ownership of their data at all times. The information can be exported in standard formats and remains under their control. Confidentiality and data protection are essential parts of the service.">El cliente mantiene en todo momento la propiedad completa de sus datos. La información puede exportarse en formatos estándar y permanece bajo su control. La confidencialidad y la protección del dato forman parte esencial del servicio.</p>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="5" y1="8" x2="19" y2="8" stroke="#00b4d8" stroke-width="1.5"/><circle cx="9" cy="6" r="0.8" fill="#00b4d8"/><line x1="9" y1="12" x2="15" y2="12" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><circle cx="9" cy="12" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/><line x1="9" y1="15" x2="13" y2="15" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="9" cy="15" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/></svg>
+                  </div>
+                  <h3 data-es="¿Cómo se priorizan las mejoras?" data-en="How are improvements prioritized?">¿Cómo se priorizan las mejoras?</h3>
+                  <p data-es="Cada ciclo mensual parte de una revisión conjunta de necesidades. Se priorizan las iniciativas con mayor impacto operativo y se define un alcance claro para el siguiente avance. Esto permite mantener foco, coherencia técnica y evolución sostenida." data-en="Each monthly cycle starts from a joint needs review. Initiatives with the greatest operational impact are prioritized and a clear scope is defined for the next advance. This allows maintaining focus, technical coherence, and sustained evolution.">Cada ciclo mensual parte de una revisión conjunta de necesidades. Se priorizan las iniciativas con mayor impacto operativo y se define un alcance claro para el siguiente avance. Esto permite mantener foco, coherencia técnica y evolución sostenida.</p>
+                </div>
+
+                <div class="faq-item">
+                  <div class="faq-icon">
+                    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="6" y1="10" x2="18" y2="10" stroke="#00b4d8" stroke-width="1.5"/><circle cx="10" cy="7" r="1" fill="#00b4d8"/><line x1="10" y1="14" x2="14" y2="14" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/></svg>
+                  </div>
+                  <h3 data-es="¿Existe un compromiso mínimo?" data-en="Is there a minimum commitment?">¿Existe un compromiso mínimo?</h3>
+                  <p data-es="Sí. Este modelo requiere continuidad suficiente para consolidar la base técnica y estabilizar el sistema. Trabajamos con un compromiso inicial que permita estructurar correctamente la implantación y establecer un ritmo de evolución consistente." data-en="Yes. This model requires sufficient continuity to consolidate the technical foundation and stabilize the system. We work with an initial commitment that allows us to correctly structure the deployment and establish a consistent evolution pace.">Sí. Este modelo requiere continuidad suficiente para consolidar la base técnica y estabilizar el sistema. Trabajamos con un compromiso inicial que permita estructurar correctamente la implantación y establecer un ritmo de evolución consistente.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ========== PANEL 5: CONTACTO (1 slide) ========== -->
       <section class="panel" id="panel-contacto">
         <div class="panel-scroll">
 
