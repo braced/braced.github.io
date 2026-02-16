@@ -46,7 +46,7 @@
       const slideIcons = {
         0: ['fa-solid fa-house', 'fa-solid fa-triangle-exclamation', 'fa-solid fa-gear', 'fa-solid fa-euro-sign'], // Inicio
         1: ['fa-solid fa-diagram-project', 'fa-solid fa-list-check', 'fa-solid fa-shield-halved'], // Cómo trabajamos
-        2: ['fa-solid fa-microchip', 'fa-solid fa-chart-line', 'fa-solid fa-layer-group'], // Capacidades técnicas
+        2: ['fa-solid fa-microchip', 'fa-solid fa-chart-line', 'fa-solid fa-briefcase'], // Capacidades técnicas (3 slides)
         3: ['fa-brands fa-stack-exchange'], // FAQ
         4: ['fa-solid fa-comments'] // Contacto
       };
