@@ -467,20 +467,45 @@
     window.addEventListener('resize', () => { cResize(); hInit(); });
   })();
 
-  // --- Contact form ---
-  const form = document.getElementById('contact-form');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const btn = form.querySelector('.btn');
-    const original = btn.textContent;
-    btn.textContent = lang === 'es' ? 'Enviado' : 'Sent';
-    btn.style.background = '#27ae60';
-    setTimeout(() => {
-      btn.textContent = original;
-      btn.style.background = '';
-      form.reset();
-    }, 2000);
-  });
+  // --- Email Copy to Clipboard ---
+  const copyEmailBtn = document.getElementById('copy-email-btn');
+  const emailFeedback = document.querySelector('.email-copied-feedback');
+
+  if (copyEmailBtn) {
+    copyEmailBtn.addEventListener('click', async () => {
+      const email = 'team@bracedeng.com';
+      
+      try {
+        await navigator.clipboard.writeText(email);
+        
+        // Show feedback
+        emailFeedback.classList.add('show');
+        
+        // Hide after animation
+        setTimeout(() => {
+          emailFeedback.classList.remove('show');
+        }, 2000);
+      } catch (err) {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = email;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          emailFeedback.classList.add('show');
+          setTimeout(() => {
+            emailFeedback.classList.remove('show');
+          }, 2000);
+        } catch (e) {
+          console.error('Copy failed', e);
+        }
+        document.body.removeChild(textarea);
+      }
+    });
+  }
 
   // --- Keyboard nav ---
   document.addEventListener('keydown', (e) => {
