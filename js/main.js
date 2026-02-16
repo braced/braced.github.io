@@ -37,19 +37,70 @@
 
       scroll.appendChild(slidesTrack);
 
-      // Create dot indicators
+      // Create dot indicators with icons
       const dots = document.createElement('div');
       dots.className = 'slide-dots';
       const slideEls = slidesTrack.querySelectorAll('.slide');
+
+      // Icon mapping per panel and slide
+      const slideIcons = {
+        0: ['fa-solid fa-house', 'fa-solid fa-triangle-exclamation', 'fa-solid fa-gear', 'fa-solid fa-euro-sign'], // Inicio
+        1: ['fa-solid fa-diagram-project', 'fa-solid fa-list-check', 'fa-solid fa-shield-halved'], // Cómo trabajamos
+        2: ['fa-solid fa-microchip', 'fa-solid fa-chart-line', 'fa-solid fa-layer-group'], // Capacidades técnicas
+        3: ['fa-brands fa-stack-exchange'], // FAQ
+        4: ['fa-solid fa-comments'] // Contacto
+      };
 
       slideEls.forEach((_, di) => {
         const dot = document.createElement('button');
         dot.className = 'slide-dot' + (di === 0 ? ' active' : '');
         dot.setAttribute('aria-label', `Slide ${di + 1}`);
+        
+        // Add icon
+        const icon = document.createElement('i');
+        const panelIcons = slideIcons[pi] || [];
+        icon.className = panelIcons[di] || 'fa-solid fa-circle';
+        dot.appendChild(icon);
+        
         dot.addEventListener('click', () => goToSlide(pi, di));
         dots.appendChild(dot);
       });
       scroll.appendChild(dots);
+
+      // Add scroll down indicators
+      slideEls.forEach((slide, si) => {
+        // Don't add to last slide (if this is not the last slide)
+        if (si < slideEls.length - 1) {
+          const scrollIndicator = document.createElement('div');
+          scrollIndicator.className = 'scroll-indicator';
+          
+          // Add text only to first slide of first panel (hero)
+          if (pi === 0 && si === 0) {
+            const textEl = document.createElement('span');
+            textEl.className = 'scroll-indicator-text';
+            textEl.setAttribute('data-es', 'Descubre más');
+            textEl.setAttribute('data-en', 'Discover more');
+            textEl.textContent = lang === 'es' ? 'Descubre más' : 'Discover more';
+            scrollIndicator.appendChild(textEl);
+          }
+          
+          const iconEl = document.createElement('i');
+          iconEl.className = 'fa-regular fa-circle-down';
+          scrollIndicator.appendChild(iconEl);
+          
+          scrollIndicator.addEventListener('click', () => {
+            goToSlide(pi, si + 1);
+          });
+          
+          // Append to slide-content instead of slide directly
+          const slideContent = slide.querySelector('.slide-content');
+          if (slideContent) {
+            slideContent.appendChild(scrollIndicator);
+          } else {
+            slide.appendChild(scrollIndicator);
+          }
+        }
+      });
 
       panelSlides.push({
         slides: slideEls,
@@ -60,6 +111,7 @@
       });
     });
   }
+
 
   // --- Navigate to a vertical slide within a panel ---
   let isAnimating = false;
@@ -306,6 +358,15 @@
     document.title = lang === 'es'
       ? 'Braced Engineering — Software interno estructurado'
       : 'Braced Engineering — Structured internal software';
+    
+    // Save language preference
+    localStorage.setItem('braced_lang', lang);
+  }
+
+  // Load saved language preference
+  const savedLang = localStorage.getItem('braced_lang');
+  if (savedLang && (savedLang === 'es' || savedLang === 'en')) {
+    setLang(savedLang);
   }
 
   langBtn.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
@@ -522,5 +583,62 @@
       if (ps) goToSlide(currentPanel, ps.current - 1);
     }
   });
+
+  // --- Cookie Consent & Google Analytics ---
+  (function() {
+    const CONSENT_KEY = 'braced_cookie_consent';
+    const GA_ID = 'G-JBMBCNVEHT';
+
+    // Google Analytics loader function
+    function loadGoogleAnalytics() {
+      if (window.gtag) return; // Already loaded
+
+      // Create and load gtag script
+      const script1 = document.createElement('script');
+      script1.async = true;
+      script1.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+      document.head.appendChild(script1);
+
+      // Initialize gtag
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+
+      console.log('Google Analytics loaded');
+    }
+
+    // Check consent status
+    const consent = localStorage.getItem(CONSENT_KEY);
+    
+    if (consent === 'accepted') {
+      // User already accepted - load GA immediately
+      loadGoogleAnalytics();
+    } else if (consent === 'rejected') {
+      // User rejected - do nothing
+      console.log('Cookies rejected by user');
+    } else {
+      // No decision yet - show banner
+      const banner = document.getElementById('cookie-banner');
+      const acceptBtn = document.getElementById('cookie-accept');
+      const rejectBtn = document.getElementById('cookie-reject');
+
+      if (banner) {
+        banner.style.display = 'block';
+
+        acceptBtn.addEventListener('click', () => {
+          localStorage.setItem(CONSENT_KEY, 'accepted');
+          banner.style.display = 'none';
+          loadGoogleAnalytics();
+        });
+
+        rejectBtn.addEventListener('click', () => {
+          localStorage.setItem(CONSENT_KEY, 'rejected');
+          banner.style.display = 'none';
+        });
+      }
+    }
+  })();
 
 })();
