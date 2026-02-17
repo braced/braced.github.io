@@ -156,10 +156,21 @@
     }, 850);
   }
 
-  // --- Wheel event handling ---
+  // --- Wheel event handling with Scroll Lock ---
   let wheelTimeout = null;
   let accumulatedDelta = 0;
   const WHEEL_THRESHOLD = 50;
+
+  // Scroll Lock: require a second wheel at edge to change slide
+  let edgeDirection = 0;     // 1 = at bottom, -1 = at top, 0 = not at edge
+  let edgeConfirmed = false; // true after first edge hit
+  let edgeResetTimer = null;
+
+  function resetEdgeLock() {
+    edgeDirection = 0;
+    edgeConfirmed = false;
+    clearTimeout(edgeResetTimer);
+  }
 
   function handleWheel(e) {
     if (isAnimating) {
@@ -171,6 +182,7 @@
     if (!ps) return;
 
     const currentSlide = ps.slides[ps.current];
+    const direction = e.deltaY > 0 ? 1 : -1;
 
     // Check if the current slide has scrollable content
     const hasOverflow = currentSlide.scrollHeight > currentSlide.clientHeight + 2;
@@ -178,14 +190,30 @@
     if (hasOverflow) {
       const atTop = currentSlide.scrollTop <= 1;
       const atBottom = currentSlide.scrollTop + currentSlide.clientHeight >= currentSlide.scrollHeight - 2;
+      const atEdge = (direction > 0 && atBottom) || (direction < 0 && atTop);
 
-      // Allow native scroll if content is scrollable and not at edges
-      if (e.deltaY < 0 && !atTop) return;
-      if (e.deltaY > 0 && !atBottom) return;
+      if (!atEdge) {
+        // Not at edge: allow native scroll, reset edge lock
+        resetEdgeLock();
+        return;
+      }
+
+      // At edge: implement scroll lock (require second wheel)
+      if (!edgeConfirmed || edgeDirection !== direction) {
+        // First hit at edge in this direction
+        e.preventDefault();
+        edgeDirection = direction;
+        edgeConfirmed = true;
+        clearTimeout(edgeResetTimer);
+        edgeResetTimer = setTimeout(resetEdgeLock, 800);
+        return;
+      }
+      // Second hit at same edge direction → fall through to change slide
     }
 
     // Prevent default scroll
     e.preventDefault();
+    resetEdgeLock();
 
     // Accumulate delta to avoid micro-scroll triggers
     accumulatedDelta += e.deltaY;
@@ -197,10 +225,10 @@
 
     if (Math.abs(accumulatedDelta) < WHEEL_THRESHOLD) return;
 
-    const direction = accumulatedDelta > 0 ? 1 : -1;
+    const dir = accumulatedDelta > 0 ? 1 : -1;
     accumulatedDelta = 0;
 
-    const nextSlide = ps.current + direction;
+    const nextSlide = ps.current + dir;
     if (nextSlide >= 0 && nextSlide < ps.slides.length) {
       goToSlide(currentPanel, nextSlide);
     }
@@ -249,8 +277,7 @@
     if (index < 0 || index >= panels.length) return;
     currentPanel = index;
 
-    // On mobile: CSS handles display:none/block via .active class
-    // On desktop: horizontal transform
+    // Desktop: horizontal transform
     if (!isMobile()) {
       track.style.transform = `translateX(-${index * 100}vw)`;
     }
@@ -259,36 +286,41 @@
     panels.forEach((p, i) => p.classList.toggle('active', i === index));
     updateMobileNav(index);
 
-    // Reset to first slide of the panel (desktop only)
+    // Desktop: restore remembered slide position (no reset to 0)
     if (!isMobile()) {
       const ps = panelSlides[index];
-      if (ps && ps.current !== 0) {
-        ps.slides[ps.current].classList.remove('active-slide');
-        ps.current = 0;
+      if (ps) {
+        const savedSlide = ps.current;
+        // Position track at saved slide without animation
+        const panelHeight = ps.scrollEl.offsetHeight;
         ps.track.style.transition = 'none';
-        ps.track.style.transform = 'translateY(0)';
+        ps.track.style.transform = `translateY(-${savedSlide * panelHeight}px)`;
+        // Update dots
         ps.dots.querySelectorAll('.slide-dot').forEach((d, i) => {
-          d.classList.toggle('active', i === 0);
+          d.classList.toggle('active', i === savedSlide);
         });
+        // Update active-slide class
+        ps.slides.forEach(s => s.classList.remove('active-slide'));
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             ps.track.style.transition = '';
           });
         });
-      }
-
-      // Activate first slide's content
-      if (ps) {
-        ps.slides.forEach(s => s.classList.remove('active-slide'));
         setTimeout(() => {
-          ps.slides[0].classList.add('active-slide');
+          ps.slides[savedSlide].classList.add('active-slide');
         }, 200);
       }
     }
 
-    // On mobile: scroll to top of page
+    // Mobile: scrollIntoView of the target panel
     if (isMobile()) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
+      const targetPanel = panels[index];
+      if (targetPanel) {
+        const offset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) +
+                        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-nav-h'));
+        const panelTop = targetPanel.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: panelTop, behavior: 'smooth' });
+      }
     }
 
     // Close mobile menu
@@ -351,6 +383,33 @@
   // Create mobile nav if on mobile
   if (isMobile()) {
     createMobileNav();
+
+    // IntersectionObserver: sync mobile-nav with scroll position
+    const observerOptions = {
+      root: null,
+      rootMargin: '-50% 0px -50% 0px', // Trigger when panel center crosses viewport center
+      threshold: 0
+    };
+
+    let isScrollingFromNav = false;
+
+    const panelObserver = new IntersectionObserver((entries) => {
+      if (isScrollingFromNav) return;
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const panelId = entry.target.id;
+          const panelIds = ['panel-inicio', 'panel-como-trabajamos', 'panel-casos', 'panel-faq', 'panel-contacto'];
+          const idx = panelIds.indexOf(panelId);
+          if (idx !== -1 && idx !== currentPanel) {
+            currentPanel = idx;
+            updateMobileNav(idx);
+            tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+          }
+        }
+      });
+    }, observerOptions);
+
+    panels.forEach(panel => panelObserver.observe(panel));
   }
 
   // --- Initialize ---

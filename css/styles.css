@@ -1384,12 +1384,9 @@ h4 { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-bottom: 
     width: 100%;
     height: auto;
     overflow: visible;
-    display: none;
-    opacity: 1;
-  }
-  .panel.active {
     display: block;
-    opacity: 1;
+    opacity: 1 !important;
+    transition: none;
   }
 
   .panel-scroll {
