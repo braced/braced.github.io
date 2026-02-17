@@ -257,6 +257,7 @@
 
     tabs.forEach((t, i) => t.classList.toggle('active', i === index));
     panels.forEach((p, i) => p.classList.toggle('active', i === index));
+    updateMobileNav(index);
 
     // Reset to first slide of the panel (desktop only)
     if (!isMobile()) {
@@ -309,6 +310,47 @@
         });
       }
     });
+  }
+
+  // --- Mobile icon nav bar ---
+  function createMobileNav() {
+    if (document.querySelector('.mobile-nav')) return;
+    const mobileNav = document.createElement('div');
+    mobileNav.className = 'mobile-nav';
+
+    const navIcons = [
+      { icon: 'fa-solid fa-house', panel: 0 },
+      { icon: 'fa-solid fa-diagram-project', panel: 1 },
+      { icon: 'fa-solid fa-microchip', panel: 2 },
+      { icon: 'fa-solid fa-circle-question', panel: 3 },
+      { icon: 'fa-solid fa-comments', panel: 4 }
+    ];
+
+    navIcons.forEach(({ icon, panel }) => {
+      const btn = document.createElement('button');
+      btn.className = 'mobile-nav-btn' + (panel === 0 ? ' active' : '');
+      btn.setAttribute('data-panel', panel);
+      btn.setAttribute('aria-label', `Panel ${panel + 1}`);
+      const i = document.createElement('i');
+      i.className = icon;
+      btn.appendChild(i);
+      btn.addEventListener('click', () => goToPanel(panel));
+      mobileNav.appendChild(btn);
+    });
+
+    document.body.appendChild(mobileNav);
+  }
+
+  function updateMobileNav(index) {
+    const btns = document.querySelectorAll('.mobile-nav-btn');
+    btns.forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
+  }
+
+  // Create mobile nav if on mobile
+  if (isMobile()) {
+    createMobileNav();
   }
 
   // --- Initialize ---
