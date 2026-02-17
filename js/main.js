@@ -9,6 +9,11 @@
   let currentPanel = 0;
   let lang = 'es';
 
+  // Mobile detection based on viewport width
+  function isMobile() {
+    return window.innerWidth <= 768;
+  }
+
   // --- Vertical slides state per panel ---
   const panelSlides = []; // { slides: NodeList, track: el, dots: el, current: number }
 
@@ -243,36 +248,46 @@
   function goToPanel(index) {
     if (index < 0 || index >= panels.length) return;
     currentPanel = index;
-    track.style.transform = `translateX(-${index * 100}vw)`;
+
+    // On mobile: CSS handles display:none/block via .active class
+    // On desktop: horizontal transform
+    if (!isMobile()) {
+      track.style.transform = `translateX(-${index * 100}vw)`;
+    }
 
     tabs.forEach((t, i) => t.classList.toggle('active', i === index));
     panels.forEach((p, i) => p.classList.toggle('active', i === index));
 
-    // Reset to first slide of the panel
-    const ps = panelSlides[index];
-    if (ps && ps.current !== 0) {
-      // Quick reset without animation
-      ps.slides[ps.current].classList.remove('active-slide');
-      ps.current = 0;
-      ps.track.style.transition = 'none';
-      ps.track.style.transform = 'translateY(0)';
-      ps.dots.querySelectorAll('.slide-dot').forEach((d, i) => {
-        d.classList.toggle('active', i === 0);
-      });
-      // Re-enable transition after reset
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          ps.track.style.transition = '';
+    // Reset to first slide of the panel (desktop only)
+    if (!isMobile()) {
+      const ps = panelSlides[index];
+      if (ps && ps.current !== 0) {
+        ps.slides[ps.current].classList.remove('active-slide');
+        ps.current = 0;
+        ps.track.style.transition = 'none';
+        ps.track.style.transform = 'translateY(0)';
+        ps.dots.querySelectorAll('.slide-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === 0);
         });
-      });
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            ps.track.style.transition = '';
+          });
+        });
+      }
+
+      // Activate first slide's content
+      if (ps) {
+        ps.slides.forEach(s => s.classList.remove('active-slide'));
+        setTimeout(() => {
+          ps.slides[0].classList.add('active-slide');
+        }, 200);
+      }
     }
 
-    // Activate first slide's content
-    if (ps) {
-      ps.slides.forEach(s => s.classList.remove('active-slide'));
-      setTimeout(() => {
-        ps.slides[0].classList.add('active-slide');
-      }, 200);
+    // On mobile: scroll to top of page
+    if (isMobile()) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
 
     // Close mobile menu
@@ -299,10 +314,12 @@
   // --- Initialize ---
   initSlides();
 
-  // Bind events
-  document.addEventListener('wheel', handleWheel, { passive: false });
-  document.addEventListener('touchstart', handleTouchStart, { passive: true });
-  document.addEventListener('touchend', handleTouchEnd, { passive: true });
+  // Bind events - only desktop slide navigation
+  if (!isMobile()) {
+    document.addEventListener('wheel', handleWheel, { passive: false });
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
+  }
   window.addEventListener('resize', onResize);
 
   // Tab clicks
@@ -424,7 +441,10 @@
         bTargets.push({x:p.x,y:p.y});
         if(Math.random()<0.35) bTargets.push({x:p.x+(Math.random()-0.5)*8,y:p.y+(Math.random()-0.5)*8});
       });
-      const total=Math.min(Math.floor(cW*cH/1800),1500);
+      // Reduce particles on mobile for better performance
+      const mobileFactor = isMobile() ? 4000 : 1800;
+      const mobileMax = isMobile() ? 400 : 1500;
+      const total=Math.min(Math.floor(cW*cH/mobileFactor),mobileMax);
       for(let i=0;i<total;i++){
         const gx=(Math.random()+Math.random()+Math.random())/3;
         const gy=(Math.random()+Math.random()+Math.random())/3;

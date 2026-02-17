@@ -1358,9 +1358,79 @@ h4 { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-bottom: 
 
 @media (max-width: 768px) {
   :root { --header-h: 56px; --footer-h: 42px; }
+
+  /* --- MOBILE: disable fixed slide system, use native scroll --- */
+  body {
+    overflow-y: auto;
+    height: auto;
+  }
+
+  #panels-wrapper {
+    position: relative;
+    top: 0;
+    bottom: auto;
+    overflow: visible;
+    margin-top: var(--header-h);
+    margin-bottom: 0;
+  }
+
+  #panels-track {
+    display: block;
+    transform: none !important;
+  }
+
+  .panel {
+    min-width: 100%;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    display: none;
+    opacity: 1;
+  }
+  .panel.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .panel-scroll {
+    height: auto;
+    overflow: visible;
+  }
+
+  .slides-track {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .slide {
+    height: auto;
+    min-height: 0;
+    overflow: visible;
+  }
+
+  .slide .slide-content {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  /* Hide slide dots and scroll indicators on mobile */
+  .slide-dots { display: none !important; }
+  .scroll-indicator { display: none !important; }
+
+  /* Footer not fixed on mobile */
+  footer {
+    position: relative;
+    height: auto;
+    padding: 12px 0;
+  }
+
+  /* Header stays fixed */
+  header { position: fixed; }
+
   .header-inner { padding: 0 16px; }
   .container { padding: 0 20px; }
-  .content-block { padding: 56px 0; }
+  .content-block { padding: 48px 0; }
 
   #nav {
     position: fixed; top: var(--header-h);
@@ -1369,36 +1439,173 @@ h4 { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-bottom: 
     flex-direction: column; align-items: center; justify-content: center;
     gap: 16px; transform: translateX(100%);
     transition: transform 0.3s ease;
+    z-index: 250;
   }
   #nav.open { transform: translateX(0); }
   .nav-tab { font-size: 1.1rem; padding: 12px 24px; }
   .menu-btn { display: flex; }
 
+  /* --- Hero mobile --- */
+  .hero {
+    min-height: calc(100vh - var(--header-h) - 60px);
+    min-height: calc(100svh - var(--header-h) - 60px);
+  }
+  .hero-content { padding: 48px 20px; }
+  .hero h1, .panel-hero h1, .section-header h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+  .hero-sub { font-size: 0.95rem; margin-bottom: 28px; }
+  .hero-logo-brace { height: 38px; }
+  .hero-logo-text { font-size: 2.2rem; }
+
+  /* --- Layout adjustments --- */
   .steps-visual { flex-direction: column; }
   .step-connector { transform: rotate(90deg); }
-  .cadence-flow { flex-direction: column; align-items: center; }
-  .cadence-arrow { transform: rotate(90deg); padding-top: 0; }
+
+  .cadence-flow { flex-direction: column; align-items: center; gap: 8px; }
+  .cadence-arrow { transform: rotate(90deg); padding-top: 0; width: 30px; }
+  .cadence-node { flex: 0 0 auto; width: 100%; max-width: 280px; }
+  .cadence-desc { font-size: 0.78rem; }
+
   .form-row { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr 1fr; }
-  .footer-inner { padding: 0 16px; flex-direction: column; gap: 2px; text-align: center; }
 
-  .hero-content { padding: 60px 20px; }
-  .hero h1, .panel-hero h1, .section-header h1 { font-size: clamp(1.8rem, 7vw, 2.8rem); }
+  /* --- Footer mobile --- */
+  .footer-inner {
+    padding: 12px 16px;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+  .footer-tagline { display: none; }
+  .footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
 
-  .slide-dots { right: 10px; }
-  .slide-dot { width: 6px; height: 6px; }
-  .hero-trust { gap: 16px; }
-  .packs-grid-compact { grid-template-columns: 1fr; }
-  .case-metrics { flex-wrap: wrap; gap: 20px; }
-  .capability-grid-2x2 { grid-template-columns: 1fr; }
+  /* --- Pricing mobile --- */
+  .pricing-stack .price-card { padding: 20px 16px; }
+  .price-val { font-size: 1.8rem; }
+
+  /* --- FAQ mobile --- */
+  .faq-item { min-height: 0; padding: 20px; }
+  .faq-item h3 { min-height: 0; font-size: 0.95rem; }
+  .faq-item p { font-size: 0.82rem; text-align: left; }
+
+  /* --- SLA mobile --- */
+  .sla-tier { padding: 14px 16px; }
+
+  /* --- Packs mobile --- */
+  .packs-grid-compact { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .packs-grid-compact .pack-card { padding: 12px 8px; font-size: 0.75rem; }
+
+  /* --- Capabilities mobile --- */
+  .capability-grid-2x2 { grid-template-columns: 1fr; gap: 16px; }
   .capability-grid-3x1 { grid-template-columns: 1fr; }
+  .capability-card { padding: 24px 20px; gap: 14px; }
+
+  /* --- Portfolio mobile --- */
+  .portfolio-grid { grid-template-columns: 1fr; gap: 16px; }
+  .portfolio-card { padding: 20px 16px; }
+  .portfolio-card p { font-size: 0.8rem; }
+
+  /* --- Data details mobile --- */
+  .data-details { gap: 12px; }
+  .data-detail { padding: 12px; flex-direction: column; gap: 10px; }
+  .data-detail-icon { width: 28px; height: 28px; }
+
+  /* --- Scope / Guarantees mobile --- */
+  .scope-excluded { margin-top: 28px; padding-top: 24px; }
+  .scope-fit-item { padding: 12px; }
+  .scope-note { padding: 14px 14px 14px 42px; font-size: 0.82rem; }
+
+  /* --- Included cols mobile --- */
+  .included-col { padding: 20px; }
+  .included-col li { font-size: 0.82rem; }
+
+  /* --- Implementation block mobile --- */
+  .implementation-block { padding: 20px 16px; }
+  .implementation-results { gap: 12px; }
+  .impl-result { font-size: 0.78rem; }
+
+  /* --- Section header mobile --- */
+  .section-header { margin-bottom: 32px; }
+  .section-header .hero-sub { font-size: 0.9rem; }
+
+  /* --- Contact mobile --- */
+  .contact-clean { padding: 40px 16px; }
+  .contact-graphic { max-width: 200px; opacity: 0.5; }
+
+  /* --- Block visual diagrams scale down --- */
+  .block-visual svg.diagram { max-width: 300px; }
+  .diagram-sm { max-width: 280px; }
+
+  /* --- CTA invite mobile --- */
+  .cta-invite { padding: 24px 18px; margin-top: 24px; }
+  .cta-invite-content { flex-direction: column; text-align: center; gap: 12px; }
+  .cta-icon { width: 32px; height: 32px; }
+
+  /* --- Offer layout mobile --- */
+  .offer-layout { gap: 36px; }
+
+  /* --- Subsection title --- */
+  .subsection-title { font-size: 0.9rem; margin-bottom: 20px; }
+
+  /* --- Hero trust --- */
+  .hero-trust { gap: 16px; }
+
+  /* --- Case metrics --- */
+  .case-metrics { flex-wrap: wrap; gap: 20px; }
+
+  /* --- Check grid compact --- */
+  .check-grid-compact .check-item { padding: 8px 12px; font-size: 0.82rem; }
 }
 
 @media (max-width: 480px) {
-  .hero-ctas { flex-direction: column; align-items: center; }
+  .hero-ctas { flex-direction: column; align-items: center; width: 100%; }
+  .hero-ctas .btn { width: 100%; text-align: center; }
   .features-grid { grid-template-columns: 1fr; }
   .problem-cards { grid-template-columns: 1fr; }
   .packs-grid { grid-template-columns: 1fr 1fr; }
+
+  .hero h1, .section-header h1 { font-size: clamp(1.4rem, 5.5vw, 2rem); }
+  .hero-logo-text { font-size: 1.8rem; }
+  .hero-logo-brace { height: 32px; }
+
+  h2 { font-size: clamp(1.3rem, 5vw, 1.7rem); margin-bottom: 20px; }
+
+  .block-split { gap: 28px; }
+  .content-block { padding: 36px 0; }
+
+  .btn { padding: 10px 22px; font-size: 0.85rem; }
+  .btn-lg { padding: 14px 28px; font-size: 0.9rem; }
+
+  .problem-list .problem-card { padding: 10px 12px; font-size: 0.8rem; }
+  .problem-icon { width: 32px; height: 32px; }
+
+  .features-inline { gap: 8px; }
+  .feature-inline { font-size: 0.82rem; }
+  .feature-inline-icon { width: 24px; height: 24px; }
+
+  .steps-compact { gap: 10px; }
+  .step-compact { font-size: 0.8rem; }
+
+  .packs-grid-compact { grid-template-columns: 1fr 1fr; }
+  .packs-grid-compact .pack-card { padding: 10px 6px; font-size: 0.72rem; }
+  .pack-icon { width: 28px; height: 28px; }
+
+  .cadence-node h4 { font-size: 0.8rem; }
+  .cadence-icon { width: 48px; height: 48px; border-radius: 12px; }
+  .cadence-icon svg { width: 30px; height: 30px; }
+
+  .email-copy-container {
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+  }
+  .email-text { font-size: 0.82rem; }
+
+  /* Guarantees stacked */
+  .guarantees-layout { gap: 36px; }
 }
 
 /* === NEW CONTACT SECTION === */
@@ -1635,21 +1842,3 @@ h4 { font-size: 0.95rem; font-weight: 600; color: var(--accent); margin-bottom: 
   }
 }
 
-/* === RESPONSIVE CONTACT === */
-@media (max-width: 768px) {
-  .contact-clean {
-    padding: 60px 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .email-copy-container {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px;
-  }
-  
-  .email-text {
-    font-size: 0.85rem;
-  }
-}
