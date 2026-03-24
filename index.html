@@ -3,968 +3,920 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Braced Engineering — Software interno estructurado</title>
+  <title>Braced Engineering</title>
   <link rel="icon" type="image/png" href="img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1a1a1a;
+      --text: #c8c8c8;
+      --text-bright: #f0f0f0;
+      --text-muted: #999;
+      --accent: #00b4d8;
+      --accent2: #7b2ff7;
+      --accent-dim: rgba(0,180,216,0.08);
+      --accent-glow: rgba(0,180,216,0.15);
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    ::selection { background: rgba(0,180,216,0.25); color: var(--text-bright); }
+
+    /* --- SCROLL SNAP --- */
+    .snap-container {
+      height: 100vh; overflow-y: auto;
+      scroll-snap-type: y mandatory; scroll-behavior: smooth;
+    }
+    .snap-container::-webkit-scrollbar { width: 0; }
+
+    .snap-section {
+      min-height: 100vh;
+      scroll-snap-align: start; scroll-snap-stop: always;
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+
+    /* --- CANVAS BG --- */
+    #particle-canvas {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      z-index: 0; pointer-events: none;
+    }
+
+    /* --- SECTION DECORATIVE ORBS --- */
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); pointer-events: none; z-index: 0;
+      animation: orbFloat 12s ease-in-out infinite alternate;
+    }
+    .orb-1 { width: 400px; height: 400px; background: rgba(0,180,216,0.06); top: -10%; right: -5%; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(123,47,247,0.05); bottom: -10%; left: -5%; animation-delay: -4s; }
+    .orb-3 { width: 350px; height: 350px; background: rgba(0,180,216,0.05); top: 20%; left: -8%; animation-delay: -2s; }
+    .orb-4 { width: 280px; height: 280px; background: rgba(123,47,247,0.04); bottom: 5%; right: -3%; animation-delay: -6s; }
+    @keyframes orbFloat {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(20px, -15px) scale(1.08); }
+    }
+
+    /* --- FADE-IN ANIMATION --- */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.1s; }
+    .reveal-d2 { transition-delay: 0.2s; }
+    .reveal-d3 { transition-delay: 0.3s; }
+    .reveal-d4 { transition-delay: 0.4s; }
+
+    /* --- NAV --- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 60px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-text { font-size: 0.95rem; font-weight: 800; color: var(--text-bright); letter-spacing: -0.03em; }
+    .nav-links { display: flex; align-items: center; gap: 32px; }
+    .nav-cta {
+      font-family: inherit; font-size: 0.78rem; font-weight: 600;
+      color: var(--accent); background: rgba(0,180,216,0.06);
+      border: 1px solid rgba(0,180,216,0.25);
+      padding: 8px 22px; border-radius: 6px;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.25s;
+      box-shadow: 0 0 12px rgba(0,180,216,0.06);
+    }
+    .nav-cta:hover {
+      background: rgba(0,180,216,0.1); border-color: rgba(0,180,216,0.4);
+      box-shadow: 0 0 20px rgba(0,180,216,0.1);
+    }
+    .lang-btn {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.72rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 6px; cursor: pointer;
+      transition: all 0.2s; letter-spacing: 0.08em; font-family: inherit;
+    }
+    .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .lang-flag { width: 16px; height: 12px; vertical-align: -1px; margin-right: 4px; border-radius: 1px; }
+
+    /* --- SECTION INNER --- */
+    .section-inner {
+      position: relative; z-index: 1;
+      max-width: 900px; margin: 0 auto; padding: 0 40px;
+    }
+
+    /* --- HERO --- */
+    .hero-inner {
+      text-align: center; max-width: 780px; margin: 0 auto;
+      padding: 0 40px; position: relative; z-index: 1;
+    }
+    .hero-logo {
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 32px;
+    }
+    .hero-brace { opacity: 0.9; filter: drop-shadow(0 0 12px rgba(0,180,216,0.4)); }
+    .hero-brand {
+      font-size: 1.8rem; font-weight: 900; color: var(--text-bright);
+      letter-spacing: -0.03em;
+    }
+    .hero h1 {
+      font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+      font-weight: 800; color: var(--text-bright);
+      line-height: 1.25; letter-spacing: -0.03em;
+      margin-bottom: 0;
+      max-width: 680px; margin-left: auto; margin-right: auto;
+    }
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--accent), #7be0f0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub { font-size: 0.95rem; color: var(--text-muted); margin-top: 20px; line-height: 1.6; }
+    .hero-cta-wrap { margin-top: 48px; display: flex; justify-content: center; gap: 16px; }
+    .btn-glow {
+      display: inline-block; font-family: inherit; font-size: 0.88rem; font-weight: 600;
+      color: var(--accent); background: rgba(0,180,216,0.04);
+      border: 1.5px solid var(--accent); padding: 13px 36px;
+      border-radius: 8px; cursor: pointer; text-decoration: none;
+      transition: all 0.3s;
+      box-shadow: 0 0 8px rgba(0,180,216,0.15), 0 0 20px rgba(0,180,216,0.06), inset 0 0 6px rgba(0,180,216,0.05);
+    }
+    .btn-glow:hover {
+      background: rgba(0,180,216,0.08);
+      box-shadow: 0 0 16px rgba(0,180,216,0.3), 0 0 40px rgba(0,180,216,0.12), inset 0 0 10px rgba(0,180,216,0.08);
+      transform: translateY(-3px);
+    }
+    .scroll-hint {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: 0.4;
+    }
+    .scroll-hint span {
+      font-size: 0.65rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--text-muted);
+    }
+    .scroll-line {
+      width: 1px; height: 32px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 0.8; transform: scaleY(1.3); }
+    }
+
+    /* --- GRADIENT HEADINGS --- */
+    .section-label {
+      font-size: 0.6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.16em;
+      color: var(--accent); margin-bottom: 28px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .section-label::before {
+      content: ''; width: 28px; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent); opacity: 0.6;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+      font-weight: 800; line-height: 1.12; letter-spacing: -0.035em;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, var(--text-bright) 40%, var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .body-text { font-size: 0.95rem; color: var(--text); line-height: 1.7; max-width: 560px; }
+    .body-text + .body-text { margin-top: 12px; }
+    .body-text.muted { color: var(--text-muted); font-size: 0.9rem; }
+
+    /* --- GRADIENT DIVIDER --- */
+    .gradient-line {
+      width: 80px; height: 2px; margin-top: 28px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      border-radius: 2px;
+    }
+
+    /* --- QUÉ HACEMOS HERO CARD --- */
+    .what-card {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(0,180,216,0.1);
+      border-left: 3px solid var(--accent);
+      border-radius: 16px;
+      padding: 48px 52px;
+      overflow: hidden;
+      transition: all 0.4s;
+    }
+    .what-card:hover {
+      border-color: rgba(0,180,216,0.2);
+      box-shadow: 0 16px 60px rgba(0,180,216,0.06), 0 0 0 1px rgba(0,180,216,0.06);
+    }
+    .what-card::after {
+      content: ''; position: absolute; top: -1px; left: -1px; right: -1px; height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), transparent);
+      border-radius: 16px 16px 0 0;
+    }
+    .what-card-bg {
+      position: absolute; right: -20px; top: 50%; transform: translateY(-50%);
+      width: 220px; height: 220px; opacity: 0.03;
+      transition: opacity 0.4s;
+    }
+    .what-card:hover .what-card-bg { opacity: 0.06; }
+    .what-card h2 { margin-bottom: 16px; }
+    .what-card .body-text { max-width: 520px; }
+
+    /* --- PILLARS (WOW) --- */
+    .pillars {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-top: 48px;
+    }
+    .pillar {
+      padding: 32px 28px; position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      overflow: hidden;
+    }
+    .pillar::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .pillar:hover {
+      background: rgba(0,180,216,0.04);
+      border-color: rgba(0,180,216,0.15);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,180,216,0.08), 0 0 0 1px rgba(0,180,216,0.1);
+    }
+    .pillar:hover::before { opacity: 1; }
+    .pillar-icon {
+      position: absolute; bottom: 12px; right: 12px;
+      width: 72px; height: 72px; opacity: 0.06;
+      transition: opacity 0.4s;
+    }
+    .pillar:hover .pillar-icon { opacity: 0.12; }
+    .pillar { border-left: 2px solid rgba(0,180,216,0.12); }
+    .pillar:hover { border-left-color: var(--accent); }
+    .pillar-num {
+      font-size: 2.5rem; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, rgba(0,180,216,0.35), rgba(123,47,247,0.2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 16px;
+    }
+    .pillar h3 { font-size: 0.95rem; font-weight: 700; color: var(--text-bright); margin-bottom: 10px; }
+    .pillar p { font-size: 0.82rem; color: var(--text); line-height: 1.6; }
+
+    /* --- CAPABILITIES (WOW) --- */
+    .cap-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-top: 40px;
+    }
+    .cap-item {
+      padding: 24px 28px; position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 12px;
+      font-size: 0.88rem; color: var(--text);
+      display: flex; align-items: flex-start; gap: 18px;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      overflow: hidden;
+    }
+    .cap-content h4 {
+      font-size: 0.88rem; font-weight: 700; color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+    .cap-content p {
+      font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; margin: 0;
+    }
+    .cap-icon {
+      position: absolute; bottom: 10px; right: 10px;
+      width: 56px; height: 56px; opacity: 0.05;
+      transition: opacity 0.4s;
+    }
+    .cap-item:hover .cap-icon { opacity: 0.1; }
+    .cap-item { border-left: 2px solid rgba(0,180,216,0.12); }
+    .cap-item:hover { border-left-color: var(--accent); }
+    .cap-item::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(180deg, var(--accent), var(--accent2));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .cap-item:hover {
+      background: rgba(0,180,216,0.05);
+      border-color: rgba(0,180,216,0.15);
+      color: var(--text-bright);
+      transform: translateX(4px);
+      box-shadow: 0 8px 30px rgba(0,180,216,0.06);
+    }
+    .cap-item:hover::before { opacity: 1; }
+    .cap-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+      box-shadow: 0 0 10px rgba(0,180,216,0.4), 0 0 20px rgba(0,180,216,0.15);
+      animation: capPulse 3s ease-in-out infinite;
+    }
+    .cap-item:nth-child(2) .cap-dot { animation-delay: -0.5s; }
+    .cap-item:nth-child(3) .cap-dot { animation-delay: -1s; }
+    .cap-item:nth-child(4) .cap-dot { animation-delay: -1.5s; }
+    .cap-item:nth-child(5) .cap-dot { animation-delay: -2s; }
+    .cap-item:nth-child(6) .cap-dot { animation-delay: -2.5s; }
+    @keyframes capPulse {
+      0%, 100% { box-shadow: 0 0 6px rgba(0,180,216,0.3), 0 0 12px rgba(0,180,216,0.1); }
+      50% { box-shadow: 0 0 12px rgba(0,180,216,0.5), 0 0 24px rgba(0,180,216,0.2); }
+    }
+
+    /* --- PORTFOLIO (WOW) --- */
+    .portfolio-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 16px; margin-top: 32px;
+    }
+    .portfolio-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px; padding: 22px 20px;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      display: flex; flex-direction: column; gap: 10px;
+      position: relative; overflow: hidden;
+    }
+    .portfolio-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0.3; transition: opacity 0.4s;
+    }
+    .portfolio-card:hover {
+      border-color: rgba(0,180,216,0.2);
+      background: rgba(0,180,216,0.04);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,180,216,0.08), 0 0 0 1px rgba(0,180,216,0.08);
+    }
+    .portfolio-card:hover::before { opacity: 1; }
+    .portfolio-sector {
+      font-size: 0.58rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--accent);
+      background: var(--accent-dim); padding: 3px 10px;
+      border-radius: 4px; display: inline-block; width: fit-content;
+    }
+    .portfolio-card h3 { font-size: 0.88rem; font-weight: 700; color: var(--text-bright); line-height: 1.25; margin: 0; }
+    .portfolio-card p { font-size: 0.74rem; color: var(--text); line-height: 1.5; margin: 0; }
+    .portfolio-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .portfolio-tags span {
+      font-size: 0.58rem; font-weight: 600; padding: 3px 8px;
+      border-radius: 4px; background: rgba(0,180,216,0.06);
+      color: rgba(0,180,216,0.65); border: 1px solid rgba(0,180,216,0.1);
+      transition: all 0.3s;
+    }
+    .portfolio-card:hover .portfolio-tags span {
+      background: rgba(0,180,216,0.1); border-color: rgba(0,180,216,0.2);
+      color: rgba(0,180,216,0.85);
+    }
+    .portfolio-cta-card {
+      border: 1px dashed rgba(0,180,216,0.2);
+      background: rgba(0,180,216,0.02);
+      justify-content: center; align-items: center; text-align: center;
+    }
+    .portfolio-cta-card::before { display: none; }
+    .portfolio-cta-card h3 { font-size: 1.05rem; }
+    .portfolio-cta-card p { max-width: 220px; }
+    .portfolio-cta-link {
+      font-size: 0.82rem; font-weight: 700; color: var(--accent);
+      text-decoration: none; margin-top: 6px;
+      transition: all 0.3s; display: inline-block;
+    }
+    .portfolio-cta-link:hover { transform: translateX(4px); }
+    @media (max-width: 900px) { .portfolio-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .portfolio-grid { grid-template-columns: 1fr; } }
+
+    /* --- CONTACT (WOW) --- */
+    #contacto::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,180,216,0.06) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+    }
+    .contact-inner {
+      text-align: center; max-width: 520px; margin: 0 auto;
+      padding: 0 40px; position: relative; z-index: 1;
+    }
+    .contact-divider {
+      width: 48px; height: 2px; margin: 0 auto 48px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      border-radius: 2px;
+    }
+    .contact-inner h2 { margin-bottom: 12px; }
+    .contact-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 48px; }
+    .contact-actions { display: flex; flex-direction: column; align-items: center; gap: 28px; }
+    .contact-email { font-size: 0.82rem; color: var(--text-muted); }
+    .contact-email a {
+      color: var(--text); text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s; padding-bottom: 1px;
+    }
+    .contact-email a:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* --- FOOTER --- */
+    .footer-bar {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 16px 40px; z-index: 1;
+    }
+    .footer-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.68rem; color: var(--text-muted);
+    }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--accent); }
+
+    /* --- SIDE DOTS NAV --- */
+    .side-nav {
+      position: fixed; right: 28px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 14px; z-index: 50;
+    }
+    .side-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: none;
+      cursor: pointer; transition: all 0.3s; padding: 0;
+    }
+    .side-dot:hover { background: rgba(0,180,216,0.4); transform: scale(1.3); }
+    .side-dot.active {
+      background: var(--accent);
+      box-shadow: 0 0 8px rgba(0,180,216,0.4);
+      transform: scale(1.4);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      body { overflow-y: auto; height: auto; }
+      .snap-container { scroll-snap-type: y proximity; }
+      .snap-section { min-height: 100svh; padding: 80px 0; }
+      .section-inner, .hero-inner, .contact-inner { padding: 0 24px; }
+      .nav-inner { padding: 0 20px; height: 52px; }
+      .nav-links { display: none; }
+      .pillars { grid-template-columns: 1fr; gap: 12px; }
+      .cap-grid { grid-template-columns: 1fr; }
+      .side-nav { display: none; }
+      .orb { display: none; }
+      .scroll-hint { bottom: 24px; }
+      .hero h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
+      .footer-inner { flex-direction: column; gap: 8px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: clamp(1.4rem, 7vw, 2rem); }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header id="header">
-    <div class="header-inner">
-      <a href="#" class="logo" data-tab="inicio">
-        <svg class="logo-brace-sm" viewBox="0 0 24 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <canvas id="particle-canvas"></canvas>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <svg width="18" height="32" viewBox="0 0 24 48" fill="none">
+          <path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="logo-text">Braced Engineering</span>
+        <span class="nav-logo-text">Braced</span>
       </a>
-      <nav id="nav">
-        <button class="nav-tab active" data-tab="inicio" data-es="Inicio" data-en="Home">Inicio</button>
-        <button class="nav-tab" data-tab="como-trabajamos" data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</button>
-        <button class="nav-tab" data-tab="casos" data-es="Capacidades técnicas" data-en="Technical capabilities">Capacidades técnicas</button>
-        <button class="nav-tab" data-tab="faq" data-es="FAQ" data-en="FAQ">FAQ</button>
-        <button class="nav-tab" data-tab="contacto" data-es="Contacto" data-en="Contact">Contacto</button>
-      </nav>
-      <div class="header-actions">
-        <button id="lang-toggle" class="lang-btn" aria-label="Change language"><svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#012169"/><path d="M0 0L20 14M20 0L0 14" stroke="#fff" stroke-width="2.5"/><path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1.5"/><path d="M10 0V14M0 7H20" stroke="#fff" stroke-width="4"/><path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2.5"/></svg> EN</button>
-        <button id="menu-toggle" class="menu-btn" aria-label="Menu">
-          <span></span><span></span><span></span>
-        </button>
+      <div class="nav-links">
+        <button id="lang-toggle" class="lang-btn" aria-label="Change language">EN</button>
+        <a href="#contacto" class="nav-cta">Contáctanos</a>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <!-- PANELS WRAPPER -->
-  <div id="panels-wrapper">
-    <div id="panels-track">
-
-      <!-- ========== PANEL 1: INICIO (4 slides) ========== -->
-      <section class="panel" id="panel-inicio">
-        <div class="panel-scroll">
-
-          <!-- SLIDE 1: Hero -->
-          <div class="hero">
-            <div class="hero-bg">
-              <canvas id="hero-canvas"></canvas>
-            </div>
-            <div class="hero-content">
-              <div class="hero-logo">
-                <svg class="hero-logo-brace" viewBox="0 0 30 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 4 C4 4 10 4 13 4 C18 4 21 8 21 14 L21 22 C21 26 24 28 28 28 C24 28 21 30 21 34 L21 42 C21 48 18 52 13 52 C10 52 4 52 4 52" stroke="#00b4d8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                </svg>
-                <span class="hero-logo-text">Braced</span>
-              </div>
-              <h1>
-                <span data-es="Un equipo tecnológico completo," data-en="A complete technology team,">Un equipo tecnológico completo,</span><br>
-                <span class="accent-text" data-es="sin tener que crear uno propio." data-en="without having to build your own.">sin tener que crear uno propio.</span>
-              </h1>
-              <p class="hero-sub">
-                <span data-es="Desarrollo, criterio y evolución continua para tu sistema interno." data-en="Development, expertise and continuous evolution for your internal system.">Desarrollo, criterio y evolución continua para tu sistema interno.</span><br>
-                <span data-es="Por suscripción mensual." data-en="Monthly subscription.">Por suscripción mensual.</span>
-              </p>
-              <div class="hero-ctas">
-                <button class="btn btn-primary" data-go-tab="contacto" data-es="Solicitar conversación" data-en="Book a call">Solicitar conversación</button>
-                <button class="btn btn-secondary" data-go-tab="como-trabajamos" data-es="Ver cómo trabajamos" data-en="See how we work">Ver cómo trabajamos</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 2: El Problema (diagrama + cards + texto) -->
-          <div class="content-block">
-            <div class="container">
-              <div class="block-split">
-                <div class="block-text">
-                  <h2 data-es="Cuando la operación crece, pero el sistema no." data-en="Your operations outgrow your tools.">Cuando la operación crece, pero el sistema no.</h2>
-                  <p class="muted" data-es="La empresa sigue funcionando, pero cada vez cuesta más mantener el control. La información está fragmentada, los procesos dependen de personas concretas, y cada cambio genera más fricción que antes." data-en="The company keeps running, but it's getting harder to maintain control. Information is scattered, processes depend on specific people, and every change creates more friction than before.">La empresa sigue funcionando, pero cada vez cuesta más mantener el control. La información está fragmentada, los procesos dependen de personas concretas, y cada cambio genera más fricción que antes.</p>
-                  <div class="problem-list">
-                    <div class="problem-card">
-                      <svg viewBox="0 0 40 40" class="problem-icon"><circle cx="20" cy="20" r="16" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/><line x1="12" y1="12" x2="28" y2="28" stroke="#e74c3c" stroke-width="2"/></svg>
-                      <span data-es="Herramientas que no encajan entre sí" data-en="Disconnected tools that don't talk to each other">Herramientas que no encajan entre sí</span>
-                    </div>
-                    <div class="problem-card">
-                      <svg viewBox="0 0 40 40" class="problem-icon"><path d="M8 30 L20 10 L32 30 Z" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/><line x1="20" y1="18" x2="20" y2="24" stroke="#e74c3c" stroke-width="2"/><circle cx="20" cy="27" r="1" fill="#e74c3c"/></svg>
-                      <span data-es="Procesos manuales que no escalan" data-en="Manual workflows that break as you grow">Procesos manuales que no escalan</span>
-                    </div>
-                    <div class="problem-card">
-                      <svg viewBox="0 0 40 40" class="problem-icon"><rect x="8" y="8" width="24" height="24" rx="4" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/><line x1="14" y1="16" x2="26" y2="16" stroke="#e74c3c" stroke-width="2"/><line x1="14" y1="22" x2="22" y2="22" stroke="#e74c3c" stroke-width="2" opacity="0.5"/><line x1="14" y1="28" x2="18" y2="28" stroke="#e74c3c" stroke-width="2" opacity="0.3"/></svg>
-                      <span data-es="Información difícil de auditar" data-en="Data scattered across places, impossible to audit">Información difícil de auditar</span>
-                    </div>
-                    <div class="problem-card">
-                      <svg viewBox="0 0 40 40" class="problem-icon"><circle cx="20" cy="20" r="14" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/><line x1="20" y1="12" x2="20" y2="20" stroke="#e74c3c" stroke-width="2"/><line x1="20" y1="20" x2="26" y2="26" stroke="#e74c3c" stroke-width="2"/></svg>
-                      <span data-es="Reportes que llegan tarde o incompletos" data-en="Reports that arrive late or incomplete">Reportes que llegan tarde o incompletos</span>
-                    </div>
-                    <div class="problem-card">
-                      <svg viewBox="0 0 40 40" class="problem-icon"><circle cx="20" cy="14" r="6" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/><path d="M8 34 C8 26 14 22 20 22 C26 22 32 26 32 34" stroke="#e74c3c" stroke-width="2" fill="none" opacity="0.4"/></svg>
-                      <span data-es="Dependencia excesiva del conocimiento individual" data-en="Over-reliance on individual knowledge">Dependencia excesiva del conocimiento individual</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="block-visual">
-                  <svg class="diagram" viewBox="0 0 400 340" fill="none">
-                    <defs>
-                      <radialGradient id="chaos-glow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgba(231,76,60,0.06)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient>
-                      <filter id="shadow-sm"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.4)"/></filter>
-                    </defs>
-                    <rect width="400" height="340" fill="url(#chaos-glow)" rx="16"/>
-                    <!-- Scattered tool nodes -->
-                    <g class="anim-fade" style="animation-delay:0.1s" filter="url(#shadow-sm)">
-                      <rect x="24" y="32" width="96" height="52" rx="10" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
-                      <rect x="32" y="40" width="14" height="14" rx="3" fill="rgba(231,76,60,0.15)"/>
-                      <text x="72" y="63" text-anchor="middle" fill="#777" font-size="12" font-weight="600">ERP</text>
-                    </g>
-                    <g class="anim-fade" style="animation-delay:0.25s" filter="url(#shadow-sm)">
-                      <rect x="158" y="18" width="96" height="52" rx="10" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
-                      <rect x="166" y="26" width="14" height="14" rx="3" fill="rgba(231,76,60,0.15)"/>
-                      <text x="206" y="49" text-anchor="middle" fill="#777" font-size="12" font-weight="600">Excel</text>
-                    </g>
-                    <g class="anim-fade" style="animation-delay:0.4s" filter="url(#shadow-sm)">
-                      <rect x="290" y="44" width="96" height="52" rx="10" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
-                      <rect x="298" y="52" width="14" height="14" rx="3" fill="rgba(231,76,60,0.15)"/>
-                      <text x="338" y="75" text-anchor="middle" fill="#777" font-size="12" font-weight="600">Email</text>
-                    </g>
-                    <g class="anim-fade" style="animation-delay:0.55s" filter="url(#shadow-sm)">
-                      <rect x="40" y="130" width="108" height="52" rx="10" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
-                      <rect x="48" y="138" width="14" height="14" rx="3" fill="rgba(231,76,60,0.15)"/>
-                      <text x="94" y="161" text-anchor="middle" fill="#777" font-size="12" font-weight="600">WhatsApp</text>
-                    </g>
-                    <g class="anim-fade" style="animation-delay:0.7s" filter="url(#shadow-sm)">
-                      <rect x="244" y="140" width="96" height="52" rx="10" fill="#111" stroke="#2a2a2a" stroke-width="1.5"/>
-                      <rect x="252" y="148" width="14" height="14" rx="3" fill="rgba(231,76,60,0.15)"/>
-                      <text x="292" y="171" text-anchor="middle" fill="#777" font-size="12" font-weight="600">Drive</text>
-                    </g>
-                    <!-- Broken connection lines -->
-                    <line x1="120" y1="58" x2="158" y2="44" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6 4" opacity="0.25" class="anim-dash"/>
-                    <line x1="254" y1="44" x2="290" y2="62" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6 4" opacity="0.25" class="anim-dash"/>
-                    <line x1="94" y1="84" x2="94" y2="130" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6 4" opacity="0.25" class="anim-dash"/>
-                    <line x1="206" y1="70" x2="270" y2="140" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6 4" opacity="0.25" class="anim-dash"/>
-                    <line x1="148" y1="156" x2="244" y2="160" stroke="#e74c3c" stroke-width="1" stroke-dasharray="6 4" opacity="0.25" class="anim-dash"/>
-                    <!-- Break X marks on connections -->
-                    <g class="anim-fade" style="animation-delay:1s">
-                      <circle cx="139" cy="51" r="8" fill="rgba(231,76,60,0.1)"/>
-                      <line x1="135" y1="47" x2="143" y2="55" stroke="#e74c3c" stroke-width="1.5" stroke-linecap="round"/>
-                      <line x1="143" y1="47" x2="135" y2="55" stroke="#e74c3c" stroke-width="1.5" stroke-linecap="round"/>
-                    </g>
-                    <g class="anim-fade" style="animation-delay:1.1s">
-                      <circle cx="196" cy="158" r="8" fill="rgba(231,76,60,0.1)"/>
-                      <line x1="192" y1="154" x2="200" y2="162" stroke="#e74c3c" stroke-width="1.5" stroke-linecap="round"/>
-                      <line x1="200" y1="154" x2="192" y2="162" stroke="#e74c3c" stroke-width="1.5" stroke-linecap="round"/>
-                    </g>
-                    <!-- Bottom zone: chaos indicators -->
-                    <line x1="40" y1="220" x2="360" y2="220" stroke="#1a1a1a" stroke-width="1"/>
-                    <g class="anim-fade" style="animation-delay:1.3s">
-                      <text x="200" y="252" text-anchor="middle" fill="#555" font-size="11" font-weight="500" data-es="Datos dispersos · Errores manuales · Sin visibilidad" data-en="Scattered data · Manual errors · No visibility">Datos dispersos · Errores manuales · Sin visibilidad</text>
-                      <!-- Warning icon -->
-                      <g transform="translate(185,268)">
-                        <path d="M15 4 L28 26 L2 26 Z" stroke="#e74c3c" stroke-width="1.5" fill="rgba(231,76,60,0.08)" stroke-linejoin="round"/>
-                        <line x1="15" y1="13" x2="15" y2="19" stroke="#e74c3c" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="15" cy="22.5" r="1.2" fill="#e74c3c"/>
-                      </g>
-                    </g>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 3: Solución + Features + Cómo funciona -->
-          <div class="content-block block-accent">
-            <div class="container">
-              <div class="block-split reverse">
-                <div class="block-text">
-                  <h2 data-es="Lo convertimos en un sistema sólido." data-en="We turn it into a solid system.">Lo convertimos en un sistema sólido.</h2>
-                  <p data-es="Centralizamos la información, automatizamos lo repetitivo y conectamos las herramientas que ya usas. Tu equipo trabaja con menos fricción y más visibilidad." data-en="We centralize information, automate repetitive tasks, and connect the tools you already use. Your team works with less friction and more visibility.">Centralizamos la información, automatizamos lo repetitivo y conectamos las herramientas que ya usas. Tu equipo trabaja con menos fricción y más visibilidad.</p>
-                  <p class="tagline accent-text" data-es="No es un proyecto cerrado. Es un sistema que evoluciona contigo." data-en="It's not a closed project. It's a system that evolves with you.">No es un proyecto cerrado. Es un sistema que evoluciona contigo.</p>
-                  <!-- Features inline -->
-                  <div class="features-inline">
-                    <div class="feature-inline">
-                      <svg viewBox="0 0 32 32" class="feature-inline-icon"><rect x="4" y="4" width="24" height="24" rx="5" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="8" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.3)"/><rect x="17" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.2)"/><rect x="8" y="17" width="16" height="7" rx="1.5" fill="rgba(0,180,216,0.15)"/></svg>
-                      <span data-es="App web interna a medida" data-en="Custom internal web app">App web interna a medida</span>
-                    </div>
-                    <div class="feature-inline">
-                      <svg viewBox="0 0 32 32" class="feature-inline-icon"><circle cx="16" cy="16" r="12" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M10 16 L14 16 L16 12 L19 20 L21 16 L24 16" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                      <span data-es="Automatizaciones de procesos" data-en="Process automations">Automatizaciones de procesos</span>
-                    </div>
-                    <div class="feature-inline">
-                      <svg viewBox="0 0 32 32" class="feature-inline-icon"><circle cx="11" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="23" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="17" y1="16" x2="17" y2="16" stroke="#00b4d8" stroke-width="1.5"/></svg>
-                      <span data-es="Integraciones con sistemas externos" data-en="External system integrations">Integraciones con sistemas externos</span>
-                    </div>
-                    <div class="feature-inline">
-                      <svg viewBox="0 0 32 32" class="feature-inline-icon"><rect x="5" y="5" width="22" height="22" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="9" y="19" width="4" height="6" rx="1" fill="rgba(0,180,216,0.4)"/><rect x="15" y="15" width="4" height="10" rx="1" fill="rgba(0,180,216,0.5)"/><rect x="21" y="10" width="4" height="15" rx="1" fill="rgba(0,180,216,0.6)"/></svg>
-                      <span data-es="Reporting estructurado" data-en="Structured reporting">Reporting estructurado</span>
-                    </div>
-                    <div class="feature-inline">
-                      <svg viewBox="0 0 32 32" class="feature-inline-icon"><path d="M16 5 L16 10 M16 22 L16 27 M5 16 L10 16 M22 16 L27 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.1)"/><circle cx="16" cy="16" r="2" fill="#00b4d8" opacity="0.5"/></svg>
-                      <span data-es="Infraestructura y mantenimiento incluidos" data-en="Infrastructure and maintenance included">Infraestructura y mantenimiento incluidos</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="block-visual">
-                  <div class="solution-visual-stack">
-                    <!-- Solution diagram -->
-                    <svg class="diagram diagram-sm" viewBox="0 0 400 280" fill="none">
-                      <defs>
-                        <radialGradient id="center-glow" cx="50%" cy="46%" r="35%"><stop offset="0%" stop-color="rgba(0,180,216,0.1)"/><stop offset="100%" stop-color="rgba(0,0,0,0)"/></radialGradient>
-                        <filter id="glow-line"><feGaussianBlur stdDeviation="2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-                      </defs>
-                      <rect width="400" height="280" fill="url(#center-glow)" rx="16"/>
-                      <!-- Central hub -->
-                      <g class="anim-fade" style="animation-delay:0.1s">
-                        <circle cx="200" cy="128" r="52" fill="rgba(0,180,216,0.04)" stroke="rgba(0,180,216,0.15)" stroke-width="1"/>
-                        <circle cx="200" cy="128" r="38" fill="rgba(0,180,216,0.06)" stroke="#00b4d8" stroke-width="2" class="anim-pulse"/>
-                        <!-- Font Awesome icon -->
-                        <foreignObject x="170" y="98" width="60" height="60">
-                          <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">
-                            <i class="fa-solid fa-microchip" style="font-size: 32px; color: #00b4d8;"></i>
-                          </div>
-                        </foreignObject>
-                      </g>
-                      <!-- Satellite nodes with connection lines -->
-                      <!-- ERP - top left -->
-                      <line x1="118" y1="68" x2="168" y2="100" stroke="#00b4d8" stroke-width="2" opacity="0.4" filter="url(#glow-line)" class="anim-draw"/>
-                      <g class="anim-fade" style="animation-delay:0.3s">
-                        <rect x="55" y="40" width="78" height="44" rx="10" fill="#111" stroke="#00b4d8" stroke-width="2"/>
-                        <circle cx="72" cy="55" r="3.5" fill="rgba(0,180,216,0.4)"/>
-                        <text x="100" y="67" text-anchor="middle" fill="#00b4d8" font-size="12" font-weight="600">ERP</text>
-                      </g>
-                      <!-- CRM - top right -->
-                      <line x1="282" y1="68" x2="232" y2="100" stroke="#00b4d8" stroke-width="2" opacity="0.4" filter="url(#glow-line)" class="anim-draw"/>
-                      <g class="anim-fade" style="animation-delay:0.45s">
-                        <rect x="267" y="40" width="78" height="44" rx="10" fill="#111" stroke="#00b4d8" stroke-width="2"/>
-                        <circle cx="284" cy="55" r="3.5" fill="rgba(0,180,216,0.4)"/>
-                        <text x="312" y="67" text-anchor="middle" fill="#00b4d8" font-size="12" font-weight="600">CRM</text>
-                      </g>
-                      <!-- API - bottom left -->
-                      <line x1="110" y1="212" x2="166" y2="160" stroke="#00b4d8" stroke-width="2" opacity="0.4" filter="url(#glow-line)" class="anim-draw"/>
-                      <g class="anim-fade" style="animation-delay:0.6s">
-                        <rect x="43" y="196" width="78" height="44" rx="10" fill="#111" stroke="#00b4d8" stroke-width="2"/>
-                        <circle cx="60" cy="211" r="3.5" fill="rgba(0,180,216,0.4)"/>
-                        <text x="88" y="223" text-anchor="middle" fill="#00b4d8" font-size="12" font-weight="600">API</text>
-                      </g>
-                      <!-- BI - bottom right -->
-                      <line x1="290" y1="212" x2="234" y2="160" stroke="#00b4d8" stroke-width="2" opacity="0.4" filter="url(#glow-line)" class="anim-draw"/>
-                      <g class="anim-fade" style="animation-delay:0.75s">
-                        <rect x="279" y="196" width="78" height="44" rx="10" fill="#111" stroke="#00b4d8" stroke-width="2"/>
-                        <circle cx="296" cy="211" r="3.5" fill="rgba(0,180,216,0.4)"/>
-                        <text x="324" y="223" text-anchor="middle" fill="#00b4d8" font-size="12" font-weight="600">BI</text>
-                      </g>
-                      <!-- Flow dots on lines -->
-                      <circle cx="143" cy="84" r="2.5" fill="#00b4d8" opacity="0.7" class="float-dot"/>
-                      <circle cx="257" cy="84" r="2.5" fill="#00b4d8" opacity="0.7" class="float-dot" style="animation-delay:0.8s"/>
-                      <circle cx="138" cy="186" r="2.5" fill="#00b4d8" opacity="0.7" class="float-dot" style="animation-delay:1.6s"/>
-                      <circle cx="262" cy="186" r="2.5" fill="#00b4d8" opacity="0.7" class="float-dot" style="animation-delay:2.4s"/>
-                      <!-- Bottom label -->
-                      <text x="200" y="260" text-anchor="middle" fill="#555" font-size="11" font-weight="600" data-es="Todo conectado · Un solo sistema" data-en="Everything connected · One system">Todo conectado · Un solo sistema</text>
-                    </svg>
-                    <!-- Steps below diagram -->
-                    <div class="steps-compact">
-                      <div class="step-compact">
-                        <div class="step-num-sm">1</div>
-                        <div>
-                          <strong data-es="Implantación" data-en="Deployment">Implantación</strong>
-                          <span data-es="Analizamos, configuramos y entregamos una primera versión productiva." data-en="We analyze, configure, and deliver a first productive version.">Analizamos, configuramos y entregamos una primera versión productiva.</span>
-                        </div>
-                      </div>
-                      <div class="step-compact">
-                        <div class="step-num-sm">2</div>
-                        <div>
-                          <strong data-es="Suscripción" data-en="Subscription">Suscripción</strong>
-                          <span data-es="Priorizamos mejoras y nuevas funcionalidades cada mes." data-en="We prioritize improvements and new features monthly.">Priorizamos mejoras y nuevas funcionalidades cada mes.</span>
-                        </div>
-                      </div>
-                      <div class="step-compact">
-                        <div class="step-num-sm">3</div>
-                        <div>
-                          <strong data-es="Evolución" data-en="Evolution">Evolución</strong>
-                          <span data-es="El sistema crece con tu negocio, sin rehacerlo." data-en="The system grows with your business, without rebuilding.">El sistema crece con tu negocio, sin rehacerlo.</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 4: Suscripción + Inversión + CTA -->
-          <div class="content-block">
-            <div class="container">
-              <div class="offer-layout">
-                <div class="offer-left">
-                  <h2 data-es="Qué incluye la suscripción" data-en="What the subscription includes">Qué incluye la suscripción</h2>
-                  <div class="check-grid-compact">
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><path d="M5 18 L5 8 C5 6.5 6 5 8 5 L16 5 C18 5 19 6.5 19 8 L19 18 C19 19.5 18 21 16 21 L8 21 C6 21 5 19.5 5 18Z M5 9 L19 9 M8 5 L8 2 M16 5 L16 2" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-es="Infraestructura cloud incluida" data-en="Cloud infrastructure included">Infraestructura cloud incluida</span></div>
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><rect x="4" y="7" width="16" height="13" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M7 10 L12 14 L17 10" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 10 L20 10" stroke="#00b4d8" stroke-width="1.5"/></svg><span data-es="Backups automáticos diarios" data-en="Daily automatic backups">Backups automáticos diarios</span></div>
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M7 12 L10 12 L11 10 L13 14 L14 12 L17 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-es="Monitoring y mantenimiento" data-en="Monitoring and maintenance">Monitoring y mantenimiento</span></div>
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><circle cx="12" cy="12" r="9" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M12 7 L12 12 L15 15" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-es="Soporte en horario laboral" data-en="Business hours support">Soporte en horario laboral</span></div>
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><path d="M4 12 C4 12 4 4 12 4 C20 4 20 12 20 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M20 12 C20 12 20 20 12 20 C4 20 4 12 4 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#00b4d8"/></svg><span data-es="Desarrollo evolutivo mensual" data-en="Monthly evolutionary development">Desarrollo evolutivo mensual</span></div>
-                    <div class="check-item"><svg viewBox="0 0 24 24" class="check-icon"><path d="M4 8 L8 8 M4 12 L12 12 M4 16 L8 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><circle cx="17" cy="8" r="1.5" fill="#00b4d8"/><circle cx="17" cy="12" r="1.5" fill="#00b4d8"/><circle cx="17" cy="16" r="1.5" fill="#00b4d8"/><path d="M17 9.5 L17 10.5 M17 13.5 L17 14.5" stroke="#00b4d8" stroke-width="1.5"/></svg><span data-es="Roadmap y priorización estructurada" data-en="Structured roadmap and prioritization">Roadmap y priorización estructurada</span></div>
-                  </div>
-                </div>
-                <div class="offer-right">
-                  <h2 data-es="Modelo de inversión" data-en="Investment model">Modelo de inversión</h2>
-                  <div class="pricing-stack">
-                    <div class="price-card">
-                      <svg viewBox="0 0 32 32" class="price-icon"><rect x="6" y="4" width="20" height="24" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="6" y1="10" x2="26" y2="10" stroke="#00b4d8" stroke-width="1.5"/><circle cx="11" cy="7" r="1" fill="#00b4d8"/><line x1="10" y1="16" x2="22" y2="16" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><line x1="10" y1="20" x2="18" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/><line x1="10" y1="24" x2="20" y2="24" stroke="#00b4d8" stroke-width="1.5" opacity="0.2"/></svg>
-                      <div class="price-label" data-es="Suscripción mensual" data-en="Monthly subscription">Suscripción mensual</div>
-                      <div class="price-from" data-es="desde" data-en="from">desde</div>
-                      <div class="price-val">2.500 <span>&euro;/mes</span></div>
-                    </div>
-                    <div class="price-card">
-                      <svg viewBox="0 0 32 32" class="price-icon"><circle cx="16" cy="16" r="10" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M16 8 L16 16 L21 19" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="#00b4d8" opacity="0.3"/></svg>
-                      <div class="price-label" data-es="Implantación inicial" data-en="Initial deployment">Implantación inicial</div>
-                      <div class="price-from" data-es="desde" data-en="from">desde</div>
-                      <div class="price-val">6.000 <span>&euro;</span></div>
-                    </div>
-                  </div>
-                  <p class="muted small-text" data-es="La inversión depende del alcance y la complejidad del sistema." data-en="Investment depends on the scope and complexity of the system.">La inversión depende del alcance y la complejidad del sistema.</p>
-                </div>
-              </div>
-              <div class="cta-invite">
-                <div class="cta-invite-content">
-                  <svg viewBox="0 0 24 24" class="cta-icon"><path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="#00b4d8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  <p class="cta-text" data-es="¿Te encaja este modelo? Te invitamos a charlar." data-en="Does this model fit? We invite you to chat.">¿Te encaja este modelo? Te invitamos a charlar.</p>
-                </div>
-                <button class="btn btn-primary" data-go-tab="contacto" data-es="Iniciar conversación" data-en="Start conversation">Iniciar conversación</button>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ========== PANEL 2: CÓMO TRABAJAMOS (3 slides) ========== -->
-      <section class="panel" id="panel-como-trabajamos">
-        <div class="panel-scroll">
-
-          <!-- SLIDE 1: Hero + Cadencia -->
-          <div class="content-block">
-            <div class="container">
-              <div class="section-header">
-                <h1 data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</h1>
-                <p class="hero-sub" data-es="Implantación inicial + suscripción mensual + compromiso mínimo. Cada mes detectamos lo que más impacto tiene, lo implementamos y lo dejamos funcionando." data-en="Initial deployment + monthly subscription + minimum commitment. Every month we detect what has the most impact, implement it, and get it working.">Implantación inicial + suscripción mensual + compromiso mínimo. Cada mes detectamos lo que más impacto tiene, lo implementamos y lo dejamos funcionando.</p>
-              </div>
-              
-              <div class="implementation-block">
-                <h3 class="subsection-title" data-es="Primero, construimos la base." data-en="First, we build the foundation.">Primero, construimos la base.</h3>
-                <p class="implementation-intro" data-es="Analizamos tu operación, diseñamos el sistema y lo ponemos en marcha con tu equipo." data-en="We analyze your operation, design the system, and get it running with your team.">Analizamos tu operación, diseñamos el sistema y lo ponemos en marcha con tu equipo.</p>
-                <div class="implementation-results">
-                  <div class="impl-result">
-                    <svg viewBox="0 0 24 24" class="impl-icon"><circle cx="12" cy="12" r="9" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><polyline points="8,12 11,15 16,9" stroke="#00b4d8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span data-es="Sistema en producción" data-en="System in production">Sistema en producción</span>
-                  </div>
-                  <div class="impl-result">
-                    <svg viewBox="0 0 24 24" class="impl-icon"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><path d="M8 12 L12 12 L12 16 M16 8 L16 12 L12 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    <span data-es="Base técnica estable" data-en="Stable technical foundation">Base técnica estable</span>
-                  </div>
-                  <div class="impl-result">
-                    <svg viewBox="0 0 24 24" class="impl-icon"><rect x="5" y="4" width="14" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><line x1="5" y1="8" x2="19" y2="8" stroke="#00b4d8" stroke-width="1.5"/><circle cx="9" cy="6" r="0.8" fill="#00b4d8"/><line x1="9" y1="12" x2="15" y2="12" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><circle cx="9" cy="12" r="1" fill="none" stroke="#00b4d8" stroke-width="1"/><line x1="9" y1="15" x2="13" y2="15" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="9" cy="15" r="1" fill="none" stroke="#00b4d8" stroke-width="1"/></svg>
-                    <span data-es="Roadmap definido" data-en="Defined roadmap">Roadmap definido</span>
-                  </div>
-                </div>
-              </div>
-
-              <h3 class="subsection-title" data-es="Ciclo mensual" data-en="Monthly cycle">Ciclo mensual</h3>
-              <div class="cadence-flow">
-                <div class="cadence-node">
-                  <div class="cadence-icon">
-                    <svg viewBox="0 0 48 48"><path d="M12 36 L12 12 L36 12" stroke="#00b4d8" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="22" cy="22" r="4" fill="rgba(0,180,216,0.3)" stroke="#00b4d8" stroke-width="1.5"/><circle cx="32" cy="28" r="3" fill="rgba(0,180,216,0.2)" stroke="#00b4d8" stroke-width="1.5"/></svg>
-                  </div>
-                  <h4 data-es="Recogida de necesidades" data-en="Requirements gathering">Recogida de necesidades</h4>
-                  <p class="cadence-desc muted" data-es="Identificamos qué genera más fricción en la operación diaria y lo convertimos en mejoras concretas." data-en="We identify what creates the most friction in daily operations and turn it into concrete improvements.">Identificamos qué genera más fricción en la operación diaria y lo convertimos en mejoras concretas.</p>
-                </div>
-                <div class="cadence-arrow"><svg viewBox="0 0 40 20"><path d="M0 10 L30 10" stroke="#00b4d8" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#00b4d8"/></svg></div>
-                <div class="cadence-node">
-                  <div class="cadence-icon">
-                    <svg viewBox="0 0 48 48"><rect x="10" y="10" width="28" height="28" rx="4" stroke="#00b4d8" stroke-width="2" fill="none"/><line x1="10" y1="20" x2="38" y2="20" stroke="#00b4d8" stroke-width="1.5"/><line x1="18" y1="26" x2="30" y2="26" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="18" y1="32" x2="26" y2="32" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/></svg>
-                  </div>
-                  <h4 data-es="Priorización conjunta" data-en="Joint prioritization">Priorización conjunta</h4>
-                  <p class="cadence-desc muted" data-es="Decidimos juntos qué tiene más impacto y definimos qué se implementa este mes." data-en="We decide together what has the most impact and define what gets implemented this month.">Decidimos juntos qué tiene más impacto y definimos qué se implementa este mes.</p>
-                </div>
-                <div class="cadence-arrow"><svg viewBox="0 0 40 20"><path d="M0 10 L30 10" stroke="#00b4d8" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#00b4d8"/></svg></div>
-                <div class="cadence-node">
-                  <div class="cadence-icon">
-                    <svg viewBox="0 0 48 48"><path d="M14 34 L14 20 L20 20 L20 34 M22 34 L22 16 L28 16 L28 34 M30 34 L30 24 L36 24 L36 34" stroke="#00b4d8" stroke-width="2" fill="none"/></svg>
-                  </div>
-                  <h4 data-es="Desarrollo y despliegue" data-en="Development and deployment">Desarrollo y despliegue</h4>
-                  <p class="cadence-desc muted" data-es="Lo implementamos, lo probamos y lo dejamos funcionando sin parar la operación." data-en="We implement it, test it, and get it working without stopping operations.">Lo implementamos, lo probamos y lo dejamos funcionando sin parar la operación.</p>
-                </div>
-                <div class="cadence-arrow"><svg viewBox="0 0 40 20"><path d="M0 10 L30 10" stroke="#00b4d8" stroke-width="2"/><polygon points="30,5 40,10 30,15" fill="#00b4d8"/></svg></div>
-                <div class="cadence-node">
-                  <div class="cadence-icon">
-                    <svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="14" stroke="#00b4d8" stroke-width="2" fill="none"/><polyline points="18,24 22,28 30,18" stroke="#00b4d8" stroke-width="2.5" fill="none" stroke-linecap="round"/></svg>
-                  </div>
-                  <h4 data-es="Revisión y siguiente ciclo" data-en="Review and next cycle">Revisión y siguiente ciclo</h4>
-                  <p class="cadence-desc muted" data-es="Revisamos lo que funcionó, ajustamos si hace falta y planificamos el siguiente mes." data-en="We review what worked, adjust if needed, and plan the next month.">Revisamos lo que funcionó, ajustamos si hace falta y planificamos el siguiente mes.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 2: Qué entra + Qué no entra -->
-          <div class="content-block block-accent">
-            <div class="container">
-              <div class="scope-layout">
-                <div class="scope-included">
-                  <h2 data-es="Qué entra en la suscripción" data-en="What's included in the subscription">Qué entra en la suscripción</h2>
-                  <div class="included-cols">
-                    <div class="included-col">
-                      <h4 data-es="Iniciativas funcionales" data-en="Functional initiatives"><svg viewBox="0 0 20 20" class="col-title-icon"><rect x="2" y="2" width="16" height="16" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="6" y1="7" x2="14" y2="7" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="6" y1="10" x2="12" y2="10" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="6" y1="13" x2="10" y2="13" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/></svg>Iniciativas funcionales</h4>
-                      <ul>
-                        <li data-es="Nuevos campos y validaciones" data-en="New fields and validations">Nuevos campos y validaciones</li>
-                        <li data-es="Ajustes de lógica" data-en="Logic adjustments">Ajustes de lógica</li>
-                        <li data-es="Nuevos reportes simples" data-en="New simple reports">Nuevos reportes simples</li>
-                        <li data-es="Mejoras de flujo" data-en="Flow improvements">Mejoras de flujo</li>
-                        <li data-es="Ajustes UI en módulos existentes" data-en="UI tweaks in existing modules">Ajustes UI en módulos existentes</li>
-                      </ul>
-                    </div>
-                    <div class="included-col">
-                      <h4 data-es="Automatizaciones" data-en="Automations"><svg viewBox="0 0 20 20" class="col-title-icon"><circle cx="10" cy="10" r="8" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M6 10 L8 10 L9 8 L11 12 L12 10 L14 10" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Automatizaciones</h4>
-                      <ul>
-                        <li data-es="Notificaciones automáticas" data-en="Automatic notifications">Notificaciones automáticas</li>
-                        <li data-es="Cambios de estado condicionales" data-en="Conditional status changes">Cambios de estado condicionales</li>
-                        <li data-es="Creación automática de tareas" data-en="Automatic task creation">Creación automática de tareas</li>
-                        <li data-es="Aprobaciones básicas" data-en="Basic approvals">Aprobaciones básicas</li>
-                      </ul>
-                    </div>
-                    <div class="included-col">
-                      <h4 data-es="Integraciones API" data-en="API Integrations"><svg viewBox="0 0 20 20" class="col-title-icon"><circle cx="6" cy="10" r="4" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="14" cy="10" r="4" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="10" y1="10" x2="10" y2="10" stroke="#00b4d8" stroke-width="1.5"/></svg>Integraciones API</h4>
-                      <ul>
-                        <li>Webhooks</li>
-                        <li data-es="Lectura o envío de datos a APIs" data-en="Read/send data to APIs">Lectura o envío de datos a APIs</li>
-                        <li data-es="Sincronizaciones simples" data-en="Simple synchronizations">Sincronizaciones simples</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="scope-excluded">
-                  <h3 data-es="Este modelo está pensado para" data-en="This model is designed for">Este modelo está pensado para</h3>
-                  <div class="scope-fit-items">
-                    <div class="scope-fit-item">
-                      <svg viewBox="0 0 24 24" class="scope-fit-icon"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="7" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><rect x="13" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><line x1="3" y1="10" x2="21" y2="10" stroke="#00b4d8" stroke-width="1.5"/></svg>
-                      <span data-es="Aplicaciones internas de uso operativo" data-en="Internal operational applications">Aplicaciones internas de uso operativo</span>
-                    </div>
-                    <div class="scope-fit-item">
-                      <svg viewBox="0 0 24 24" class="scope-fit-icon"><path d="M4 12 C4 12 4 5 12 5 C20 5 20 12 20 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M20 12 C20 12 20 19 12 19 C4 19 4 12 4 12" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="12" cy="12" r="2" fill="#00b4d8"/><path d="M8 8 L10 10 M16 8 L14 10 M8 16 L10 14 M16 16 L14 14" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/></svg>
-                      <span data-es="Evolución progresiva del sistema en el tiempo" data-en="Progressive system evolution over time">Evolución progresiva del sistema en el tiempo</span>
-                    </div>
-                    <div class="scope-fit-item">
-                      <svg viewBox="0 0 24 24" class="scope-fit-icon"><rect x="5" y="4" width="14" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="5" y1="8" x2="19" y2="8" stroke="#00b4d8" stroke-width="1.5"/><circle cx="9" cy="6" r="0.8" fill="#00b4d8"/><line x1="9" y1="12" x2="15" y2="12" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="9" y1="15" x2="13" y2="15" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="9" cy="12" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/><circle cx="9" cy="15" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/></svg>
-                      <span data-es="Alcances que pueden priorizarse mes a mes" data-en="Scopes that can be prioritized month by month">Alcances que pueden priorizarse mes a mes</span>
-                    </div>
-                  </div>
-                  <blockquote class="scope-note" data-es="En escenarios como plataformas públicas, intervenciones iniciales de gran volumen o entornos altamente inciertos, suelen encajar mejor otros modelos de desarrollo específicos." data-en="In scenarios such as public platforms, large initial interventions, or highly uncertain environments, other specific development models tend to fit better.">En escenarios como plataformas públicas, intervenciones iniciales de gran volumen o entornos altamente inciertos, suelen encajar mejor otros modelos de desarrollo específicos.</blockquote>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 3: Datos & Seguridad + SLA -->
-          <div class="content-block">
-            <div class="container">
-              <div class="guarantees-layout">
-                <div class="guarantees-left">
-                  <h2 data-es="Tus datos, tu propiedad" data-en="Your data, your property">Tus datos, tu propiedad</h2>
-                  <p data-es="Toda la información que vive en tu sistema es tuya. Siempre. No retenemos datos, no limitamos exportaciones, y no condicionamos el acceso a tu información en ningún momento del contrato ni después de él." data-en="All the information living in your system is yours. Always. We don't retain data, we don't limit exports, and we don't condition access to your information at any point during or after the contract.">Toda la información que vive en tu sistema es tuya. Siempre. No retenemos datos, no limitamos exportaciones, y no condicionamos el acceso a tu información en ningún momento del contrato ni después de él.</p>
-
-                  <div class="data-details">
-                    <div class="data-detail">
-                      <svg viewBox="0 0 32 32" class="data-detail-icon"><rect x="4" y="6" width="24" height="20" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M4 12 L28 12" stroke="#00b4d8" stroke-width="1.5"/><circle cx="9" cy="9" r="1.5" fill="#00b4d8" opacity="0.5"/><circle cx="14" cy="9" r="1.5" fill="#00b4d8" opacity="0.3"/></svg>
-                      <div>
-                        <strong data-es="Infraestructura aislada" data-en="Isolated infrastructure">Infraestructura aislada</strong>
-                        <span data-es="Cada cliente tiene su propia base de datos y entorno. No compartimos recursos entre clientes." data-en="Each client has their own database and environment. We don't share resources between clients.">Cada cliente tiene su propia base de datos y entorno. No compartimos recursos entre clientes.</span>
-                      </div>
-                    </div>
-                    <div class="data-detail">
-                      <svg viewBox="0 0 32 32" class="data-detail-icon"><path d="M6 22 L6 10 C6 8 8 6 10 6 L22 6 C24 6 26 8 26 10 L26 22 C26 24 24 26 22 26 L10 26 C8 26 6 24 6 22Z" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M12 16 L15 19 L21 13" stroke="#00b4d8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                      <div>
-                        <strong data-es="Backups diarios automáticos" data-en="Daily automatic backups">Backups diarios automáticos</strong>
-                        <span data-es="Copias de seguridad cifradas cada 24h con retención de 30 días. Restauración disponible bajo petición." data-en="Encrypted backups every 24h with 30-day retention. Restoration available on request.">Copias de seguridad cifradas cada 24h con retención de 30 días. Restauración disponible bajo petición.</span>
-                      </div>
-                    </div>
-                    <div class="data-detail">
-                      <svg viewBox="0 0 32 32" class="data-detail-icon"><path d="M16 4 L28 10 L28 18 C28 24 22 30 16 30 C10 30 4 24 4 18 L4 10 Z" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="13" y="13" width="6" height="5" rx="1" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="11" y="18" width="10" height="7" rx="1.5" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.1)"/><circle cx="16" cy="21" r="1.5" fill="#00b4d8"/></svg>
-                      <div>
-                        <strong data-es="Control de accesos por rol" data-en="Role-based access control">Control de accesos por rol</strong>
-                        <span data-es="Permisos granulares por usuario y módulo. Tú decides quién ve y modifica cada parte del sistema." data-en="Granular permissions per user and module. You decide who sees and modifies each part of the system.">Permisos granulares por usuario y módulo. Tú decides quién ve y modifica cada parte del sistema.</span>
-                      </div>
-                    </div>
-                    <div class="data-detail">
-                      <svg viewBox="0 0 32 32" class="data-detail-icon"><path d="M8 6 L24 6 L24 26 L8 26 Z" stroke="#00b4d8" stroke-width="1.5" fill="none" rx="2"/><path d="M12 12 L20 12 M12 16 L18 16 M12 20 L16 20" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><path d="M20 18 L26 24 M26 18 L20 24" stroke="#00b4d8" stroke-width="0" fill="none"/><path d="M18 22 L24 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><path d="M24 16 L26 16 L26 18" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-                      <div>
-                        <strong data-es="Exportación total garantizada" data-en="Full export guaranteed">Exportación total garantizada</strong>
-                        <span data-es="En cualquier momento puedes solicitar la exportación completa de tus datos en formatos estándar (CSV, JSON, SQL). Sin costes ocultos, sin restricciones." data-en="At any time you can request a full export of your data in standard formats (CSV, JSON, SQL). No hidden costs, no restrictions.">En cualquier momento puedes solicitar la exportación completa de tus datos en formatos estándar (CSV, JSON, SQL). Sin costes ocultos, sin restricciones.</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="guarantees-right">
-                  <h2>SLA</h2>
-                  <p data-es="Todas las suscripciones incluyen un nivel de servicio base. Si tu operación lo requiere, puede ampliarse mediante pack adicional." data-en="All subscriptions include a base service level. If your operation requires it, it can be expanded with an additional pack.">Todas las suscripciones incluyen un nivel de servicio base. Si tu operación lo requiere, puede ampliarse mediante pack adicional.</p>
-
-                  <div class="sla-tiers">
-                    <div class="sla-tier">
-                      <div class="sla-tier-header">
-                        <h4 data-es="SLA incluido" data-en="Included SLA">SLA incluido</h4>
-                        <span class="sla-badge" data-es="En todas las suscripciones" data-en="In all subscriptions">En todas las suscripciones</span>
-                      </div>
-                      <ul class="sla-list">
-                        <li data-es="Soporte L-V en horario laboral (9–18h CET)" data-en="Support Mon-Fri business hours (9–18h CET)">Soporte L-V en horario laboral (9–18h CET)</li>
-                        <li data-es="Respuesta a incidencias críticas: < 4h" data-en="Critical incident response: < 4h">Respuesta a incidencias críticas: &lt; 4h</li>
-                        <li data-es="Respuesta a peticiones generales: < 24h" data-en="General request response: < 24h">Respuesta a peticiones generales: &lt; 24h</li>
-                        <li data-es="Canal dedicado (email + plataforma interna)" data-en="Dedicated channel (email + internal platform)">Canal dedicado (email + plataforma interna)</li>
-                        <li data-es="Uptime objetivo: 99,5%" data-en="Uptime target: 99.5%">Uptime objetivo: 99,5%</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <h3 style="margin-top:32px" data-es="Packs adicionales" data-en="Additional packs">Packs adicionales</h3>
-                  <div class="packs-grid-compact">
-                    <div class="pack-card"><svg viewBox="0 0 40 40" class="pack-icon"><circle cx="14" cy="20" r="8" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="26" cy="20" r="8" stroke="#00b4d8" stroke-width="1.5" fill="none"/></svg><span data-es="Integración compleja" data-en="Complex integration">Integración compleja</span></div>
-                    <div class="pack-card"><svg viewBox="0 0 40 40" class="pack-icon"><path d="M10 28 L14 20 L20 24 L26 12 L32 16" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg><span data-es="Automatización avanzada" data-en="Advanced automation">Automatización avanzada</span></div>
-                    <div class="pack-card"><svg viewBox="0 0 40 40" class="pack-icon"><rect x="10" y="10" width="20" height="20" rx="4" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="20" y1="14" x2="20" y2="26" stroke="#00b4d8" stroke-width="1.5"/><line x1="14" y1="20" x2="26" y2="20" stroke="#00b4d8" stroke-width="1.5"/></svg><span data-es="Módulo específico" data-en="Specific module">Módulo específico</span></div>
-                    <div class="pack-card"><svg viewBox="0 0 40 40" class="pack-icon"><circle cx="20" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M12 30 C12 24 16 22 20 22 C24 22 28 24 28 30" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="28" cy="14" r="3" fill="#00b4d8" opacity="0.4"/></svg><span data-es="Pack IA" data-en="AI Pack">Pack IA</span></div>
-                    <div class="pack-card"><svg viewBox="0 0 40 40" class="pack-icon"><path d="M20 8 L30 14 L30 26 C30 32 25 36 20 36 C15 36 10 32 10 26 L10 14 Z" stroke="#00b4d8" stroke-width="1.5" fill="none"/><text x="20" y="25" text-anchor="middle" fill="#00b4d8" font-size="10" font-weight="700">P</text></svg><span data-es="SLA premium" data-en="Premium SLA">SLA premium</span></div>
-                    <div class="pack-card pack-card-other"><svg viewBox="0 0 40 40" class="pack-icon"><circle cx="12" cy="20" r="3" fill="#00b4d8" opacity="0.4"/><circle cx="20" cy="20" r="3" fill="#00b4d8" opacity="0.4"/><circle cx="28" cy="20" r="3" fill="#00b4d8" opacity="0.4"/></svg><span data-es="Otros" data-en="Others">Otros</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ========== PANEL 3: CAPACIDADES TÉCNICAS (3 slides + 1 casos) ========== -->
-      <section class="panel" id="panel-casos">
-        <div class="panel-scroll">
-
-          <!-- SLIDE 1: Sistemas y arquitectura -->
-          <div class="content-block">
-            <div class="container">
-              <div class="section-header">
-                <h1 data-es="Capacidades técnicas" data-en="Technical capabilities">Capacidades técnicas</h1>
-                <p class="exp-intro" data-es="Experiencia aplicada a sistemas internos operativos." data-en="Experience applied to internal operational systems.">Experiencia aplicada a sistemas internos operativos.</p>
-              </div>
-
-              <div class="capability-grid-2x2">
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><rect x="8" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.3)"/><rect x="17" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.2)"/><rect x="8" y="17" width="16" height="7" rx="1.5" fill="rgba(0,180,216,0.15)"/></svg>
-                  </div>
-                  <h4 data-es="Aplicaciones web internas a medida" data-en="Custom internal web applications">Aplicaciones web internas a medida</h4>
-                  <p data-es="Aplicaciones que se adaptan a cómo trabaja tu equipo, no al revés." data-en="Applications that adapt to how your team works, not the other way around.">Aplicaciones que se adaptan a cómo trabaja tu equipo, no al revés.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><rect x="6" y="6" width="20" height="20" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="12" cy="12" r="2" fill="rgba(0,180,216,0.4)"/><circle cx="20" cy="12" r="2" fill="rgba(0,180,216,0.4)"/><circle cx="12" cy="20" r="2" fill="rgba(0,180,216,0.4)"/><circle cx="20" cy="20" r="2" fill="rgba(0,180,216,0.4)"/><line x1="12" y1="12" x2="20" y2="12" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/><line x1="12" y1="20" x2="20" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/><line x1="12" y1="12" x2="12" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/><line x1="20" y1="12" x2="20" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.3"/></svg>
-                  </div>
-                  <h4 data-es="Organización de información" data-en="Information organization">Organización de información</h4>
-                  <p data-es="Estructuramos los datos para que sean fáciles de consultar, auditar y mantener en el tiempo." data-en="We structure data to make it easy to query, audit, and maintain over time.">Estructuramos los datos para que sean fáciles de consultar, auditar y mantener en el tiempo.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><circle cx="10" cy="16" r="5" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="22" cy="16" r="5" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="15" y1="16" x2="17" y2="16" stroke="#00b4d8" stroke-width="2"/><path d="M10 11 L10 8 L16 8 M22 11 L22 8 L16 8 M10 21 L10 24 L16 24 M22 21 L22 24 L16 24" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
-                  </div>
-                  <h4 data-es="Conexión entre herramientas" data-en="Tool connections">Conexión entre herramientas</h4>
-                  <p data-es="Hacemos que tus sistemas se comuniquen entre sí para que no tengas que duplicar información manualmente." data-en="We make your systems talk to each other so you don't have to manually duplicate information.">Hacemos que tus sistemas se comuniquen entre sí para que no tengas que duplicar información manualmente.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M12 16 L14 16 L15 13 L17 19 L18 16 L20 16" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="rgba(0,180,216,0.3)"/></svg>
-                  </div>
-                  <h4 data-es="Automatización de tareas repetitivas" data-en="Repetitive task automation">Automatización de tareas repetitivas</h4>
-                  <p data-es="El sistema se encarga de lo que se repite, para que tu equipo pueda enfocarse en lo que aporta valor." data-en="The system handles what repeats, so your team can focus on what adds value.">El sistema se encarga de lo que se repite, para que tu equipo pueda enfocarse en lo que aporta valor.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 2: Datos y análisis -->
-          <div class="content-block">
-            <div class="container">
-              <div class="section-header">
-                <h1 data-es="Datos y análisis" data-en="Data and analysis">Datos y análisis</h1>
-                <p class="exp-intro" data-es="Tratamiento, estructuración y explotación de información operativa." data-en="Treatment, structuring and exploitation of operational information.">Tratamiento, estructuración y explotación de información operativa.</p>
-              </div>
-
-              <div class="capability-grid-2x2">
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><path d="M8 8 L24 8 L24 16 L8 16 Z" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><path d="M10 16 L10 24 L22 24 L22 16" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="14" y1="11" x2="18" y2="11" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="12" y1="20" x2="20" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="16" cy="16" r="2" fill="rgba(0,180,216,0.4)"/></svg>
-                  </div>
-                  <h4 data-es="Consolidación de información dispersa" data-en="Consolidation of scattered information">Consolidación de información dispersa</h4>
-                  <p data-es="Reunimos datos de diferentes fuentes y los organizamos en un lugar donde puedas trabajar con ellos." data-en="We gather data from different sources and organize it in one place where you can work with it.">Reunimos datos de diferentes fuentes y los organizamos en un lugar donde puedas trabajar con ellos.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><rect x="6" y="6" width="20" height="20" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="10" y="18" width="3" height="6" rx="0.5" fill="rgba(0,180,216,0.4)"/><rect x="14.5" y="14" width="3" height="10" rx="0.5" fill="rgba(0,180,216,0.5)"/><rect x="19" y="10" width="3" height="14" rx="0.5" fill="rgba(0,180,216,0.6)"/></svg>
-                  </div>
-                  <h4 data-es="Informes cuando los necesitas" data-en="Reports when you need them">Informes cuando los necesitas</h4>
-                  <p data-es="Los reportes se generan automáticamente con la información actualizada, sin tener que compilarlos a mano." data-en="Reports are automatically generated with updated information, without having to compile them manually.">Los reportes se generan automáticamente con la información actualizada, sin tener que compilarlos a mano.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><path d="M16 6 L16 26 M6 16 L26 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="16" r="3" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.2)"/><path d="M10 10 L12 12 M22 10 L20 12 M10 22 L12 20 M22 22 L20 20" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg>
-                  </div>
-                  <h4 data-es="Mejora de procesos complejos" data-en="Complex process improvement">Mejora de procesos complejos</h4>
-                  <p data-es="Aplicamos análisis matemático para encontrar la mejor forma de ejecutar operaciones con muchas variables." data-en="We apply mathematical analysis to find the best way to execute operations with many variables.">Aplicamos análisis matemático para encontrar la mejor forma de ejecutar operaciones con muchas variables.</p>
-                </div>
-
-                <div class="capability-card">
-                  <div class="capability-icon">
-                    <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.05)"/><circle cx="16" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="none" opacity="0.5"/><circle cx="16" cy="16" r="2.5" fill="rgba(0,180,216,0.5)"/><path d="M16 6 L16 10 M16 22 L16 26 M6 16 L10 16 M22 16 L26 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>
-                  </div>
-                  <h4 data-es="Análisis asistido por IA" data-en="AI-assisted analysis">Análisis asistido por IA</h4>
-                  <p data-es="La IA ayuda a clasificar información, detectar patrones y extraer conclusiones de grandes volúmenes de datos." data-en="AI helps classify information, detect patterns, and extract insights from large volumes of data.">La IA ayuda a clasificar información, detectar patrones y extraer conclusiones de grandes volúmenes de datos.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SLIDE 3: Casos reales -->
-          <div class="content-block block-accent">
-            <div class="container">
-              <h2 class="capability-section-title" data-es="Algunos ejemplos reales" data-en="Some real examples">Algunos ejemplos reales</h2>
-
-              <div class="portfolio-grid">
-                <!-- Card 1: Woodwall -->
-                <div class="portfolio-card">
-                  <div class="portfolio-card-header">
-                    <div class="portfolio-icon">
-                      <svg viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="3" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><rect x="8" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.3)"/><rect x="17" y="8" width="7" height="7" rx="1.5" fill="rgba(0,180,216,0.2)"/><rect x="8" y="17" width="16" height="7" rx="1.5" fill="rgba(0,180,216,0.15)"/></svg>
-                    </div>
-                    <div class="portfolio-sector" data-es="Construcción industrializada" data-en="Industrialized construction">Construcción industrializada</div>
-                  </div>
-                  <h3 data-es="Plataforma BIM-a-Fabricación" data-en="BIM-to-Manufacturing Platform">Plataforma BIM-a-Fabricación</h3>
-                  <p data-es="Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta. Controla diseño, lotes de producción, líneas de fabricación, control de calidad y logística de entrega en un solo sistema." data-en="Complete industrialized manufacturing management: from architectural plans to plant machine automation. Controls design, production batches, manufacturing lines, quality control, and delivery logistics in a single system.">Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta. Controla diseño, lotes de producción, líneas de fabricación, control de calidad y logística de entrega en un solo sistema.</p>
-                  <div class="portfolio-tags">
-                    <span data-es="Automatización" data-en="Automation">Automatización</span><span data-es="Integración de máquinas" data-en="Machine integration">Integración de máquinas</span><span data-es="Logística" data-en="Logistics">Logística</span><span data-es="Geometría 3D" data-en="3D Geometry">Geometría 3D</span>
-                  </div>
-                </div>
-
-                <!-- Card 2: SIM Portal -->
-                <div class="portfolio-card">
-                  <div class="portfolio-card-header">
-                    <div class="portfolio-icon">
-                      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M12 16 L14 16 L15 13 L17 19 L18 16 L20 16" stroke="#00b4d8" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="2" fill="rgba(0,180,216,0.3)"/></svg>
-                    </div>
-                    <div class="portfolio-sector" data-es="Gestión de activos industriales" data-en="Industrial asset management">Gestión de activos industriales</div>
-                  </div>
-                  <h3 data-es="CRM de Reacondicionamiento de Componentes" data-en="Component Refurbishment CRM">CRM de Reacondicionamiento de Componentes</h3>
-                  <p data-es="CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística. Gestión de presupuestos, seguimiento de envíos, portales para partners externos y trazabilidad completa de cada pieza." data-en="Custom CRM orchestrating the full component repair cycle between clients, regional workshops, and logistics. Quote management, shipment tracking, external partner portals, and full traceability of every part.">CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística. Gestión de presupuestos, seguimiento de envíos, portales para partners externos y trazabilidad completa de cada pieza.</p>
-                  <div class="portfolio-tags">
-                    <span data-es="CRM a medida" data-en="Custom CRM">CRM a medida</span><span data-es="Multi-actor" data-en="Multi-actor">Multi-actor</span><span data-es="Trazabilidad" data-en="Traceability">Trazabilidad</span><span data-es="Logística" data-en="Logistics">Logística</span>
-                  </div>
-                </div>
-
-                <!-- Card 3: Onmios -->
-                <div class="portfolio-card">
-                  <div class="portfolio-card-header">
-                    <div class="portfolio-icon">
-                      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.05)"/><circle cx="16" cy="16" r="6" stroke="#00b4d8" stroke-width="1.5" fill="none" opacity="0.5"/><circle cx="16" cy="16" r="2.5" fill="rgba(0,180,216,0.5)"/><path d="M16 6 L16 10 M16 22 L16 26 M6 16 L10 16 M22 16 L26 16" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/></svg>
-                    </div>
-                    <div class="portfolio-sector" data-es="Contratación pública" data-en="Public procurement">Contratación pública</div>
-                  </div>
-                  <h3 data-es="Extracción Inteligente de Licitaciones" data-en="Intelligent Tender Data Extraction">Extracción Inteligente de Licitaciones</h3>
-                  <p data-es="Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades. Clasifica documentos, compara proveedores, analiza criterios de adjudicación y genera datasets que convierten información dispersa en ventaja competitiva." data-en="Automatically extracts and structures data from past tenders to evaluate new opportunities. Classifies documents, compares suppliers, analyzes award criteria, and generates datasets that turn scattered information into competitive advantage.">Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades. Clasifica documentos, compara proveedores, analiza criterios de adjudicación y genera datasets que convierten información dispersa en ventaja competitiva.</p>
-                  <div class="portfolio-tags">
-                    <span data-es="IA" data-en="AI">IA</span><span data-es="Extracción de datos" data-en="Data extraction">Extracción de datos</span><span data-es="OCR" data-en="OCR">OCR</span><span data-es="Análisis competitivo" data-en="Competitive analysis">Análisis competitivo</span>
-                  </div>
-                </div>
-
-                <!-- Card 4: AlgoTrad -->
-                <div class="portfolio-card">
-                  <div class="portfolio-card-header">
-                    <div class="portfolio-icon">
-                      <svg viewBox="0 0 32 32"><path d="M8 8 L24 8 L24 16 L8 16 Z" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><path d="M10 16 L10 24 L22 24 L22 16" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="14" y1="11" x2="18" y2="11" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="12" y1="20" x2="20" y2="20" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="16" cy="16" r="2" fill="rgba(0,180,216,0.4)"/></svg>
-                    </div>
-                    <div class="portfolio-sector" data-es="Fintech" data-en="Fintech">Fintech</div>
-                  </div>
-                  <h3 data-es="Motor de Backtesting Algorítmico" data-en="Algorithmic Backtesting Engine">Motor de Backtesting Algorítmico</h3>
-                  <p data-es="Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo contra datos históricos. Agentes autónomos ejecutan las estrategias validadas directamente en mercado. Evalúa rendimiento y riesgo de forma sistemática, permitiendo tomar decisiones de inversión basadas en evidencia." data-en="Platform to design, test, and optimize quantitative trading strategies against historical data. Autonomous agents execute validated strategies directly in the market. Systematically evaluates performance and risk, enabling evidence-based investment decisions.">Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo contra datos históricos. Agentes autónomos ejecutan las estrategias validadas directamente en mercado. Evalúa rendimiento y riesgo de forma sistemática, permitiendo tomar decisiones de inversión basadas en evidencia.</p>
-                  <div class="portfolio-tags">
-                    <span data-es="Agentes autónomos" data-en="Autonomous agents">Agentes autónomos</span><span data-es="Optimización" data-en="Optimization">Optimización</span><span data-es="Análisis cuantitativo" data-en="Quantitative analysis">Análisis cuantitativo</span><span data-es="Simulación" data-en="Simulation">Simulación</span><span data-es="Gestión de riesgo" data-en="Risk management">Gestión de riesgo</span>
-                  </div>
-                </div>
-
-                <!-- Card 5: Voice Agent -->
-                <div class="portfolio-card">
-                  <div class="portfolio-card-header">
-                    <div class="portfolio-icon">
-                      <svg viewBox="0 0 32 32"><path d="M16 4 C16 4 22 4 22 10 L22 16 C22 22 16 22 16 22 C16 22 10 22 10 16 L10 10 C10 4 16 4 16 4Z" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.08)"/><line x1="16" y1="22" x2="16" y2="27" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><path d="M11 27 L21 27" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round"/><circle cx="13" cy="12" r="1" fill="rgba(0,180,216,0.4)"/><circle cx="19" cy="12" r="1" fill="rgba(0,180,216,0.4)"/><path d="M13 16 Q16 18 19 16" stroke="#00b4d8" stroke-width="1" fill="none" stroke-linecap="round"/></svg>
-                    </div>
-                    <div class="portfolio-sector" data-es="Interacción con usuarios" data-en="User interaction">Interacción con usuarios</div>
-                  </div>
-                  <h3 data-es="Agentes Conversacionales con IA" data-en="AI Conversational Agents">Agentes Conversacionales con IA</h3>
-                  <p data-es="Agentes autónomos que interactúan con personas a través de múltiples canales: voz telefónica, WhatsApp y Telegram. Califican leads, extraen información de las conversaciones, responden consultas y ejecutan acciones en sistemas internos sin intervención humana." data-en="Autonomous agents that interact with people through multiple channels: voice calls, WhatsApp, and Telegram. They qualify leads, extract information from conversations, answer queries, and execute actions in internal systems without human intervention.">Agentes autónomos que interactúan con personas a través de múltiples canales: voz telefónica, WhatsApp y Telegram. Califican leads, extraen información de las conversaciones, responden consultas y ejecutan acciones en sistemas internos sin intervención humana.</p>
-                  <div class="portfolio-tags">
-                    <span data-es="IA conversacional" data-en="Conversational AI">IA conversacional</span><span data-es="Agentes autónomos" data-en="Autonomous agents">Agentes autónomos</span><span data-es="Multicanal" data-en="Multichannel">Multicanal</span><span data-es="Voz" data-en="Voice">Voz</span>
-                  </div>
-                </div>
-
-                <!-- Card 6: CTA -->
-                <div class="portfolio-card portfolio-cta">
-                  <div class="portfolio-cta-content">
-                    <div class="portfolio-cta-icon">
-                      <svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="11" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.06)" stroke-dasharray="4 3"/><line x1="16" y1="11" x2="16" y2="21" stroke="#00b4d8" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="21" y2="16" stroke="#00b4d8" stroke-width="2" stroke-linecap="round"/></svg>
-                    </div>
-                    <h3 data-es="Tu próximo proyecto" data-en="Your next project">Tu próximo proyecto</h3>
-                    <p data-es="¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos qué necesitas y diseñamos el sistema que lo resuelve." data-en="Do you have a critical process that depends on spreadsheets, emails, or disconnected tools? Tell us what you need and we'll design the system that solves it.">¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos qué necesitas y diseñamos el sistema que lo resuelve.</p>
-                    <button class="portfolio-cta-btn" data-go-tab="contacto" data-es="Hablemos" data-en="Let's talk">Hablemos</button>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ========== PANEL 4: FAQ (1 slide) ========== -->
-      <section class="panel" id="panel-faq">
-        <div class="panel-scroll">
-
-          <div class="content-block">
-            <div class="container">
-              <div class="section-header">
-                <h1 class="title-with-icon" data-es="Preguntas frecuentes" data-en="Frequently asked questions">
-                  <i class="fa-brands fa-stack-exchange"></i>
-                  <span data-es="Preguntas frecuentes" data-en="Frequently asked questions">Preguntas frecuentes</span>
-                </h1>
-              </div>
-              
-              <div class="faq-grid">
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="7" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><rect x="13" y="10" width="4" height="5" rx="1" fill="rgba(0,180,216,0.3)"/><line x1="3" y1="10" x2="21" y2="10" stroke="#00b4d8" stroke-width="1.5"/></svg>
-                  </div>
-                  <h3 data-es="¿Encaja este modelo para cualquier empresa?" data-en="Does this model fit any company?">¿Encaja este modelo para cualquier empresa?</h3>
-                  <p data-es="Este servicio está diseñado para organizaciones que dependen de procesos internos relevantes y necesitan estructurarlos de forma estable en el tiempo. Funciona especialmente bien cuando el sistema forma parte de la operación diaria y requiere evolución continua, no un proyecto puntual. No está orientado a productos digitales abiertos al mercado ni a plataformas públicas con usuarios masivos." data-en="This service is designed for organizations that depend on relevant internal processes and need to structure them stably over time. It works especially well when the system is part of daily operations and requires continuous evolution, not a one-time project. It is not oriented towards open market digital products or public platforms with massive users.">Este servicio está diseñado para organizaciones que dependen de procesos internos relevantes y necesitan estructurarlos de forma estable en el tiempo. Funciona especialmente bien cuando el sistema forma parte de la operación diaria y requiere evolución continua, no un proyecto puntual. No está orientado a productos digitales abiertos al mercado ni a plataformas públicas con usuarios masivos.</p>
-                </div>
-
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke="#00b4d8" stroke-width="1.5" fill="none"/><path d="M6 20 C6 15 9 13 12 13 C15 13 18 15 18 20" stroke="#00b4d8" stroke-width="1.5" fill="none"/><circle cx="17" cy="9" r="2" fill="#00b4d8" opacity="0.4"/></svg>
-                  </div>
-                  <h3 data-es="¿En qué se diferencia de contratar un perfil interno?" data-en="How is it different from hiring an internal profile?">¿En qué se diferencia de contratar un perfil interno?</h3>
-                  <p data-es="Contratar un perfil interno o construir un departamento tecnológico implica asumir estructura, gestión y dependencia individual. Nuestro modelo proporciona un equipo técnico y diseño completo bajo una suscripción estable, sin necesidad de crear ni gestionar un departamento propio. La diferencia no es solo coste, es escala, especialización y continuidad." data-en="Hiring an internal profile or building a tech department means taking on structure, management, and individual dependency. Our model provides a complete technical team and design under a stable subscription, without the need to create or manage your own department. The difference is not just cost, it's scale, specialization, and continuity.">Contratar un perfil interno o construir un departamento tecnológico implica asumir estructura, gestión y dependencia individual. Nuestro modelo proporciona un equipo técnico y diseño completo bajo una suscripción estable, sin necesidad de crear ni gestionar un departamento propio. La diferencia no es solo coste, es escala, especialización y continuidad.</p>
-                </div>
-
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="8" y1="10" x2="16" y2="10" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><line x1="8" y1="14" x2="14" y2="14" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="8" cy="10" r="1" fill="#00b4d8"/><circle cx="8" cy="14" r="1" fill="#00b4d8"/></svg>
-                  </div>
-                  <h3 data-es="¿Qué incluye exactamente la suscripción?" data-en="What exactly does the subscription include?">¿Qué incluye exactamente la suscripción?</h3>
-                  <p data-es="La suscripción cubre la evolución estructurada del sistema mes a mes. Incluye desarrollo evolutivo priorizado, ajustes funcionales y mejoras operativas, automatizaciones e integraciones básicas, mantenimiento técnico y estabilidad, infraestructura para uso interno estándar, y backups y monitorización. El objetivo no es realizar tareas aisladas, sino consolidar el sistema de forma progresiva y coherente." data-en="The subscription covers the structured evolution of the system month by month. It includes prioritized evolutionary development, functional adjustments and operational improvements, basic automations and integrations, technical maintenance and stability, infrastructure for standard internal use, and backups and monitoring. The goal is not to perform isolated tasks, but to consolidate the system progressively and coherently.">La suscripción cubre la evolución estructurada del sistema mes a mes. Incluye desarrollo evolutivo priorizado, ajustes funcionales y mejoras operativas, automatizaciones e integraciones básicas, mantenimiento técnico y estabilidad, infraestructura para uso interno estándar, y backups y monitorización. El objetivo no es realizar tareas aisladas, sino consolidar el sistema de forma progresiva y coherente.</p>
-                </div>
-
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 2 L22 8 L22 14 C22 19 17 23 12 23 C7 23 2 19 2 14 L2 8 Z" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="10" y="10" width="4" height="4" rx="0.5" stroke="#00b4d8" stroke-width="1.5" fill="none"/><rect x="8" y="14" width="8" height="6" rx="1" stroke="#00b4d8" stroke-width="1.5" fill="rgba(0,180,216,0.1)"/><circle cx="12" cy="17" r="1.2" fill="#00b4d8"/></svg>
-                  </div>
-                  <h3 data-es="¿Quién es propietario de la información?" data-en="Who owns the information?">¿Quién es propietario de la información?</h3>
-                  <p data-es="El cliente mantiene en todo momento la propiedad completa de sus datos. La información puede exportarse en formatos estándar y permanece bajo su control. La confidencialidad y la protección del dato forman parte esencial del servicio." data-en="The client maintains complete ownership of their data at all times. The information can be exported in standard formats and remains under their control. Confidentiality and data protection are essential parts of the service.">El cliente mantiene en todo momento la propiedad completa de sus datos. La información puede exportarse en formatos estándar y permanece bajo su control. La confidencialidad y la protección del dato forman parte esencial del servicio.</p>
-                </div>
-
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="5" y1="8" x2="19" y2="8" stroke="#00b4d8" stroke-width="1.5"/><circle cx="9" cy="6" r="0.8" fill="#00b4d8"/><line x1="9" y1="12" x2="15" y2="12" stroke="#00b4d8" stroke-width="1.5" opacity="0.5"/><circle cx="9" cy="12" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/><line x1="9" y1="15" x2="13" y2="15" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/><circle cx="9" cy="15" r="1.2" fill="none" stroke="#00b4d8" stroke-width="1"/></svg>
-                  </div>
-                  <h3 data-es="¿Cómo se priorizan las mejoras?" data-en="How are improvements prioritized?">¿Cómo se priorizan las mejoras?</h3>
-                  <p data-es="Cada ciclo mensual parte de una revisión conjunta de necesidades. Se priorizan las iniciativas con mayor impacto operativo y se define un alcance claro para el siguiente avance. Esto permite mantener foco, coherencia técnica y evolución sostenida." data-en="Each monthly cycle starts from a joint needs review. Initiatives with the greatest operational impact are prioritized and a clear scope is defined for the next advance. This allows maintaining focus, technical coherence, and sustained evolution.">Cada ciclo mensual parte de una revisión conjunta de necesidades. Se priorizan las iniciativas con mayor impacto operativo y se define un alcance claro para el siguiente avance. Esto permite mantener foco, coherencia técnica y evolución sostenida.</p>
-                </div>
-
-                <div class="faq-item">
-                  <div class="faq-icon">
-                    <svg viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="16" rx="2" stroke="#00b4d8" stroke-width="1.5" fill="none"/><line x1="6" y1="10" x2="18" y2="10" stroke="#00b4d8" stroke-width="1.5"/><circle cx="10" cy="7" r="1" fill="#00b4d8"/><line x1="10" y1="14" x2="14" y2="14" stroke="#00b4d8" stroke-width="1.5" opacity="0.4"/></svg>
-                  </div>
-                  <h3 data-es="¿Existe un compromiso mínimo?" data-en="Is there a minimum commitment?">¿Existe un compromiso mínimo?</h3>
-                  <p data-es="Sí. Este modelo requiere continuidad suficiente para consolidar la base técnica y estabilizar el sistema. Trabajamos con un compromiso inicial que permita estructurar correctamente la implantación y establecer un ritmo de evolución consistente." data-en="Yes. This model requires sufficient continuity to consolidate the technical foundation and stabilize the system. We work with an initial commitment that allows us to correctly structure the deployment and establish a consistent evolution pace.">Sí. Este modelo requiere continuidad suficiente para consolidar la base técnica y estabilizar el sistema. Trabajamos con un compromiso inicial que permita estructurar correctamente la implantación y establecer un ritmo de evolución consistente.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ========== PANEL 5: CONTACTO (1 slide) ========== -->
-      <section class="panel" id="panel-contacto">
-        <div class="panel-scroll">
-
-          <div class="content-block">
-            <div class="container">
-              <div class="contact-clean">
-                <h1 data-es="Hablemos de tu sistema" data-en="Let's talk about your system">Hablemos de tu sistema</h1>
-                <p class="contact-subtitle" data-es="Primera conversación: 20 minutos.<br>Analizamos tu contexto y vemos si el modelo encaja." data-en="First conversation: 20 minutes.<br>We analyze your context and see if the model fits.">Primera conversación: 20 minutos.<br>Analizamos tu contexto y vemos si el modelo encaja.</p>
-                
-                <a href="https://calendar.app.google/NSMxhFgxWBFcUL5r5" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-lg btn-neon" data-es="Agendar conversación" data-en="Book a conversation">
-                  <svg class="btn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                  <span data-es="Agendar conversación" data-en="Book a conversation">Agendar conversación</span>
-                </a>
-                
-                <div class="contact-email-section">
-                  <p class="contact-email-label" data-es="También puedes escribirnos directamente a" data-en="You can also email us directly at">También puedes escribirnos directamente a</p>
-                  <div class="email-copy-container">
-                    <span class="email-text">team@bracedeng.com</span>
-                    <button class="email-copy-btn" id="copy-email-btn" aria-label="Copy email">
-                      <svg viewBox="0 0 24 24" class="copy-icon">
-                        <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-                        <path d="M5 15 L5 5 C5 3.9 5.9 3 7 3 L17 3" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-                      </svg>
-                    </button>
-                    <span class="email-copied-feedback" data-es="Copiado ✓" data-en="Copied ✓">Copiado ✓</span>
-                  </div>
-                </div>
-
-                <svg class="contact-graphic" viewBox="0 0 300 400" fill="none">
-                  <path d="M60 40 C60 40 80 40 90 40 C110 40 120 55 120 75 L120 160 C120 180 140 195 160 195 C140 195 120 210 120 230 L120 315 C120 335 110 350 90 350 C80 350 60 350 60 350" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.15" class="anim-draw"/>
-                  <circle cx="200" cy="80" r="4" fill="#00b4d8" opacity="0.3" class="float-dot"/>
-                  <circle cx="240" cy="140" r="3" fill="#00b4d8" opacity="0.2" class="float-dot" style="animation-delay:1s"/>
-                  <circle cx="180" cy="250" r="5" fill="#00b4d8" opacity="0.25" class="float-dot" style="animation-delay:2s"/>
-                  <circle cx="220" cy="320" r="3" fill="#00b4d8" opacity="0.15" class="float-dot" style="animation-delay:0.5s"/>
-                </svg>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-    </div>
+  <!-- SIDE DOTS -->
+  <div class="side-nav" id="side-nav">
+    <button class="side-dot active" data-section="0"></button>
+    <button class="side-dot" data-section="1"></button>
+    <button class="side-dot" data-section="2"></button>
+    <button class="side-dot" data-section="3"></button>
+    <button class="side-dot" data-section="4"></button>
+    <button class="side-dot" data-section="5"></button>
   </div>
 
-  <!-- FOOTER -->
-  <footer id="footer">
-    <div class="footer-inner">
-      <p>&copy; 2026 Braced Engineering</p>
-      <p class="footer-tagline" data-es="Ingeniería de software interno estructurado y evolutivo." data-en="Structured and evolutionary internal software engineering.">Ingeniería de software interno estructurado y evolutivo.</p>
-      <div class="footer-links">
-        <a href="legal.html" data-es="Aviso Legal" data-en="Legal Notice">Aviso Legal</a>
-        <a href="privacidad.html" data-es="Privacidad" data-en="Privacy">Privacidad</a>
-        <a href="cookies.html" data-es="Cookies" data-en="Cookies">Cookies</a>
-        <a href="https://www.linkedin.com/company/bracedeng/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="footer-social"><i class="fa-brands fa-linkedin"></i></a>
-      </div>
-    </div>
-  </footer>
+  <div class="snap-container" id="snap-container">
 
-  <!-- Cookie Banner -->
-  <div id="cookie-banner" class="cookie-banner" style="display: none;">
-    <div class="cookie-banner-content">
-      <p class="cookie-banner-text">
-        <span data-es="Utilizamos cookies analíticas para mejorar tu experiencia. Puedes aceptarlas o rechazarlas." data-en="We use analytical cookies to improve your experience. You can accept or reject them.">Utilizamos cookies analíticas para mejorar tu experiencia. Puedes aceptarlas o rechazarlas.</span>
-        <a href="cookies.html" class="cookie-banner-link" data-es="Más información" data-en="More info">Más información</a>
-      </p>
-      <div class="cookie-banner-buttons">
-        <button id="cookie-reject" class="cookie-btn cookie-btn-reject" data-es="Rechazar" data-en="Reject">Rechazar</button>
-        <button id="cookie-accept" class="cookie-btn cookie-btn-accept" data-es="Aceptar" data-en="Accept">Aceptar</button>
+    <!-- 1. HERO -->
+    <section class="snap-section hero" id="hero">
+      <div class="hero-inner">
+        <div class="hero-logo reveal">
+          <svg class="hero-brace" width="42" height="72" viewBox="0 0 24 48" fill="none">
+            <path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="#00b4d8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="hero-brand">Braced</span>
+        </div>
+        <h1 id="hero-title" class="reveal reveal-d1"></h1>
+        <p class="hero-sub reveal reveal-d2" data-es="Ingeniería de software que se integra en tu empresa y la impulsa." data-en="Software engineering that integrates into your company and drives it forward.">Ingeniería de software que se integra en tu empresa y la impulsa.</p>
+        <div class="hero-cta-wrap reveal reveal-d3">
+          <a href="#contacto" class="btn-glow" id="hero-cta">Hablar con nosotros</a>
+        </div>
       </div>
-    </div>
+      <div class="scroll-hint">
+        <span>Scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- 2. QUÉ HACEMOS -->
+    <section class="snap-section" id="que-hacemos">
+      <div class="orb orb-1"></div>
+      <div class="section-inner">
+        <div class="section-label reveal" data-es="Qué hacemos" data-en="What we do">Qué hacemos</div>
+        <div class="what-card reveal reveal-d1">
+          <svg class="what-card-bg" viewBox="0 0 24 48" fill="none">
+            <path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <h2 data-es="Convertimos tu operación en un sistema inteligente." data-en="We turn your operations into an intelligent system.">Convertimos tu operación en un sistema inteligente.</h2>
+          <p class="body-text" data-es="Datos estructurados. Procesos automatizados. Decisiones informadas. No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir." data-en="Structured data. Automated processes. Informed decisions. We don't build generic software — we build the infrastructure your business needs to operate, scale, and compete.">Datos estructurados. Procesos automatizados. Decisiones informadas. No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir.</p>
+          <div class="gradient-line" style="margin-top:24px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. CÓMO -->
+    <section class="snap-section" id="como">
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+      <div class="section-inner">
+        <div class="section-label reveal" data-es="Cómo" data-en="How">Cómo</div>
+        <h2 class="reveal reveal-d1" data-es="Nos integramos en tu organización." data-en="We integrate into your organization.">Nos integramos en tu organización.</h2>
+        <p class="body-text reveal reveal-d2" data-es="Analizamos la operación. Construimos el sistema. Lo mantenemos vivo." data-en="We analyze operations. Build the system. Keep it alive.">Analizamos la operación. Construimos el sistema. Lo mantenemos vivo.</p>
+        <div class="pillars">
+          <div class="pillar reveal">
+            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+            <div class="pillar-num">01</div>
+            <h3 data-es="Entendemos" data-en="Understand">Entendemos</h3>
+            <p data-es="Nos sumergimos en tu operación. Mapeamos procesos, detectamos fricción y definimos exactamente qué construir para generar impacto real." data-en="We dive into your operations. Map processes, detect friction, and define exactly what to build to generate real impact.">Nos sumergimos en tu operación. Mapeamos procesos, detectamos fricción y definimos exactamente qué construir para generar impacto real.</p>
+          </div>
+          <div class="pillar reveal reveal-d1">
+            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <div class="pillar-num">02</div>
+            <h3 data-es="Construimos" data-en="Build">Construimos</h3>
+            <p data-es="Desarrollamos tecnología sólida, iterativa, integrada con tu equipo. Cada sprint entrega valor real, no demos vacías." data-en="We develop solid, iterative technology, integrated with your team. Every sprint delivers real value, not empty demos.">Desarrollamos tecnología sólida, iterativa, integrada con tu equipo. Cada sprint entrega valor real, no demos vacías.</p>
+          </div>
+          <div class="pillar reveal reveal-d2">
+            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+            <div class="pillar-num">03</div>
+            <h3 data-es="Evolucionamos" data-en="Evolve">Evolucionamos</h3>
+            <p data-es="El sistema crece contigo. Mantenimiento continuo, nuevas capacidades, adaptación a medida que tu negocio escala." data-en="The system grows with you. Continuous maintenance, new capabilities, adaptation as your business scales.">El sistema crece contigo. Mantenimiento continuo, nuevas capacidades, adaptación a medida que tu negocio escala.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CAPACIDADES -->
+    <section class="snap-section" id="capacidades">
+      <div class="orb orb-4"></div>
+      <div class="section-inner">
+        <div class="section-label reveal" data-es="Capacidades" data-en="Capabilities">Capacidades</div>
+        <h2 class="reveal reveal-d1" data-es="Lo que construimos." data-en="What we build.">Lo que construimos.</h2>
+        <div class="cap-grid">
+          <div class="cap-item reveal"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h5"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Sistemas operativos a medida" data-en="Custom operating systems">Sistemas operativos a medida</h4><p data-es="Plataformas internas que centralizan datos, flujos y decisiones de tu negocio en un solo lugar." data-en="Internal platforms that centralize data, workflows, and business decisions in one place.">Plataformas internas que centralizan datos, flujos y decisiones de tu negocio en un solo lugar.</p></div></div>
+          <div class="cap-item reveal reveal-d1"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Automatización de procesos" data-en="Process automation">Automatización de procesos</h4><p data-es="Eliminamos tareas manuales y repetitivas. Tu equipo se centra en lo que importa." data-en="We eliminate manual, repetitive tasks. Your team focuses on what matters.">Eliminamos tareas manuales y repetitivas. Tu equipo se centra en lo que importa.</p></div></div>
+          <div class="cap-item reveal reveal-d1"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 12h6M15 7.5l-6 3M15 16.5l-6-3"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Integración de datos" data-en="Data integration">Integración de datos</h4><p data-es="Conectamos tus fuentes de información para que fluyan sin fricción entre sistemas." data-en="We connect your data sources so information flows seamlessly between systems.">Conectamos tus fuentes de información para que fluyan sin fricción entre sistemas.</p></div></div>
+          <div class="cap-item reveal reveal-d2"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Reporting en tiempo real" data-en="Real-time reporting">Reporting en tiempo real</h4><p data-es="Dashboards y métricas vivas que reflejan el estado real de tu operación." data-en="Live dashboards and metrics that reflect the real state of your operations.">Dashboards y métricas vivas que reflejan el estado real de tu operación.</p></div></div>
+          <div class="cap-item reveal reveal-d2"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M12 2a7 7 0 017 7c0 3-2 5-3 7h-8c-1-2-3-4-3-7a7 7 0 017-7z"/><path d="M9 18h6M10 21h4"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="IA aplicada" data-en="Applied AI">IA aplicada</h4><p data-es="Modelos, agentes y análisis predictivo integrados en tu flujo de trabajo diario." data-en="Models, agents, and predictive analytics integrated into your daily workflow.">Modelos, agentes y análisis predictivo integrados en tu flujo de trabajo diario.</p></div></div>
+          <div class="cap-item reveal reveal-d3"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M4 14a1 1 0 01-1-1V5a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1"/><path d="M2 18h20M8 18v2h8v-2"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Infraestructura y soporte" data-en="Infrastructure & support">Infraestructura y soporte</h4><p data-es="Cloud, DevOps, monitorización y mantenimiento continuo de todo lo que construimos." data-en="Cloud, DevOps, monitoring, and continuous maintenance of everything we build.">Cloud, DevOps, monitorización y mantenimiento continuo de todo lo que construimos.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CASOS -->
+    <section class="snap-section" id="casos">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="section-inner" style="max-width:1000px">
+        <div class="section-label reveal" data-es="Casos" data-en="Cases">Casos</div>
+        <h2 class="reveal reveal-d1" data-es="Lo que hemos construido." data-en="What we've built.">Lo que hemos construido.</h2>
+        <div class="portfolio-grid">
+          <div class="portfolio-card reveal">
+            <div class="portfolio-sector" data-es="Construcción industrializada" data-en="Industrialized construction">Construcción industrializada</div>
+            <h3 data-es="Plataforma BIM-a-Fabricación" data-en="BIM-to-Manufacturing Platform">Plataforma BIM-a-Fabricación</h3>
+            <p data-es="Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta." data-en="Complete industrialized manufacturing management: from architectural plans to plant machine automation.">Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta.</p>
+            <div class="portfolio-tags"><span>Automatización</span><span>Integración de máquinas</span><span>Logística</span><span>Geometría 3D</span></div>
+          </div>
+          <div class="portfolio-card reveal reveal-d1">
+            <div class="portfolio-sector" data-es="Gestión de activos industriales" data-en="Industrial asset management">Gestión de activos industriales</div>
+            <h3 data-es="CRM de reparación multi-actor" data-en="Multi-actor repair CRM">CRM de reparación multi-actor</h3>
+            <p data-es="CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística." data-en="Custom CRM orchestrating the full component repair cycle between clients, regional workshops, and logistics.">CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística.</p>
+            <div class="portfolio-tags"><span>CRM a medida</span><span>Multi-actor</span><span>Trazabilidad</span></div>
+          </div>
+          <div class="portfolio-card reveal reveal-d2">
+            <div class="portfolio-sector" data-es="Contratación pública" data-en="Public procurement">Contratación pública</div>
+            <h3 data-es="Análisis de licitaciones con IA" data-en="AI tender analysis">Análisis de licitaciones con IA</h3>
+            <p data-es="Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades." data-en="Automatically extracts and structures data from past tenders to evaluate new opportunities.">Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades.</p>
+            <div class="portfolio-tags"><span>IA</span><span>Extracción de datos</span><span>OCR</span></div>
+          </div>
+          <div class="portfolio-card reveal">
+            <div class="portfolio-sector">Fintech</div>
+            <h3 data-es="Trading cuantitativo con agentes" data-en="Quantitative trading with agents">Trading cuantitativo con agentes</h3>
+            <p data-es="Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo con agentes autónomos en mercado." data-en="Platform to design, test, and optimize quantitative trading strategies with autonomous agents in the market.">Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo con agentes autónomos en mercado.</p>
+            <div class="portfolio-tags"><span>Agentes autónomos</span><span>Optimización</span><span>Simulación</span></div>
+          </div>
+          <div class="portfolio-card reveal reveal-d1">
+            <div class="portfolio-sector" data-es="Interacción con usuarios" data-en="User interaction">Interacción con usuarios</div>
+            <h3 data-es="Agentes conversacionales multicanal" data-en="Multichannel conversational agents">Agentes conversacionales multicanal</h3>
+            <p data-es="Agentes autónomos que interactúan por voz, WhatsApp y Telegram. Califican leads y ejecutan acciones sin intervención humana." data-en="Autonomous agents that interact via voice, WhatsApp, and Telegram. They qualify leads and execute actions without human intervention.">Agentes autónomos que interactúan por voz, WhatsApp y Telegram. Califican leads y ejecutan acciones sin intervención humana.</p>
+            <div class="portfolio-tags"><span>IA conversacional</span><span>Multicanal</span><span>Voz</span></div>
+          </div>
+          <div class="portfolio-card portfolio-cta-card reveal reveal-d2">
+            <h3 data-es="El tuyo es el siguiente." data-en="Yours is next.">El tuyo es el siguiente.</h3>
+            <p data-es="¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos." data-en="Got a critical process running on spreadsheets, emails, or disconnected tools? Tell us.">¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos.</p>
+            <a href="#contacto" class="portfolio-cta-link" data-es="Hablemos →" data-en="Let's talk →">Hablemos →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. CONTACTO -->
+    <section class="snap-section" id="contacto">
+      <div class="contact-inner">
+        <div class="contact-divider reveal"></div>
+        <h2 class="reveal reveal-d1" data-es="Construimos el sistema que impulsa tu empresa." data-en="We build the system that drives your company.">Construimos el sistema que impulsa tu empresa.</h2>
+        <p class="contact-sub reveal reveal-d2" data-es="20 minutos para ver si encajamos." data-en="20 minutes to see if we're a fit.">20 minutos para ver si encajamos.</p>
+        <div class="contact-actions reveal reveal-d3">
+          <a href="https://calendar.app.google/NSMxhFgxWBFcUL5r5" target="_blank" rel="noopener noreferrer" class="btn-glow" data-es="Agendar conversación" data-en="Schedule a conversation">Agendar conversación</a>
+          <p class="contact-email"><span data-es="o escríbenos a " data-en="or write to us at ">o escríbenos a </span><a href="mailto:team@bracedeng.com">team@bracedeng.com</a></p>
+        </div>
+      </div>
+      <div class="footer-bar">
+        <div class="footer-inner">
+          <span>&copy; 2026 Braced Engineering</span>
+          <div class="footer-links">
+            <a href="legal.html">Aviso Legal</a>
+            <a href="privacidad.html">Privacidad</a>
+            <a href="cookies.html">Cookies</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </div>
 
-  <style>
-    .cookie-banner {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(17,17,17,0.98);
-      border-top: 1px solid var(--border);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      z-index: 300;
-      padding: 20px;
-      animation: slideUp 0.4s ease;
-    }
-    @keyframes slideUp {
-      from { transform: translateY(100%); }
-      to { transform: translateY(0); }
-    }
-    .cookie-banner-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 24px;
-      flex-wrap: wrap;
-    }
-    .cookie-banner-text {
-      flex: 1;
-      min-width: 280px;
-      font-size: 0.9rem;
-      color: var(--text);
-      line-height: 1.5;
-      margin: 0;
-    }
-    .cookie-banner-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      margin-left: 8px;
-    }
-    .cookie-banner-link:hover {
-      text-decoration: underline;
-    }
-    .cookie-banner-buttons {
-      display: flex;
-      gap: 12px;
-      flex-shrink: 0;
-    }
-    .cookie-btn {
-      padding: 10px 24px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
-      border: none;
-    }
-    .cookie-btn-reject {
-      background: rgba(179,179,179,0.1);
-      color: var(--text-muted);
-      border: 1px solid rgba(179,179,179,0.2);
-    }
-    .cookie-btn-reject:hover {
-      background: rgba(179,179,179,0.15);
-      color: var(--text);
-    }
-    .cookie-btn-accept {
-      background: rgba(0,180,216,0.1);
-      color: var(--accent);
-      border: 1px solid var(--accent);
-    }
-    .cookie-btn-accept:hover {
-      background: rgba(0,180,216,0.15);
-    }
-    @media (max-width: 768px) {
-      .cookie-banner-content {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-      }
-      .cookie-banner-buttons {
-        width: 100%;
-      }
-      .cookie-btn {
-        flex: 1;
-      }
-    }
-  </style>
+  <script>
+  (() => {
+    // --- Particle canvas ---
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let cW, cH;
+    const CDIST = 100;
+    const ANG = 60 * Math.PI / 180;
+    const cosA = Math.cos(ANG), sinA = Math.sin(ANG);
 
-  <script src="js/main.js"></script>
+    function cResize() { cW = canvas.width = window.innerWidth; cH = canvas.height = window.innerHeight; }
+
+    function sampleBrace(cx, cy, h, count) {
+      const w = h * 0.16, tipW = h * 0.25, pts = [];
+      for (let i = 0; i <= count; i++) {
+        const t = i / count; let x, y;
+        if (t <= 0.08) { const l = t / 0.08; x = cx + w * 0.3 + w * 0.7 * (1 - l); y = cy - h / 2 + h * 0.02 * l * l; }
+        else if (t <= 0.42) { const l = (t - 0.08) / 0.34; x = cx + w * 0.3 - w * 0.05 * Math.sin(l * Math.PI); y = cy - h / 2 + h * 0.02 + h * 0.44 * l; }
+        else if (t <= 0.5) { const l = (t - 0.42) / 0.08, e = l * l * (3 - 2 * l); x = cx + w * 0.3 - tipW * e; y = cy - h * 0.04 + h * 0.08 * e; }
+        else if (t <= 0.58) { const l = (t - 0.5) / 0.08, e = l * l * (3 - 2 * l); x = cx + w * 0.3 - tipW * (1 - e); y = cy + h * 0.04 - h * 0.08 * (1 - e); }
+        else if (t <= 0.92) { const l = (t - 0.58) / 0.34; x = cx + w * 0.3 - w * 0.05 * Math.sin(l * Math.PI); y = cy + h * 0.04 + h * 0.44 * l; }
+        else { const l = (t - 0.92) / 0.08; x = cx + w * 0.3 + w * 0.7 * l; y = cy + h / 2 - h * 0.02 * (1 - l) * (1 - l); }
+        const rx = cx + (x - cx) * cosA - (y - cy) * sinA, ry = cy + (x - cx) * sinA + (y - cy) * cosA;
+        pts.push({ x: rx, y: ry });
+      }
+      return pts;
+    }
+
+    let gCols, gRows, gGrid;
+    function buildGrid(nodes) {
+      gCols = Math.ceil(cW / CDIST) + 1; gRows = Math.ceil(cH / CDIST) + 1;
+      gGrid = new Array(gCols * gRows);
+      for (let i = 0; i < gGrid.length; i++) gGrid[i] = [];
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i], col = Math.floor(n.x / CDIST), row = Math.floor(n.y / CDIST);
+        if (col >= 0 && col < gCols && row >= 0 && row < gRows) gGrid[row * gCols + col].push(i);
+      }
+    }
+
+    let hNodes = [], bTargets = [], hStart, hTime = 0, hLastAssign = 0;
+    const CONV_MS = 10000;
+
+    function hInit() {
+      hNodes = []; bTargets = [];
+      const cx = cW * 0.5, cy = cH * 0.47, bH = Math.min(cH * 0.76, 640);
+      sampleBrace(cx, cy, bH, 55).forEach(p => {
+        bTargets.push({ x: p.x, y: p.y });
+        if (Math.random() < 0.35) bTargets.push({ x: p.x + (Math.random() - 0.5) * 8, y: p.y + (Math.random() - 0.5) * 8 });
+      });
+      const isMobile = window.innerWidth <= 768;
+      const total = Math.min(Math.floor(cW * cH / (isMobile ? 4000 : 1800)), isMobile ? 400 : 1500);
+      for (let i = 0; i < total; i++) {
+        const gx = (Math.random() + Math.random() + Math.random()) / 3;
+        const gy = (Math.random() + Math.random() + Math.random()) / 3;
+        hNodes.push({
+          x: cx + (gx - 0.5) * cW * 1.4, y: cy + (gy - 0.5) * cH * 1.4,
+          vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25,
+          r: Math.random() * 1.4 + 0.2, baseAlpha: Math.random() * 0.38 + 0.02, alpha: 0,
+          phase: Math.random() * Math.PI * 2, braceIdx: -1,
+          driftR: Math.random() * 7 + 2, driftSpd: Math.random() * 0.15 + 0.06
+        });
+      }
+      hStart = performance.now(); hLastAssign = 0;
+    }
+
+    function assignBrace() {
+      hNodes.forEach(n => n.braceIdx = -1);
+      const taken = new Uint8Array(hNodes.length);
+      for (let ti = 0; ti < bTargets.length; ti++) {
+        const t = bTargets[ti]; let best = Infinity, bi = -1;
+        for (let ni = 0; ni < hNodes.length; ni++) {
+          if (taken[ni]) continue;
+          const dx = hNodes[ni].x - t.x, dy = hNodes[ni].y - t.y, d = dx * dx + dy * dy;
+          if (d < best) { best = d; bi = ni; }
+        }
+        if (bi !== -1) { hNodes[bi].braceIdx = ti; taken[bi] = 1; }
+      }
+    }
+
+    function hDraw() {
+      ctx.clearRect(0, 0, cW, cH);
+      const elapsed = performance.now() - hStart;
+      const conv = Math.pow(Math.min(elapsed / CONV_MS, 1), 2);
+      if (elapsed - hLastAssign > 2000) { assignBrace(); hLastAssign = elapsed; }
+      const cx = cW / 2, cy = cH * 0.47;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, cH * 0.55);
+      g.addColorStop(0, `rgba(0,180,216,${0.006 + conv * 0.012})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g; ctx.fillRect(0, 0, cW, cH);
+      hTime += 0.01;
+      for (let i = 0; i < hNodes.length; i++) {
+        const n = hNodes[i];
+        if (n.braceIdx >= 0 && conv > 0.01) {
+          const t = bTargets[n.braceIdx];
+          const bx = Math.sin(hTime * n.driftSpd + n.phase) * n.driftR;
+          const by = Math.cos(hTime * n.driftSpd * 0.7 + n.phase) * n.driftR * 0.5;
+          const str = conv * 0.01;
+          n.x += (t.x + bx - n.x) * str; n.y += (t.y + by - n.y) * str;
+          n.x += n.vx * (1 - conv * 0.7); n.y += n.vy * (1 - conv * 0.7);
+        } else { n.x += n.vx; n.y += n.vy; }
+        if (n.x < -20) n.x = cW + 20; if (n.x > cW + 20) n.x = -20;
+        if (n.y < -20) n.y = cH + 20; if (n.y > cH + 20) n.y = -20;
+        n.alpha = n.baseAlpha + Math.sin(hTime * 0.7 + n.phase) * 0.02;
+      }
+      buildGrid(hNodes);
+      const maxD2 = CDIST * CDIST;
+      ctx.lineWidth = 0.4;
+      for (let row = 0; row < gRows; row++) {
+        for (let col = 0; col < gCols; col++) {
+          const cell = gGrid[row * gCols + col];
+          for (let dc = 0; dc <= 1; dc++) for (let dr = 0; dr <= 1; dr++) {
+            if (dc === 0 && dr === 0) {
+              for (let a = 0; a < cell.length; a++) for (let b = a + 1; b < cell.length; b++) {
+                const ni = hNodes[cell[a]], nj = hNodes[cell[b]];
+                const dx = ni.x - nj.x, dy = ni.y - nj.y, d2 = dx * dx + dy * dy;
+                if (d2 < maxD2) { ctx.beginPath(); ctx.moveTo(ni.x, ni.y); ctx.lineTo(nj.x, nj.y); ctx.strokeStyle = `rgba(0,180,216,${(1 - Math.sqrt(d2) / CDIST) * 0.06})`; ctx.stroke(); }
+              }
+            } else {
+              const nr = row + dr, nc = col + dc;
+              if (nr < 0 || nr >= gRows || nc < 0 || nc >= gCols) continue;
+              const other = gGrid[nr * gCols + nc];
+              for (let a = 0; a < cell.length; a++) for (let b = 0; b < other.length; b++) {
+                const ni = hNodes[cell[a]], nj = hNodes[other[b]];
+                const dx = ni.x - nj.x, dy = ni.y - nj.y, d2 = dx * dx + dy * dy;
+                if (d2 < maxD2) { ctx.beginPath(); ctx.moveTo(ni.x, ni.y); ctx.lineTo(nj.x, nj.y); ctx.strokeStyle = `rgba(0,180,216,${(1 - Math.sqrt(d2) / CDIST) * 0.06})`; ctx.stroke(); }
+              }
+            }
+          }
+          if (row + 1 < gRows && col - 1 >= 0) {
+            const other = gGrid[(row + 1) * gCols + (col - 1)];
+            for (let a = 0; a < cell.length; a++) for (let b = 0; b < other.length; b++) {
+              const ni = hNodes[cell[a]], nj = hNodes[other[b]];
+              const dx = ni.x - nj.x, dy = ni.y - nj.y, d2 = dx * dx + dy * dy;
+              if (d2 < maxD2) { ctx.beginPath(); ctx.moveTo(ni.x, ni.y); ctx.lineTo(nj.x, nj.y); ctx.strokeStyle = `rgba(0,180,216,${(1 - Math.sqrt(d2) / CDIST) * 0.06})`; ctx.stroke(); }
+            }
+          }
+        }
+      }
+      for (let i = 0; i < hNodes.length; i++) {
+        const n = hNodes[i], a = n.alpha;
+        if (a > 0.1) { ctx.beginPath(); ctx.arc(n.x, n.y, n.r * 2.5, 0, Math.PI * 2); ctx.fillStyle = `rgba(0,180,216,${a * 0.05})`; ctx.fill(); }
+        ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fillStyle = `rgba(0,180,216,${a})`; ctx.fill();
+      }
+      requestAnimationFrame(hDraw);
+    }
+
+    cResize(); hInit(); hDraw();
+    window.addEventListener('resize', () => { cResize(); hInit(); });
+
+    // --- Scroll reveal ---
+    const container = document.getElementById('snap-container');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { root: container, threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // --- Navigation ---
+    const sections = document.querySelectorAll('.snap-section');
+    const dots = document.querySelectorAll('.side-dot');
+    let currentSection = 0, isScrolling = false;
+
+    function goToSection(idx) {
+      if (idx < 0 || idx >= sections.length || isScrolling) return;
+      isScrolling = true; currentSection = idx;
+      sections[idx].scrollIntoView({ behavior: 'smooth' });
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      setTimeout(() => { isScrolling = false; }, 900);
+    }
+
+    dots.forEach(dot => dot.addEventListener('click', () => goToSection(parseInt(dot.dataset.section))));
+
+    let wheelAccum = 0, wheelTimer = null;
+    container.addEventListener('wheel', (e) => {
+      e.preventDefault(); if (isScrolling) return;
+      wheelAccum += e.deltaY;
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(() => { wheelAccum = 0; }, 150);
+      if (Math.abs(wheelAccum) > 50) { goToSection(currentSection + (wheelAccum > 0 ? 1 : -1)); wheelAccum = 0; }
+    }, { passive: false });
+
+    let touchY = 0;
+    container.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+    container.addEventListener('touchend', e => {
+      const dy = touchY - e.changedTouches[0].clientY;
+      if (Math.abs(dy) > 50) goToSection(currentSection + (dy > 0 ? 1 : -1));
+    }, { passive: true });
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToSection(currentSection + 1); }
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToSection(currentSection - 1); }
+    });
+
+    const sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = Array.from(sections).indexOf(entry.target);
+          if (idx !== -1) { currentSection = idx; dots.forEach((d, i) => d.classList.toggle('active', i === idx)); }
+        }
+      });
+    }, { root: container, threshold: 0.5 });
+    sections.forEach(s => sectionObserver.observe(s));
+
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const idx = Array.from(sections).findIndex(s => s.id === a.getAttribute('href').slice(1));
+        if (idx !== -1) goToSection(idx);
+      });
+    });
+
+    // --- Language toggle ---
+    let lang = 'es';
+    const langBtn = document.getElementById('lang-toggle');
+    const navCta = document.querySelector('.nav-cta');
+    const heroTitle = document.getElementById('hero-title');
+    const heroCta = document.getElementById('hero-cta');
+    const FLAG_EN = '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#012169"/><path d="M0 0L20 14M20 0L0 14" stroke="#fff" stroke-width="2.5"/><path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1.5"/><path d="M10 0V14M0 7H20" stroke="#fff" stroke-width="4"/><path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2.5"/></svg>';
+    const FLAG_ES = '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#c60b1e"/><rect y="4" width="20" height="6" fill="#ffc400"/></svg>';
+
+    function setLang(newLang) {
+      lang = newLang;
+      langBtn.innerHTML = lang === 'es' ? FLAG_EN + ' EN' : FLAG_ES + ' ES';
+      navCta.textContent = lang === 'es' ? 'Contáctanos' : 'Contact us';
+      heroTitle.innerHTML = lang === 'es'
+        ? 'Las empresas que ganan operan sobre sistemas que entienden su negocio.<br><span class="accent">Construimos el tuyo.</span>'
+        : 'Winning companies run on systems that understand their business.<br><span class="accent">We build yours.</span>';
+      heroCta.textContent = lang === 'es' ? 'Hablar con nosotros' : 'Talk to us';
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-es]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text && el.children.length === 0) el.textContent = text;
+      });
+      localStorage.setItem('braced_lang', lang);
+    }
+
+    const savedLang = localStorage.getItem('braced_lang');
+    setLang((savedLang === 'es' || savedLang === 'en') ? savedLang : 'es');
+    langBtn.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
+  })();
+  </script>
+
 </body>
 </html>
