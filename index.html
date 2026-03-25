@@ -571,23 +571,115 @@
       transform: scale(1.4);
     }
 
+    /* --- MOBILE NAV BUTTONS --- */
+    .nav-right-mobile { display: none; }
+    .nav-mobile-cta, .nav-mobile-lang { display: none; }
+
     /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
-      .snap-section { padding: 80px 0; }
-      .section-inner, .hero-inner, .contact-inner { padding: 0 24px; }
-      .nav-inner { padding: 0 20px; height: 52px; }
+      /* Body */
+      body { height: 100vh; height: 100dvh; }
+      .snap-container { height: 100vh; height: 100dvh; }
+
+      /* Nav mobile: compact with essential buttons */
+      .nav-inner { padding: 0 16px; height: 52px; }
       .nav-links { display: none; }
-      .pillars { grid-template-columns: 1fr; gap: 12px; }
-      .cap-grid { grid-template-columns: 1fr; }
+      .nav-mobile-cta, .nav-mobile-lang {
+        display: inline-flex; align-items: center;
+      }
+      .nav-mobile-cta {
+        font-family: inherit; font-size: 0.7rem; font-weight: 600;
+        color: var(--accent); background: rgba(0,180,216,0.06);
+        border: 1px solid rgba(0,180,216,0.25);
+        padding: 6px 14px; border-radius: 6px;
+        text-decoration: none; gap: 4px;
+      }
+      .nav-mobile-lang {
+        background: transparent; border: 1px solid var(--border);
+        color: var(--text-muted); font-size: 0.65rem; font-weight: 700;
+        padding: 4px 10px; border-radius: 6px; cursor: pointer;
+        font-family: inherit; letter-spacing: 0.06em;
+      }
+      .nav-right-mobile { display: flex; align-items: center; gap: 10px; }
+
+      /* Sections: allow internal scroll, compact padding */
+      .snap-section {
+        padding: 60px 0 24px;
+        justify-content: flex-start;
+        align-items: stretch;
+      }
+      .snap-section.active { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+      /* Section inner */
+      .section-inner, .hero-inner, .contact-inner { padding: 0 20px; }
+
+      /* Hero: centered, compact */
+      .hero { justify-content: center !important; padding: 0 !important; }
+      .hero-inner { padding: 0 20px; }
+      .hero-logo { margin-bottom: 20px; gap: 10px; }
+      .hero-brace { width: 32px; height: 54px; }
+      .hero-brand { font-size: 1.4rem; }
+      .hero h1 { font-size: clamp(1.3rem, 5.5vw, 1.8rem); }
+      .hero-sub { font-size: 0.85rem; margin-top: 14px; }
+      .hero-cta-wrap { margin-top: 32px; }
+      .btn-glow { font-size: 0.82rem; padding: 11px 28px; }
+      .scroll-hint { bottom: 20px; }
+      .scroll-hint span { font-size: 0.58rem; }
+
+      /* Section labels & headings */
+      .section-label { margin-bottom: 16px; font-size: 0.55rem; }
+      h2 { font-size: clamp(1.25rem, 5vw, 1.7rem); margin-bottom: 12px; }
+      .body-text { font-size: 0.85rem; }
+
+      /* Punch grid */
+      .punch-grid { grid-template-columns: 1fr; gap: 12px; margin-top: 28px; }
+      .punch-item { padding: 24px 20px; text-align: left; display: flex; gap: 16px; align-items: flex-start; }
+      .punch-icon { width: 36px; height: 36px; margin: 0; flex-shrink: 0; }
+      .punch-item h3 { font-size: 0.88rem; margin-bottom: 4px; }
+      .punch-item p { font-size: 0.76rem; }
+
+      /* Pillars */
+      .pillars { grid-template-columns: 1fr; gap: 10px; margin-top: 28px; }
+      .pillar { padding: 24px 20px; }
+      .pillar-num { font-size: 1.8rem; margin-bottom: 10px; }
+      .pillar h3 { font-size: 0.85rem; }
+      .pillar p { font-size: 0.76rem; }
+
+      /* Capabilities */
+      .cap-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 28px; }
+      .cap-item { padding: 18px 16px; gap: 12px; }
+      .cap-content h4 { font-size: 0.82rem; }
+      .cap-content p { font-size: 0.72rem; }
+
+      /* Portfolio */
+      .portfolio-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 20px; }
+      .portfolio-card { padding: 18px 16px; gap: 8px; }
+      .portfolio-card h3 { font-size: 0.82rem; }
+      .portfolio-card p { font-size: 0.7rem; }
+      .portfolio-tags span { font-size: 0.54rem; }
+      .portfolio-cta-card h3 { font-size: 0.9rem; }
+
+      /* Contact */
+      .contact-divider { margin-bottom: 28px; }
+      .contact-sub { margin-bottom: 28px; font-size: 0.82rem; }
+      .contact-email { font-size: 0.75rem; }
+
+      /* Footer */
+      .footer-bar { padding: 12px 20px; }
+      .footer-inner { flex-direction: column; gap: 6px; font-size: 0.62rem; }
+
+      /* Side nav & orbs off */
       .side-nav { display: none; }
       .orb { display: none; }
-      .scroll-hint { bottom: 24px; }
-      .hero h1 { font-size: clamp(1.6rem, 6vw, 2.4rem); }
-      .footer-inner { flex-direction: column; gap: 8px; }
+
+      /* Canvas off on mobile */
+      #particle-canvas { display: none; }
     }
 
-    @media (max-width: 480px) {
-      .hero h1 { font-size: clamp(1.4rem, 7vw, 2rem); }
+    @media (max-width: 380px) {
+      .hero h1 { font-size: clamp(1.1rem, 5vw, 1.5rem); }
+      .hero-brand { font-size: 1.2rem; }
+      .btn-glow { font-size: 0.78rem; padding: 10px 22px; }
     }
   </style>
 </head>
@@ -608,6 +700,11 @@
         <button id="lang-toggle" class="lang-btn" aria-label="Change language">EN</button>
         <a href="#contacto" class="nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span data-es="Contáctanos" data-en="Contact us">Contáctanos</span></a>
         <a href="https://console.bracedeng.com/" target="_blank" rel="noopener noreferrer" class="nav-portal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span data-es="Acceso Clientes" data-en="Client Access">Acceso Clientes</span></a>
+      </div>
+      <!-- Mobile nav buttons -->
+      <div class="nav-right-mobile">
+        <button id="lang-toggle-mobile" class="nav-mobile-lang" aria-label="Change language">EN</button>
+        <a href="#contacto" class="nav-mobile-cta" data-es="Contacto" data-en="Contact">Contacto</a>
       </div>
     </div>
   </nav>
@@ -947,8 +1044,9 @@
       requestAnimationFrame(hDraw);
     }
 
-    cResize(); hInit(); hDraw();
-    window.addEventListener('resize', () => { cResize(); hInit(); });
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) { cResize(); hInit(); hDraw(); }
+    window.addEventListener('resize', () => { if (window.innerWidth > 768) { cResize(); hInit(); } });
 
     // --- Navigation (fade between sections) ---
     const container = document.getElementById('snap-container');
@@ -1022,14 +1120,24 @@
       }
     }, { passive: false });
 
-    // Touch: swipe up/down = +1/-1 section
-    let touchY = 0;
+    // Touch: swipe up/down, respects internal scroll on mobile
+    let touchY = 0, touchCooldown = false;
     document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
     document.addEventListener('touchend', e => {
+      if (touchCooldown) return;
       const dy = touchY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) > 50) {
-        const next = targetSection + (dy > 0 ? 1 : -1);
-        if (next >= 0 && next < sections.length) goToSection(next);
+      if (Math.abs(dy) < 60) return;
+      const active = sections[targetSection];
+      const atTop = active.scrollTop <= 5;
+      const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 5;
+      // Only change section if at scroll boundary
+      if (dy > 0 && !atBottom) return;
+      if (dy < 0 && !atTop) return;
+      const next = targetSection + (dy > 0 ? 1 : -1);
+      if (next >= 0 && next < sections.length) {
+        goToSection(next);
+        touchCooldown = true;
+        setTimeout(() => { touchCooldown = false; }, 500);
       }
     }, { passive: true });
 
@@ -1057,9 +1165,12 @@
     const FLAG_EN = '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#012169"/><path d="M0 0L20 14M20 0L0 14" stroke="#fff" stroke-width="2.5"/><path d="M0 0L20 14M20 0L0 14" stroke="#C8102E" stroke-width="1.5"/><path d="M10 0V14M0 7H20" stroke="#fff" stroke-width="4"/><path d="M10 0V14M0 7H20" stroke="#C8102E" stroke-width="2.5"/></svg>';
     const FLAG_ES = '<svg class="lang-flag" viewBox="0 0 20 14"><rect width="20" height="14" rx="2" fill="#c60b1e"/><rect y="4" width="20" height="6" fill="#ffc400"/></svg>';
 
+    const langBtnMobile = document.getElementById('lang-toggle-mobile');
+
     function setLang(newLang) {
       lang = newLang;
       langBtn.innerHTML = lang === 'es' ? FLAG_EN + ' EN' : FLAG_ES + ' ES';
+      if (langBtnMobile) langBtnMobile.textContent = lang === 'es' ? 'EN' : 'ES';
       const navCtaSpan = navCta.querySelector('span');
       if (navCtaSpan) navCtaSpan.textContent = lang === 'es' ? 'Contáctanos' : 'Contact us';
       heroTitle.innerHTML = lang === 'es'
@@ -1077,6 +1188,7 @@
     const savedLang = localStorage.getItem('braced_lang');
     setLang((savedLang === 'es' || savedLang === 'en') ? savedLang : 'es');
     langBtn.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
+    if (langBtnMobile) langBtnMobile.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
 
     // --- Copy email ---
     const copyBtn = document.getElementById('copy-email-btn');
