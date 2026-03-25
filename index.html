@@ -46,7 +46,7 @@
 
     .snap-section {
       min-height: 100vh;
-      scroll-snap-align: start; scroll-snap-stop: always;
+      scroll-snap-align: start;
       display: flex; flex-direction: column; justify-content: center;
       position: relative; overflow: hidden;
     }
@@ -880,44 +880,49 @@
     // --- Navigation ---
     const sections = document.querySelectorAll('.snap-section');
     const dots = document.querySelectorAll('.side-dot');
-    let currentSection = 0, isScrolling = false;
+    let targetSection = 0;
 
     function goToSection(idx) {
-      if (idx < 0 || idx >= sections.length || isScrolling) return;
-      isScrolling = true; currentSection = idx;
+      idx = Math.max(0, Math.min(sections.length - 1, idx));
+      targetSection = idx;
       sections[idx].scrollIntoView({ behavior: 'smooth' });
       dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      setTimeout(() => { isScrolling = false; }, 900);
     }
 
     dots.forEach(dot => dot.addEventListener('click', () => goToSection(parseInt(dot.dataset.section))));
 
-    let wheelAccum = 0, wheelTimer = null;
+    // Wheel: each tick = +1/-1 section, cooldown prevents multi-fire per gesture
+    let wheelCooldown = false;
     container.addEventListener('wheel', (e) => {
-      e.preventDefault(); if (isScrolling) return;
-      wheelAccum += e.deltaY;
-      clearTimeout(wheelTimer);
-      wheelTimer = setTimeout(() => { wheelAccum = 0; }, 150);
-      if (Math.abs(wheelAccum) > 50) { goToSection(currentSection + (wheelAccum > 0 ? 1 : -1)); wheelAccum = 0; }
+      e.preventDefault();
+      if (wheelCooldown) return;
+      if (Math.abs(e.deltaY) > 30) {
+        goToSection(targetSection + (e.deltaY > 0 ? 1 : -1));
+        wheelCooldown = true;
+        setTimeout(() => { wheelCooldown = false; }, 400);
+      }
     }, { passive: false });
 
+    // Touch: swipe up/down = +1/-1 section
     let touchY = 0;
     container.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
     container.addEventListener('touchend', e => {
       const dy = touchY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) > 50) goToSection(currentSection + (dy > 0 ? 1 : -1));
+      if (Math.abs(dy) > 50) goToSection(targetSection + (dy > 0 ? 1 : -1));
     }, { passive: true });
 
+    // Keyboard
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToSection(currentSection + 1); }
-      if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToSection(currentSection - 1); }
+      if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToSection(targetSection + 1); }
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToSection(targetSection - 1); }
     });
 
+    // Section observer: sync dots with actual scroll position
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const idx = Array.from(sections).indexOf(entry.target);
-          if (idx !== -1) { currentSection = idx; dots.forEach((d, i) => d.classList.toggle('active', i === idx)); }
+          if (idx !== -1) { targetSection = idx; dots.forEach((d, i) => d.classList.toggle('active', i === idx)); }
         }
       });
     }, { root: container, threshold: 0.5 });
