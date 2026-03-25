@@ -32,23 +32,50 @@
       color: var(--text);
       line-height: 1.6;
       overflow: hidden;
-      height: 100vh;
+      height: 100vh; width: 100vw;
     }
 
     ::selection { background: rgba(0,180,216,0.25); color: var(--text-bright); }
 
-    /* --- SCROLL SNAP --- */
+    /* --- CINEMATIC FADE SECTIONS --- */
     .snap-container {
-      height: 100vh; overflow-y: auto;
-      scroll-snap-type: y mandatory; scroll-behavior: smooth;
+      position: relative; width: 100%; height: 100vh; overflow: hidden;
+      perspective: 1200px;
     }
-    .snap-container::-webkit-scrollbar { width: 0; }
 
     .snap-section {
-      min-height: 100vh;
-      scroll-snap-align: start;
+      position: absolute; inset: 0;
       display: flex; flex-direction: column; justify-content: center;
-      position: relative; overflow: hidden;
+      overflow: hidden;
+      opacity: 0; visibility: hidden;
+      transform: translateY(50px) scale(0.98);
+      transition: opacity 0.55s cubic-bezier(0.16,1,0.3,1),
+                  visibility 0.55s,
+                  transform 0.55s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+      will-change: opacity, transform;
+    }
+    .snap-section.active {
+      opacity: 1; visibility: visible;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      overflow-y: auto;
+    }
+    .snap-section.active::-webkit-scrollbar { width: 0; }
+    .snap-section.active { scrollbar-width: none; }
+    .snap-section.exit-up {
+      opacity: 0;
+      transform: translateY(-40px) scale(0.98);
+    }
+    .snap-section.exit-down {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+    }
+    .snap-section.enter-up {
+      transform: translateY(50px) scale(0.98);
+    }
+    .snap-section.enter-down {
+      transform: translateY(-50px) scale(0.98);
     }
 
     /* --- CANVAS BG --- */
@@ -261,6 +288,50 @@
     .what-card:hover .what-card-bg { opacity: 0.06; }
     .what-card h2 { margin-bottom: 16px; }
     .what-card .body-text { max-width: 520px; }
+
+    /* --- PUNCH GRID (QUÉ HACEMOS) --- */
+    .punch-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 48px;
+    }
+    .punch-item {
+      padding: 36px 28px; position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
+      transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+      overflow: hidden; text-align: center;
+    }
+    .punch-item::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .punch-item:hover {
+      background: rgba(0,180,216,0.05);
+      border-color: rgba(0,180,216,0.2);
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(0,180,216,0.1), 0 0 0 1px rgba(0,180,216,0.08);
+    }
+    .punch-item:hover::before { opacity: 1; }
+    .punch-icon {
+      width: 48px; height: 48px; margin: 0 auto 20px;
+      color: var(--accent);
+      filter: drop-shadow(0 0 8px rgba(0,180,216,0.3));
+      transition: all 0.4s;
+    }
+    .punch-item:hover .punch-icon {
+      transform: scale(1.15);
+      filter: drop-shadow(0 0 16px rgba(0,180,216,0.5));
+    }
+    .punch-item h3 {
+      font-size: 1rem; font-weight: 700; color: var(--text-bright);
+      margin-bottom: 10px;
+    }
+    .punch-item p {
+      font-size: 0.82rem; color: var(--text-muted); line-height: 1.55;
+    }
+    @media (max-width: 768px) { .punch-grid { grid-template-columns: 1fr; gap: 12px; } }
 
     /* --- PILLARS (WOW) --- */
     .pillars {
@@ -502,9 +573,7 @@
 
     /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
-      body { overflow-y: auto; height: auto; }
-      .snap-container { scroll-snap-type: y proximity; }
-      .snap-section { min-height: 100svh; padding: 80px 0; }
+      .snap-section { padding: 80px 0; }
       .section-inner, .hero-inner, .contact-inner { padding: 0 24px; }
       .nav-inner { padding: 0 20px; height: 52px; }
       .nav-links { display: none; }
@@ -581,13 +650,24 @@
       <div class="orb orb-1"></div>
       <div class="section-inner">
         <div class="section-label reveal" data-es="Qué hacemos" data-en="What we do">Qué hacemos</div>
-        <div class="what-card reveal reveal-d1">
-          <svg class="what-card-bg" viewBox="0 0 24 48" fill="none">
-            <path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="#00b4d8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <h2 data-es="Convertimos tu operación en un sistema inteligente." data-en="We turn your operations into an intelligent system.">Convertimos tu operación en un sistema inteligente.</h2>
-          <p class="body-text" data-es="Datos estructurados. Procesos automatizados. Decisiones informadas. No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir." data-en="Structured data. Automated processes. Informed decisions. We don't build generic software — we build the infrastructure your business needs to operate, scale, and compete.">Datos estructurados. Procesos automatizados. Decisiones informadas. No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir.</p>
-          <div class="gradient-line" style="margin-top:24px"></div>
+        <h2 class="reveal reveal-d1" data-es="Convertimos tu operación en un sistema inteligente." data-en="We turn your operations into an intelligent system.">Convertimos tu operación en un sistema inteligente.</h2>
+        <p class="body-text reveal reveal-d2" data-es="No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir." data-en="We don't build generic software — we build the infrastructure your business needs to operate, scale, and compete.">No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir.</p>
+        <div class="punch-grid">
+          <div class="punch-item reveal reveal-d1">
+            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h5"/></svg></div>
+            <h3 data-es="Datos estructurados" data-en="Structured data">Datos estructurados</h3>
+            <p data-es="Tu información unificada, accesible y lista para actuar." data-en="Your information unified, accessible, and ready to act on.">Tu información unificada, accesible y lista para actuar.</p>
+          </div>
+          <div class="punch-item reveal reveal-d2">
+            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/><path d="M9.5 9c1 0 1.5.5 2.5 1.5S13 12 14.5 12c-1.5 0-2 .5-3 1.5S10.5 15 9.5 15"/></svg></div>
+            <h3 data-es="Procesos automatizados" data-en="Automated processes">Procesos automatizados</h3>
+            <p data-es="Sin tareas manuales. Tu equipo se centra en lo que importa." data-en="No manual tasks. Your team focuses on what matters.">Sin tareas manuales. Tu equipo se centra en lo que importa.</p>
+          </div>
+          <div class="punch-item reveal reveal-d3">
+            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg></div>
+            <h3 data-es="Decisiones informadas" data-en="Informed decisions">Decisiones informadas</h3>
+            <p data-es="Métricas en tiempo real que guían cada paso del negocio." data-en="Real-time metrics guiding every business decision.">Métricas en tiempo real que guían cada paso del negocio.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -870,45 +950,87 @@
     cResize(); hInit(); hDraw();
     window.addEventListener('resize', () => { cResize(); hInit(); });
 
-    // --- Scroll reveal ---
+    // --- Navigation (fade between sections) ---
     const container = document.getElementById('snap-container');
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { root: container, threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-    // --- Navigation ---
     const sections = document.querySelectorAll('.snap-section');
     const dots = document.querySelectorAll('.side-dot');
     let targetSection = 0;
 
-    function goToSection(idx) {
-      idx = Math.max(0, Math.min(sections.length - 1, idx));
-      targetSection = idx;
-      sections[idx].scrollIntoView({ behavior: 'smooth' });
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    function revealSection(section) {
+      setTimeout(() => {
+        section.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+      }, 120);
     }
 
-    dots.forEach(dot => dot.addEventListener('click', () => goToSection(parseInt(dot.dataset.section))));
+    function clearDirectionClasses(el) {
+      el.classList.remove('exit-up', 'exit-down', 'enter-up', 'enter-down');
+    }
+
+    function goToSection(idx) {
+      idx = Math.max(0, Math.min(sections.length - 1, idx));
+      if (idx === targetSection) return;
+      const goingDown = idx > targetSection;
+      const leaving = sections[targetSection];
+      const entering = sections[idx];
+
+      // Reset reveals on leaving section
+      leaving.querySelectorAll('.reveal').forEach(el => el.classList.remove('visible'));
+
+      // Clean all direction classes
+      sections.forEach(s => clearDirectionClasses(s));
+
+      // Exit: leaving section slides away
+      leaving.classList.remove('active');
+      leaving.classList.add(goingDown ? 'exit-up' : 'exit-down');
+
+      // Prepare entering section at starting position (no transition)
+      entering.style.transition = 'none';
+      entering.classList.add(goingDown ? 'enter-up' : 'enter-down');
+      entering.offsetHeight; // force reflow
+
+      // Animate entering section in
+      entering.style.transition = '';
+      entering.classList.remove('enter-up', 'enter-down');
+      entering.classList.add('active');
+
+      targetSection = idx;
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      revealSection(entering);
+    }
+
+    // Initialize first section
+    sections[0].classList.add('active');
+    revealSection(sections[0]);
+
+    dots.forEach(dot => dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.section);
+      if (idx !== targetSection) goToSection(idx);
+    }));
 
     // Wheel: each tick = +1/-1 section, cooldown prevents multi-fire per gesture
     let wheelCooldown = false;
-    container.addEventListener('wheel', (e) => {
+    document.addEventListener('wheel', (e) => {
       e.preventDefault();
       if (wheelCooldown) return;
       if (Math.abs(e.deltaY) > 30) {
-        goToSection(targetSection + (e.deltaY > 0 ? 1 : -1));
-        wheelCooldown = true;
-        setTimeout(() => { wheelCooldown = false; }, 400);
+        const next = targetSection + (e.deltaY > 0 ? 1 : -1);
+        if (next >= 0 && next < sections.length) {
+          goToSection(next);
+          wheelCooldown = true;
+          setTimeout(() => { wheelCooldown = false; }, 600);
+        }
       }
     }, { passive: false });
 
     // Touch: swipe up/down = +1/-1 section
     let touchY = 0;
-    container.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
-    container.addEventListener('touchend', e => {
+    document.addEventListener('touchstart', e => { touchY = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
       const dy = touchY - e.changedTouches[0].clientY;
-      if (Math.abs(dy) > 50) goToSection(targetSection + (dy > 0 ? 1 : -1));
+      if (Math.abs(dy) > 50) {
+        const next = targetSection + (dy > 0 ? 1 : -1);
+        if (next >= 0 && next < sections.length) goToSection(next);
+      }
     }, { passive: true });
 
     // Keyboard
@@ -917,17 +1039,7 @@
       if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToSection(targetSection - 1); }
     });
 
-    // Section observer: sync dots with actual scroll position
-    const sectionObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const idx = Array.from(sections).indexOf(entry.target);
-          if (idx !== -1) { targetSection = idx; dots.forEach((d, i) => d.classList.toggle('active', i === idx)); }
-        }
-      });
-    }, { root: container, threshold: 0.5 });
-    sections.forEach(s => sectionObserver.observe(s));
-
+    // Anchor links
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         e.preventDefault();
