@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Braced Engineering — Brand Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface-2: #161616;
+      --border: #1e1e1e;
+      --text: #c8c8c8;
+      --text-bright: #f0f0f0;
+      --text-muted: #888888;
+      --accent: #00b4d8;
+      --accent-dark: #0096c7;
+      --accent-dim: rgba(45,212,191,0.08);
+      --accent-glow: rgba(45,212,191,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Inter, 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .site-header .brand { display: flex; align-items: center; gap: 10px; }
+    .site-header .brand svg { width: 28px; height: 28px; }
+    .site-header .brand-name {
+      font-size: 14px; font-weight: 700; color: var(--text-bright);
+      letter-spacing: -0.3px;
+    }
+    .site-header .brand-sub {
+      font-size: 11px; color: var(--text-muted); letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .version-badge {
+      font-size: 11px; color: var(--accent); border: 1px solid var(--accent);
+      padding: 3px 10px; border-radius: 99px; letter-spacing: 1px;
+    }
+
+    /* ── Nav ── */
+    .side-nav {
+      position: fixed;
+      left: 0; top: 73px; bottom: 0;
+      width: 200px;
+      border-right: 1px solid var(--border);
+      padding: 32px 20px;
+      overflow-y: auto;
+    }
+    .side-nav a {
+      display: block; padding: 7px 12px; border-radius: 6px;
+      font-size: 13px; color: var(--text-muted); text-decoration: none;
+      transition: all 0.15s;
+      margin-bottom: 2px;
+    }
+    .side-nav a:hover { color: var(--text-bright); background: var(--surface); }
+    .side-nav a.active { color: var(--accent); background: var(--accent-dim); }
+    .side-nav .nav-section {
+      font-size: 10px; font-weight: 600; color: var(--text-muted);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 16px 12px 6px; margin-top: 8px;
+    }
+
+    /* ── Main layout ── */
+    .main { margin-left: 200px; padding: 60px 64px; max-width: 1000px; }
+
+    /* ── Section ── */
+    .section { margin-bottom: 80px; }
+    .section-header { margin-bottom: 32px; }
+    .section-label {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+    }
+    .section-title {
+      font-size: 28px; font-weight: 800; color: var(--text-bright);
+      letter-spacing: -0.5px;
+    }
+    .section-desc { font-size: 14px; color: var(--text-muted); margin-top: 8px; max-width: 560px; }
+
+    /* ── Logo showcase ── */
+    .logo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .logo-card {
+      border-radius: 12px; border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .logo-card-preview {
+      display: flex; align-items: center; justify-content: center;
+      padding: 40px 32px; min-height: 140px;
+    }
+    .logo-card-preview.dark { background: #0a0a0a; }
+    .logo-card-preview.surface { background: #111111; }
+    .logo-card-preview.light { background: #f5f5f5; }
+    .logo-card-preview.white { background: #ffffff; }
+    .logo-card-preview svg { max-width: 100%; height: auto; }
+    .logo-card-info {
+      padding: 14px 16px; background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-card-name { font-size: 12px; font-weight: 600; color: var(--text-bright); }
+    .logo-card-filename { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+    .btn-dl {
+      font-size: 11px; color: var(--accent); border: 1px solid var(--accent);
+      background: var(--accent-dim); padding: 4px 12px; border-radius: 6px;
+      cursor: pointer; text-decoration: none; transition: all 0.15s;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .btn-dl:hover { background: var(--accent); color: #0a0a0a; }
+
+    /* ── Icon grid ── */
+    .icon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .icon-card {
+      border-radius: 12px; border: 1px solid var(--border);
+      overflow: hidden; text-align: center;
+    }
+    .icon-card-preview {
+      display: flex; align-items: center; justify-content: center;
+      padding: 28px 20px; background: #0a0a0a;
+    }
+    .icon-card-preview.light { background: #f5f5f5; }
+    .icon-card-preview.checker {
+      background-image: linear-gradient(45deg, #1a1a1a 25%, transparent 25%),
+                        linear-gradient(-45deg, #1a1a1a 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #1a1a1a 75%),
+                        linear-gradient(-45deg, transparent 75%, #1a1a1a 75%);
+      background-size: 16px 16px;
+      background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+      background-color: #0d0d0d;
+    }
+    .icon-card-info {
+      padding: 10px 12px; background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .icon-card-name { font-size: 11px; font-weight: 600; color: var(--text-bright); }
+    .icon-card-size { font-size: 10px; color: var(--text-muted); }
+
+    /* ── Color palette ── */
+    .palette-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .color-swatch {
+      border-radius: 10px; border: 1px solid var(--border); overflow: hidden;
+      cursor: pointer; transition: transform 0.15s;
+    }
+    .color-swatch:hover { transform: translateY(-2px); }
+    .color-swatch-preview { height: 72px; }
+    .color-swatch-info {
+      padding: 10px 12px; background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+    .color-name { font-size: 11px; font-weight: 600; color: var(--text-bright); }
+    .color-hex { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+    .color-role { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .copy-hint {
+      font-size: 9px; color: var(--accent); opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .color-swatch:hover .copy-hint { opacity: 1; }
+    .copied-flash { color: var(--accent) !important; }
+
+    /* ── Typography ── */
+    .type-scale { display: flex; flex-direction: column; gap: 20px; }
+    .type-row {
+      display: flex; align-items: baseline; gap: 24px;
+      padding: 20px 24px; background: var(--surface);
+      border: 1px solid var(--border); border-radius: 10px;
+    }
+    .type-meta { min-width: 120px; }
+    .type-label { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+    .type-spec { font-size: 11px; font-family: monospace; color: var(--accent); margin-top: 3px; }
+    .type-sample { color: var(--text-bright); }
+
+    /* ── Usage rules ── */
+    .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .rule-card {
+      padding: 20px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .rule-card.do { border-color: rgba(39,174,96,0.3); }
+    .rule-card.dont { border-color: rgba(231,76,60,0.3); }
+    .rule-tag {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; margin-bottom: 10px;
+    }
+    .rule-card.do .rule-tag { color: #27ae60; background: rgba(39,174,96,0.1); }
+    .rule-card.dont .rule-tag { color: #e74c3c; background: rgba(231,76,60,0.1); }
+    .rule-text { font-size: 13px; color: var(--text); }
+
+    /* ── Export section ── */
+    .export-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .export-btn {
+      padding: 16px 20px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--surface); cursor: pointer; text-align: left;
+      transition: all 0.15s; color: var(--text);
+    }
+    .export-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+    .export-btn-name { font-size: 13px; font-weight: 600; color: var(--text-bright); }
+    .export-btn-desc { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+    .export-btn-size { font-size: 10px; font-family: monospace; color: var(--accent); margin-top: 6px; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      background: var(--surface); border: 1px solid var(--accent);
+      color: var(--text-bright); padding: 10px 18px;
+      border-radius: 8px; font-size: 13px;
+      opacity: 0; transform: translateY(8px);
+      transition: all 0.2s; pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .side-nav { display: none; }
+      .main { margin-left: 0; padding: 32px 24px; }
+      .logo-grid, .rules-grid, .export-grid { grid-template-columns: 1fr; }
+      .palette-grid { grid-template-columns: repeat(3, 1fr); }
+      .icon-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="brand">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="hglow"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+            stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#hglow)"/>
+    </svg>
+    <div>
+      <div class="brand-name">BRACED</div>
+      <div class="brand-sub">Engineering</div>
+    </div>
+  </div>
+  <span class="version-badge">v1.0 Brand Guide</span>
+</header>
+
+<!-- Side nav -->
+<nav class="side-nav">
+  <div class="nav-section">Identity</div>
+  <a href="#logos" class="active">Logo</a>
+  <a href="#icons">Iconos</a>
+  <div class="nav-section">Foundations</div>
+  <a href="#colors">Colores</a>
+  <a href="#typography">Tipografía</a>
+  <div class="nav-section">Guidelines</div>
+  <a href="#usage">Uso correcto</a>
+  <a href="#export">Exportar PNG</a>
+</nav>
+
+<!-- Main content -->
+<main class="main">
+
+  <!-- Hero -->
+  <div style="margin-bottom: 72px;">
+    <div style="font-size: 11px; font-weight: 600; color: var(--accent); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px;">Brand Identity System</div>
+    <h1 style="font-size: 48px; font-weight: 900; color: var(--text-bright); letter-spacing: -1.5px; line-height: 1.1;">
+      Braced Engineering<br><span style="color: var(--accent);">Brand Guide</span>
+    </h1>
+    <p style="font-size: 16px; color: var(--text-muted); margin-top: 16px; max-width: 520px;">
+      Guía oficial de identidad visual. Todos los assets, colores, tipografías y normas de uso para mantener una presencia de marca coherente.
+    </p>
+  </div>
+
+  <hr class="divider">
+
+  <!-- ── LOGOS ── -->
+  <section class="section" id="logos">
+    <div class="section-header">
+      <div class="section-label">01 — Logo</div>
+      <h2 class="section-title">Variantes de logo</h2>
+      <p class="section-desc">El símbolo de la llave <code style="color:var(--accent);">{</code> representa la apertura, la estructura del código y la ingeniería de precisión. Usar siempre en las versiones oficiales.</p>
+    </div>
+
+    <div class="logo-grid">
+
+      <!-- Primary horizontal -->
+      <div class="logo-card" style="grid-column: span 2;">
+        <div class="logo-card-preview dark">
+          <svg viewBox="0 0 244 64" fill="none" style="height:64px; width:auto;" xmlns="http://www.w3.org/2000/svg">
+            <defs><filter id="lg1"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+                  stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#lg1)"/>
+            <text x="58" y="41" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="-1" fill="#f0f0f0">BRACED</text>
+          </svg>
+        </div>
+        <div class="logo-card-info">
+          <div>
+            <div class="logo-card-name">Logo principal — fondo oscuro</div>
+            <div class="logo-card-filename">logo.svg</div>
+          </div>
+          <a class="btn-dl" href="logo.svg" download>↓ SVG</a>
+        </div>
+      </div>
+
+      <!-- Light version -->
+      <div class="logo-card" style="grid-column: span 2;">
+        <div class="logo-card-preview white">
+          <svg viewBox="0 0 244 64" fill="none" style="height:64px; width:auto;" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+                  stroke="#0096c7" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <text x="58" y="41" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="-1" fill="#0a0a0a">BRACED</text>
+          </svg>
+        </div>
+        <div class="logo-card-info">
+          <div>
+            <div class="logo-card-name">Logo — fondo claro / blanco</div>
+            <div class="logo-card-filename">logo-light.svg</div>
+          </div>
+          <a class="btn-dl" href="logo-light.svg" download>↓ SVG</a>
+        </div>
+      </div>
+
+      <!-- Stacked -->
+      <div class="logo-card">
+        <div class="logo-card-preview dark" style="padding: 32px;">
+          <svg viewBox="0 0 200 132" fill="none" style="height:110px; width:auto;" xmlns="http://www.w3.org/2000/svg">
+            <defs><filter id="lg2"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <path d="M 116 14 C 111 14 106 14 103 14 C 95 14 92 19 92 27 L 92 39 C 92 43 85 45 85 45 C 85 45 92 48 92 51 L 92 63 C 92 72 95 77 103 77 C 106 77 111 77 116 77"
+                  stroke="#00b4d8" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#lg2)"/>
+            <text x="100" y="106" text-anchor="middle" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="26" font-weight="800" letter-spacing="-0.5" fill="#f0f0f0">BRACED</text>
+            <text x="100" y="124" text-anchor="middle" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="10" font-weight="500" letter-spacing="4" fill="#00b4d8">ENGINEERING</text>
+          </svg>
+        </div>
+        <div class="logo-card-info">
+          <div>
+            <div class="logo-card-name">Logo apilado</div>
+            <div class="logo-card-filename">logo-stacked.svg</div>
+          </div>
+          <a class="btn-dl" href="logo-stacked.svg" download>↓ SVG</a>
+        </div>
+      </div>
+
+      <!-- Mono white -->
+      <div class="logo-card">
+        <div class="logo-card-preview surface" style="background:#222;">
+          <svg viewBox="0 0 244 64" fill="none" style="height:54px; width:auto;" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+                  stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <text x="58" y="41" font-family="Inter, Segoe UI, system-ui, sans-serif" font-size="30" font-weight="800" letter-spacing="-1" fill="#ffffff">BRACED</text>
+          </svg>
+        </div>
+        <div class="logo-card-info">
+          <div>
+            <div class="logo-card-name">Logo monocromo — blanco</div>
+            <div class="logo-card-filename">logo-mono.svg</div>
+          </div>
+          <a class="btn-dl" href="logo-mono.svg" download>↓ SVG</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── ICONS ── -->
+  <section class="section" id="icons">
+    <div class="section-header">
+      <div class="section-label">02 — Iconos</div>
+      <h2 class="section-title">Sistema de iconos</h2>
+      <p class="section-desc">Variantes del símbolo solo, para favicons, avatares, app icons y otros contextos donde el espacio es limitado.</p>
+    </div>
+
+    <div class="icon-grid">
+
+      <!-- Icon transparent -->
+      <div class="icon-card">
+        <div class="icon-card-preview checker">
+          <svg viewBox="0 0 64 64" fill="none" style="width:72px;height:72px;" xmlns="http://www.w3.org/2000/svg">
+            <defs><filter id="ic1"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+                  stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#ic1)"/>
+          </svg>
+        </div>
+        <div class="icon-card-info">
+          <div class="icon-card-name">Icono transparente</div>
+          <div class="icon-card-size">64×64 · icon.svg</div>
+        </div>
+      </div>
+
+      <!-- Icon app -->
+      <div class="icon-card">
+        <div class="icon-card-preview" style="background:#1a1a1a;">
+          <svg viewBox="0 0 108 108" fill="none" style="width:80px;height:80px;" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#111111"/><stop offset="100%" stop-color="#0a0a0a"/>
+              </linearGradient>
+              <linearGradient id="br2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#48cae4"/><stop offset="100%" stop-color="#0096c7"/>
+              </linearGradient>
+              <filter id="ig2"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <rect x="0" y="0" width="108" height="108" rx="22" fill="url(#bg2)"/>
+            <rect x="0.75" y="0.75" width="106.5" height="106.5" rx="21.5" fill="none" stroke="#1e1e1e" stroke-width="1.5"/>
+            <path d="M 74 15 C 68 15 62 15 57 15 C 48 15 44 21 44 32 L 44 47 C 44 51 35 54 35 54 C 35 54 44 57 44 62 L 44 77 C 44 87 48 93 57 93 C 62 93 68 93 74 93"
+                  stroke="url(#br2)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#ig2)"/>
+          </svg>
+        </div>
+        <div class="icon-card-info">
+          <div class="icon-card-name">App icon</div>
+          <div class="icon-card-size">108×108 · icon-app.svg</div>
+        </div>
+      </div>
+
+      <!-- Icon dark bg -->
+      <div class="icon-card">
+        <div class="icon-card-preview dark">
+          <svg viewBox="0 0 64 64" fill="none" style="width:64px;height:64px;" xmlns="http://www.w3.org/2000/svg">
+            <defs><filter id="ic3"><feGaussianBlur stdDeviation="1.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58"
+                  stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#ic3)"/>
+          </svg>
+        </div>
+        <div class="icon-card-info">
+          <div class="icon-card-name">Icono — fondo oscuro</div>
+          <div class="icon-card-size">64×64 · acento teal</div>
+        </div>
+      </div>
+
+      <!-- Favicon -->
+      <div class="icon-card">
+        <div class="icon-card-preview dark">
+          <svg viewBox="0 0 32 32" fill="none" style="width:48px;height:48px;" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 22 3 C 18 3 14 3 12 3 C 9 3 7 5 7 8.5 L 7 13.5 C 7 15 4 16 4 16 C 4 16 7 17 7 18.5 L 7 23.5 C 7 27 9 29 12 29 C 14 29 18 29 22 29"
+                  stroke="#00b4d8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </div>
+        <div class="icon-card-info">
+          <div class="icon-card-name">Favicon</div>
+          <div class="icon-card-size">32×32 · favicon.svg</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Size comparison -->
+    <div style="margin-top: 24px; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px;">
+      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase;">Escala de tamaños</div>
+      <div style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+        <div style="text-align:center;">
+          <svg viewBox="0 0 64 64" fill="none" style="width:64px;height:64px;" xmlns="http://www.w3.org/2000/svg"><path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58" stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">64px</div>
+        </div>
+        <div style="text-align:center;">
+          <svg viewBox="0 0 64 64" fill="none" style="width:48px;height:48px;" xmlns="http://www.w3.org/2000/svg"><path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58" stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">48px</div>
+        </div>
+        <div style="text-align:center;">
+          <svg viewBox="0 0 64 64" fill="none" style="width:32px;height:32px;" xmlns="http://www.w3.org/2000/svg"><path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58" stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">32px</div>
+        </div>
+        <div style="text-align:center;">
+          <svg viewBox="0 0 64 64" fill="none" style="width:24px;height:24px;" xmlns="http://www.w3.org/2000/svg"><path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58" stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">24px</div>
+        </div>
+        <div style="text-align:center;">
+          <svg viewBox="0 0 64 64" fill="none" style="width:16px;height:16px;" xmlns="http://www.w3.org/2000/svg"><path d="M 34 6 C 30 6 26 6 23 6 C 17 6 14 10 14 17 L 14 27 C 14 30 8 32 8 32 C 8 32 14 34 14 37 L 14 47 C 14 54 17 58 23 58 C 26 58 30 58 34 58" stroke="#00b4d8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+          <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">16px</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── COLORS ── -->
+  <section class="section" id="colors">
+    <div class="section-header">
+      <div class="section-label">03 — Colores</div>
+      <h2 class="section-title">Paleta de color</h2>
+      <p class="section-desc">Haz clic en cualquier swatch para copiar el código hex al portapapeles.</p>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Primarios</div>
+    <div class="palette-grid" style="margin-bottom: 24px;">
+      <div class="color-swatch" onclick="copyColor('#00b4d8', this)">
+        <div class="color-swatch-preview" style="background:#00b4d8;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Accent</div>
+          <div class="color-hex">#00b4d8</div>
+          <div class="color-role">Botones, links, acento</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#0096c7', this)">
+        <div class="color-swatch-preview" style="background:#0096c7;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Accent Dark</div>
+          <div class="color-hex">#0096c7</div>
+          <div class="color-role">Hover, activo</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#48cae4', this)">
+        <div class="color-swatch-preview" style="background:#48cae4;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Accent Light</div>
+          <div class="color-hex">#48cae4</div>
+          <div class="color-role">Gradiente, highlights</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#00b4d8', this)">
+        <div class="color-swatch-preview" style="background:#00b4d8;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Brand Blue</div>
+          <div class="color-hex">#00b4d8</div>
+          <div class="color-role">Variante azul</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Neutros</div>
+    <div class="palette-grid" style="margin-bottom: 24px;">
+      <div class="color-swatch" onclick="copyColor('#0a0a0a', this)">
+        <div class="color-swatch-preview" style="background:#0a0a0a; border-bottom: 1px solid #1e1e1e;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Background</div>
+          <div class="color-hex">#0a0a0a</div>
+          <div class="color-role">Fondo principal</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#111111', this)">
+        <div class="color-swatch-preview" style="background:#111111; border-bottom: 1px solid #1e1e1e;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Surface</div>
+          <div class="color-hex">#111111</div>
+          <div class="color-role">Cards, paneles</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#1e1e1e', this)">
+        <div class="color-swatch-preview" style="background:#1e1e1e;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Border</div>
+          <div class="color-hex">#1e1e1e</div>
+          <div class="color-role">Bordes, divisores</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#f0f0f0', this)">
+        <div class="color-swatch-preview" style="background:#f0f0f0;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Text Bright</div>
+          <div class="color-hex">#f0f0f0</div>
+          <div class="color-role">Títulos, énfasis</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#c8c8c8', this)">
+        <div class="color-swatch-preview" style="background:#c8c8c8;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Text</div>
+          <div class="color-hex">#c8c8c8</div>
+          <div class="color-role">Cuerpo de texto</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Estado</div>
+    <div class="palette-grid">
+      <div class="color-swatch" onclick="copyColor('#27ae60', this)">
+        <div class="color-swatch-preview" style="background:#27ae60;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Success</div>
+          <div class="color-hex">#27ae60</div>
+          <div class="color-role">Éxito, SLA</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#e74c3c', this)">
+        <div class="color-swatch-preview" style="background:#e74c3c;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Error</div>
+          <div class="color-hex">#e74c3c</div>
+          <div class="color-role">Error, alerta</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+      <div class="color-swatch" onclick="copyColor('#f39c12', this)">
+        <div class="color-swatch-preview" style="background:#f39c12;"></div>
+        <div class="color-swatch-info">
+          <div class="color-name">Warning</div>
+          <div class="color-hex">#f39c12</div>
+          <div class="color-role">Advertencia</div>
+          <div class="copy-hint">Clic para copiar</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── TYPOGRAPHY ── -->
+  <section class="section" id="typography">
+    <div class="section-header">
+      <div class="section-label">04 — Tipografía</div>
+      <h2 class="section-title">Sistema tipográfico</h2>
+      <p class="section-desc">Fuente principal: <strong style="color:var(--accent)">Inter</strong>. Fallbacks: Segoe UI, system-ui, sans-serif.</p>
+    </div>
+
+    <div class="type-scale">
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Display</div>
+          <div class="type-spec">48px / 900 / -1.5px</div>
+        </div>
+        <div class="type-sample" style="font-size:48px; font-weight:900; letter-spacing:-1.5px; line-height:1;">Braced</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Heading 1</div>
+          <div class="type-spec">32px / 800 / -1px</div>
+        </div>
+        <div class="type-sample" style="font-size:32px; font-weight:800; letter-spacing:-1px;">Software a medida</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Heading 2</div>
+          <div class="type-spec">24px / 700 / -0.5px</div>
+        </div>
+        <div class="type-sample" style="font-size:24px; font-weight:700; letter-spacing:-0.5px;">Cómo trabajamos</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Heading 3</div>
+          <div class="type-spec">18px / 700</div>
+        </div>
+        <div class="type-sample" style="font-size:18px; font-weight:700;">Automatización de procesos</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Body</div>
+          <div class="type-spec">15px / 400 / 1.6</div>
+        </div>
+        <div class="type-sample" style="font-size:15px; line-height:1.6; max-width:480px; color:var(--text);">
+          Construimos sistemas de software interno para empresas. No software genérico, sino infraestructura propia que permite operar, escalar y competir.
+        </div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Label</div>
+          <div class="type-spec">11px / 600 / +2px</div>
+        </div>
+        <div class="type-sample" style="font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--accent);">Capacidades</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">
+          <div class="type-label">Wordmark</div>
+          <div class="type-spec">30px / 800 / -1px</div>
+        </div>
+        <div class="type-sample" style="font-size:30px; font-weight:800; letter-spacing:-1px; color:#f0f0f0;">BRACED</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── USAGE ── -->
+  <section class="section" id="usage">
+    <div class="section-header">
+      <div class="section-label">05 — Guidelines</div>
+      <h2 class="section-title">Uso correcto del logo</h2>
+    </div>
+
+    <div class="rules-grid">
+      <div class="rule-card do">
+        <span class="rule-tag">✓ Correcto</span>
+        <p class="rule-text">Usar el logo sobre fondos oscuros (#0a0a0a, #111111) con la versión principal en teal.</p>
+      </div>
+      <div class="rule-card dont">
+        <span class="rule-tag">✗ Incorrecto</span>
+        <p class="rule-text">No deformar ni estirar el logo en ninguna dirección. Mantener siempre la proporción original.</p>
+      </div>
+      <div class="rule-card do">
+        <span class="rule-tag">✓ Correcto</span>
+        <p class="rule-text">En fondos claros, usar la versión <code>logo-light.svg</code> con trazo en teal oscuro (#0096c7) y texto negro.</p>
+      </div>
+      <div class="rule-card dont">
+        <span class="rule-tag">✗ Incorrecto</span>
+        <p class="rule-text">No usar el logo principal (texto blanco) sobre fondos blancos o claros. Hay pérdida de contraste.</p>
+      </div>
+      <div class="rule-card do">
+        <span class="rule-tag">✓ Correcto</span>
+        <p class="rule-text">Dejar un espacio mínimo alrededor del logo equivalente a la altura de la "B" del wordmark.</p>
+      </div>
+      <div class="rule-card dont">
+        <span class="rule-tag">✗ Incorrecto</span>
+        <p class="rule-text">No cambiar el color del símbolo <code>{</code> a ningún otro que no sea la paleta oficial.</p>
+      </div>
+      <div class="rule-card do">
+        <span class="rule-tag">✓ Correcto</span>
+        <p class="rule-text">Tamaño mínimo de uso: 24px de alto para el logo horizontal, 20px para el icono solo.</p>
+      </div>
+      <div class="rule-card dont">
+        <span class="rule-tag">✗ Incorrecto</span>
+        <p class="rule-text">No añadir sombras, efectos, bordes o modificaciones visuales no contempladas en este sistema.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── EXPORT ── -->
+  <section class="section" id="export">
+    <div class="section-header">
+      <div class="section-label">06 — Exportar</div>
+      <h2 class="section-title">Exportar como PNG</h2>
+      <p class="section-desc">Genera PNGs de alta resolución (2×) directamente desde el navegador. Los archivos se descargan automáticamente.</p>
+    </div>
+
+    <div class="export-grid">
+      <button class="export-btn" onclick="exportPng('logo', 488, 128)">
+        <div class="export-btn-name">Logo horizontal</div>
+        <div class="export-btn-desc">Para web, docs, email</div>
+        <div class="export-btn-size">488 × 128 px (2×)</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('logo-stacked', 400, 264)">
+        <div class="export-btn-name">Logo apilado</div>
+        <div class="export-btn-desc">Redes sociales, presentaciones</div>
+        <div class="export-btn-size">400 × 264 px (2×)</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('logo-light', 488, 128)">
+        <div class="export-btn-name">Logo fondo claro</div>
+        <div class="export-btn-desc">Documentos, impresión</div>
+        <div class="export-btn-size">488 × 128 px (2×)</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('logo-mono', 488, 128)">
+        <div class="export-btn-name">Logo monocromo</div>
+        <div class="export-btn-desc">Uso sobre colores</div>
+        <div class="export-btn-size">488 × 128 px (2×)</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('icon', 256, 256)">
+        <div class="export-btn-name">Icono 256×256</div>
+        <div class="export-btn-desc">App icon, avatar</div>
+        <div class="export-btn-size">256 × 256 px</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('icon-app', 512, 512)">
+        <div class="export-btn-name">App icon 512×512</div>
+        <div class="export-btn-desc">App stores, iOS/Android</div>
+        <div class="export-btn-size">512 × 512 px</div>
+      </button>
+      <button class="export-btn" onclick="exportPng('favicon', 64, 64)">
+        <div class="export-btn-name">Favicon 64×64</div>
+        <div class="export-btn-desc">Navegadores web</div>
+        <div class="export-btn-size">64 × 64 px</div>
+      </button>
+      <button class="export-btn" onclick="exportAllPngs()">
+        <div class="export-btn-name" style="color:var(--accent);">↓ Descargar todo</div>
+        <div class="export-btn-desc">Todos los assets en PNG</div>
+        <div class="export-btn-size">Pack completo</div>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── Color copy ──
+  function copyColor(hex, el) {
+    navigator.clipboard.writeText(hex).then(() => {
+      showToast('Copiado: ' + hex);
+      const hexEl = el.querySelector('.color-hex');
+      const orig = hexEl.textContent;
+      hexEl.textContent = '✓ Copiado';
+      hexEl.classList.add('copied-flash');
+      setTimeout(() => {
+        hexEl.textContent = orig;
+        hexEl.classList.remove('copied-flash');
+      }, 1200);
+    });
+  }
+
+  // ── Toast ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  // ── PNG export ──
+  function exportPng(name, w, h) {
+    const svgPath = name + '.svg';
+    fetch(svgPath)
+      .then(r => r.text())
+      .then(svgText => {
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+
+        const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const img = new Image();
+        img.onload = () => {
+          ctx.drawImage(img, 0, 0, w, h);
+          URL.revokeObjectURL(url);
+          const link = document.createElement('a');
+          link.download = 'braced-' + name + '@' + w + 'x' + h + '.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          showToast('Descargando ' + name + '.png…');
+        };
+        img.onerror = () => {
+          showToast('Error: no se pudo cargar ' + svgPath);
+          URL.revokeObjectURL(url);
+        };
+        img.src = url;
+      })
+      .catch(() => showToast('Error cargando ' + svgPath));
+  }
+
+  const allExports = [
+    ['logo', 488, 128],
+    ['logo-stacked', 400, 264],
+    ['logo-light', 488, 128],
+    ['logo-mono', 488, 128],
+    ['icon', 256, 256],
+    ['icon-app', 512, 512],
+    ['favicon', 64, 64],
+  ];
+
+  function exportAllPngs() {
+    allExports.forEach(([name, w, h], i) => {
+      setTimeout(() => exportPng(name, w, h), i * 400);
+    });
+  }
+
+  // ── Nav active state ──
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.side-nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const id = e.target.getAttribute('id');
+        const link = document.querySelector('.side-nav a[href="#' + id + '"]');
+        if (link) link.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -55% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
