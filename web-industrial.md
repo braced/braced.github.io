@@ -1,186 +1,151 @@
-# Braced Engineering — Web industrial
+# Braced Engineering — Web: propuesta definitiva de contenidos
 
-Propuesta de contenidos y enfoque para la vuelta a la web: de "software para empresas" a **ingeniería de software para el mundo industrial** (fábricas, constructoras, empresas de maquinaria).
+Estado de la propuesta tras tres rondas de exploración:
 
-La estructura visual de la web actual (one-page, 6 pantallas, bilingüe) se mantiene. Esto es una vuelta de **contenido y mensaje**, no de diseño.
+- **Estructura:** S1 — "Índice" (perfil de empresa con índice fijo y contenido en prosa y listas).
+- **Tono:** descriptivo. La web describe qué empresa es Braced, en qué está especializada, qué hace, para quién y cómo. No vende nada.
+- **Alcance:** construcción, ingeniería, fabricación, maquinaria y activos — cuatro sectores al mismo nivel.
+- **Estilo visual:** Fundición con toques de Alta Visibilidad, aplicado con contención (ver §5).
 
----
-
-## 1. Enfoque
-
-**Posicionamiento:** software a medida para empresas industriales. El hilo conductor: **cerramos el hueco entre la oficina técnica y la planta**.
-
-**El ángulo diferencial:** la mayoría de agencias de software no ha pisado una fábrica; la mayoría de integradores industriales no hace software moderno. Braced es el puente — *"hablamos los dos idiomas: el de la planta y el del software"*.
-
-**Objetivo de la primera pantalla:** que un gerente o director de operaciones industrial se reconozca en 3 segundos, y que quien no sea del sector entienda que esto no es para él. **Filtrar es el objetivo, no un efecto secundario.**
-
-### Reglas del copy
-
-- **Vocabulario del sector**, no genérico: órdenes de fabricación, partes de taller, planos, trazabilidad, lotes y series, mantenimiento, OEE, avance de obra, ERP, BIM, CNC, PLC.
-- **Dolores y resultados primero**, tecnología después (la tecnología va en tags y detalles, no en titulares).
-- **Solo se publican como "casos" proyectos 100% Braced.** El know-how de proyectos privativos (optimización de maquinaria, mantenimiento predictivo) se absorbe como capacidad genérica, sin sector ni contexto identificable.
-- Frases cortas. Nada de paja de consultora. Tono sobrio y seguro, como hasta ahora.
-
-## 2. A quién le hablamos
-
-- **Empresa:** industrial mediana — fabricación (idealmente industrializada), construcción, maquinaria, gestión de activos/talleres, ingenierías.
-- **Persona:** gerencia, dirección de operaciones o producción, responsable de oficina técnica.
-- **Su situación:** el ERP no sabe qué pasa en planta, la planificación vive en un Excel que solo entiende una persona, los planos se traducen a mano a producción, la información está en islas.
-
-## 3. Estructura de la web
-
-One-page de 6 pantallas (la misma que hoy), bilingüe ES/EN (`data-es`/`data-en`):
-
-1. **Hero** — a quién hablamos y qué prometemos
-2. **Qué hacemos** — el problema y el beneficio
-3. **Cómo trabajamos** — el proceso y el ángulo diferencial
-4. **Capacidades** — los servicios concretos
-5. **Casos** — la prueba
-6. **Contacto** — cierre de baja fricción
-
-Se mantienen: botón "Acceso Clientes" (portal), CTA de agendar (Google Calendar), email con copiar, footer legal.
+Las exploraciones (rondas 1–3 y la propuesta visual anterior) siguen en el canvas de diseño "Concepto Web Braced" como referencia.
 
 ---
 
-## 4. Contenido por sección
+## 1. Principios
 
-### 4.1 Hero
+1. **Describir, no vender.** Sin eslóganes, sin titulares de "dolor", sin llamadas a la acción imperativas, sin superlativos ni adjetivos de valor. Los verbos de acción que quedan son etiquetas de navegación ("Ver ficha", "reservar en la agenda").
+2. **Especialización y actividad explícitas en la primera frase.** Quien llegue a la web tiene que saber en un párrafo qué tipo de empresa es, en qué está especializada y qué hace exactamente.
+3. **Ningún sector domina.** El vocabulario cambia según el sector (mediciones y certificaciones, versiones de proyecto, órdenes y trazabilidad, mantenimiento y flotas); "planta" no es la palabra por defecto.
+4. **Solo trabajos 100 % Braced.** El conocimiento procedente de proyectos privativos (optimización de parámetros de maquinaria, mantenimiento predictivo) se describe como capacidad en "Qué hacemos", sin sector ni contexto identificable.
+5. **Nada inventado.** Donde falte un dato real (equipo, sede, cliente, cifras) va un marcador `[pendiente]`, nunca un relleno.
 
-**Variante A (recomendada):**
+## 2. Estructura
 
-> **Software a la altura de tu ingeniería.**
->
-> Construimos los sistemas que conectan tu oficina técnica, tu planta y tus datos. Para fábricas, constructoras y empresas de maquinaria.
+Página única con **scroll natural** (se abandona la navegación por pantallas completas con fundidos). Dos columnas en escritorio: índice fijo a la izquierda que marca la sección visible, contenido a la derecha. En móvil, el índice se convierte en menú y el contenido va a una columna. Bilingüe ES/EN (`data-es` / `data-en`).
 
-**Variante B (más provocadora):**
+| # | Apartado | Contenido |
+|---|---|---|
+| — | Presentación | Un párrafo descriptivo + ficha Actividad / Especialización / Sectores |
+| 01 | Qué hacemos | Introducción + cinco áreas de trabajo |
+| 02 | Sectores | Cuatro sectores, descritos en paralelo |
+| 03 | Cómo trabajamos | Un párrafo + tres fases |
+| 04 | Trabajos | Tres fichas de proyecto con datos |
+| 05 | La empresa | Quiénes somos `[pendiente]` |
+| 06 | Contacto | Email, agenda, acceso de clientes |
 
-> **Tu maquinaria ya es digital. Tus procesos todavía no.**
->
-> Conectamos ERP, oficina técnica y máquinas en un solo sistema.
+Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" (portal `console.bracedeng.com`). Sin botón de contacto destacado: Contacto es un apartado más.
 
-**Variante C (más sobria):**
+## 3. Textos (ES)
 
-> **Del plano a la máquina, sin fricción.**
->
-> Ingeniería de software a medida para el sector industrial.
+### Presentación
 
-CTA principal: **"Hablar con nosotros"** → sección Contacto.
+> Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, su maquinaria y sus datos, y los mantenemos en producción.
 
-### 4.2 Qué hacemos
-
-> **Cerramos el hueco entre la oficina técnica y la planta.**
->
-> En la mayoría de empresas industriales la información vive en islas: el ERP no sabe qué pasa en planta, los planos se traducen a mano y la planificación depende de un Excel que solo entiende una persona. Construimos el sistema que lo une.
-
-Tres bloques de **beneficio** (no de servicio — así no se pisa con Capacidades):
-
-| Bloque | Texto |
+| | |
 |---|---|
-| **Trazabilidad total** | Cada pieza, orden y parte de trabajo, localizable al instante. |
-| **Menos trabajo manual** | Lo que hoy se copia entre sistemas, mañana fluye solo. |
-| **Decisiones con datos de planta** | Producción, avance y costes en tiempo real, no a mes vencido. |
+| **Actividad** | Desarrollo, integración y mantenimiento de software a medida. |
+| **Especialización** | Sistemas de operación internos para empresas industriales y de construcción; integración con CAD/BIM, ERP y maquinaria; datos e IA aplicada a la operación. |
+| **Sectores** | Construcción · Ingeniería · Fabricación · Maquinaria y activos |
 
-### 4.3 Cómo trabajamos
+### 01 — Qué hacemos
 
-Intro:
+> Desarrollamos y mantenemos el software que una empresa utiliza para operar. Nuestro trabajo se concentra en cinco áreas:
 
-> **Nos integramos en tu organización.**
->
-> Hablamos los dos idiomas: el de la planta y el del software.
-
-Los tres pilares (estructura actual, tono industrializado):
-
-| Pilar | Texto |
+| Área | Descripción |
 |---|---|
-| **01 — Entendemos** | Empezamos pisando la planta, no la sala de reuniones. Mapeamos procesos, detectamos fricción y definimos exactamente qué construir para generar impacto real. |
-| **02 — Construimos** | Desarrollamos tecnología sólida, iterativa, integrada con tu equipo. Cada sprint entrega valor real, no demos vacías. |
-| **03 — Evolucionamos** | El sistema crece contigo. Mantenimiento continuo, nuevas capacidades, adaptación a medida que tu negocio escala. |
+| **Sistemas de gestión internos** | Plataformas que centralizan la operación de una empresa: proyectos, órdenes, activos y documentación. Sustituyen hojas de cálculo y herramientas desconectadas. |
+| **Integración** | Conexión entre ERP, oficina técnica (CAD, BIM), maquinaria y sistemas de terceros. |
+| **Datos e indicadores** | Cuadros de mando e informes sobre los datos de operación. |
+| **Análisis e IA aplicada** | Modelos sobre datos de equipos y documentación: mantenimiento predictivo, optimización de parámetros de operación, extracción de datos de documentos. |
+| **Infraestructura y mantenimiento** | Despliegue, monitorización y evolución continua de los sistemas que desarrollamos. |
 
-### 4.4 Capacidades
+### 02 — Sectores
 
-> **Lo que construimos.**
+| Sector | A quién | Qué hacemos |
+|---|---|---|
+| **Construcción** | Constructoras, promotoras, construcción industrializada | Gestión de proyectos y obra: mediciones y certificaciones, control de costes, documentación y versiones de planos. Análisis de licitaciones públicas. En construcción industrializada, sistemas que conectan el modelo BIM con la fabricación. |
+| **Ingeniería** | Ingenierías, oficinas técnicas, consultoras técnicas | Gestión documental y de versiones de proyectos, automatización de cálculos y entregables, integración con CAD y BIM. Herramientas internas que sustituyen a hojas de cálculo compartidas y a procesos manuales de revisión. |
+| **Fabricación** | Fabricantes, talleres, plantas de producción | Órdenes de fabricación, trazabilidad de piezas y lotes, control de producción e indicadores. Integración con máquinas (CNC, PLC) y con el ERP existente. |
+| **Maquinaria y activos** | Fabricantes de maquinaria, mantenedores, gestores de flotas | Gestión de mantenimiento, reparaciones y componentes; datos de sensores y de operación; modelos de mantenimiento predictivo y de optimización de parámetros. |
 
-| Capacidad | Texto |
+### 03 — Cómo trabajamos
+
+> Trabajamos integrados en la organización del cliente. Un proyecto empieza con un análisis de la operación sobre el terreno. A partir de ahí se define el sistema y se desarrolla de forma iterativa, con entregas periódicas. Una vez en producción, nos ocupamos de su mantenimiento y de su evolución.
+
+| Fase | |
 |---|---|
-| **Plataformas de producción a medida** | Tu MES/GMAO hecho para cómo trabaja tu planta: órdenes, partes, calidad, mantenimiento. |
-| **Integración con maquinaria** | Del plano o el modelo BIM a la máquina: CNC, PLCs, líneas automatizadas. |
-| **Conexión ERP–planta–oficina técnica** | Tus sistemas actuales hablando entre sí, sin dobles introducciones de datos. |
-| **Indicadores en tiempo real** | OEE, avance de obra, costes: el estado real de la operación, en vivo. |
-| **IA y optimización aplicada** | Modelos que aprenden del comportamiento de tus equipos: anticipan fallos antes de que paren la máquina, optimizan parámetros de operación y exprimen los datos que tu maquinaria ya genera. |
-| **Infraestructura y soporte** | Cloud, DevOps, monitorización y mantenimiento continuo de todo lo que construimos. |
+| **Análisis** | Procesos, datos y sistemas existentes. |
+| **Desarrollo** | Iterativo, con entregas periódicas. |
+| **Mantenimiento y evolución** | Soporte continuo del sistema en producción. |
 
-> El bullet de **IA y optimización aplicada** absorbe deliberadamente el know-how de los proyectos privativos (optimización de parámetros de maquinaria, mantenimiento predictivo con deep learning) como afirmación de capacidad, sin referencias a sector, cliente ni contexto.
+### 04 — Trabajos
 
-### 4.5 Casos
+Fichas de proyecto: qué es el sistema, sector, alcance, integraciones. Sin adjetivos. El cliente se nombra solo si se puede.
 
-> **Lo que hemos construido.**
+**Plataforma BIM-a-fabricación**
+Sistema de gestión de la fabricación industrializada de edificios. A partir del modelo BIM genera las órdenes de fabricación, gestiona la logística de los elementos y automatiza la maquinaria de planta. Incluye el tratamiento de la geometría 3D de los elementos.
+Sector: Construcción industrializada · Alcance: Sistema completo · Integraciones: BIM, maquinaria de planta · Cliente: `[pendiente]`
 
-Solo proyectos 100% Braced, todos industriales, en este orden:
+**Gestión de reparación de componentes**
+Sistema que gestiona el ciclo de reparación de componentes entre los clientes, los talleres regionales y la logística: recepción, diagnóstico, reparación, envío y trazabilidad de cada componente a lo largo del proceso.
+Sector: Activos industriales · Alcance: CRM a medida · Integraciones: Logística · Cliente: `[pendiente]`
 
-1. **Plataforma BIM-a-Fabricación** *(caso bandera — primero y con más espacio)*
-   Sector: Construcción industrializada.
-   "Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta."
-   Tags: Automatización · Integración de máquinas · Logística · Geometría 3D
+**Análisis de licitaciones públicas**
+Herramienta que extrae y estructura los datos de licitaciones públicas anteriores (importes, adjudicatarios, condiciones) a partir de la documentación original, para el análisis de nuevas oportunidades.
+Sector: Construcción · Contratación pública · Alcance: Herramienta de análisis · Tecnología: Extracción de datos, OCR · Cliente: `[pendiente]`
 
-2. **CRM de reparación multi-actor**
-   Sector: Gestión de activos industriales.
-   "CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística."
-   Tags: CRM a medida · Multi-actor · Trazabilidad
+Fuera de la web: trading cuantitativo y agentes conversacionales (fuera de foco); optimización de perforación y mantenimiento predictivo de turbinas (privativos; descritos como capacidad en 01).
 
-3. **Análisis de licitaciones con IA**
-   Sector: Contratación pública *(conecta directo con constructoras)*.
-   "Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades."
-   Tags: IA · Extracción de datos · OCR
+### 05 — La empresa
 
-4. **Tarjeta CTA final** (reenfocada al dolor industrial):
-   > **El tuyo es el siguiente.**
-   >
-   > ¿Tu planificación de planta vive en un Excel? ¿Los planos se traducen a mano a producción? Cuéntanos.
-   >
-   > Hablemos →
+> Braced Engineering está formada por ingenieros de software con experiencia en entornos de ingeniería e industria. `[pendiente: equipo, trayectoria, sede — redactar con datos reales, en el mismo tono descriptivo]`
 
-**Fuera de la web:**
+Opcional: fotografía del equipo u oficina. Si no la hay, el apartado va solo con texto.
 
-- *Trading cuantitativo* — rompe el foco industrial ("hacen de todo" es el mensaje contrario al que queremos).
-- *Agentes conversacionales multicanal* — genérico; reencuadrable a uso industrial más adelante si interesa (partes por WhatsApp desde obra, atención de recambios…).
-- *Optimización de perforación y mantenimiento predictivo de turbinas* — privativos: no se publican como casos, viven absorbidos en Capacidades (ver 4.4).
+### 06 — Contacto
 
-**Pendiente que multiplica el valor de esta sección:** una métrica de resultado por caso ("de X días a Y horas", "−N% errores"). Es el elemento de prueba que más vende y el único que falta.
+- team@bracedeng.com
+- Para una primera conversación se puede reservar directamente en la agenda. *(enlace actual de Google Calendar)*
+- Clientes: console.bracedeng.com
 
-### 4.6 Contacto
+### Pie
 
-> **Construimos el sistema que impulsa tu fábrica.**
-> *(alternativa si se quiere abarcar constructoras: "…que impulsa tu operación.")*
->
-> 20 minutos para ver si encajamos.
+© 2026 Braced Engineering · Aviso legal · Privacidad · Cookies
 
-- CTA: **Agendar conversación** (Google Calendar)
-- Secundario: "o escríbenos a team@bracedeng.com" (con botón copiar)
-- Footer: legal / privacidad / cookies, sin cambios
+## 4. Traducción EN
 
----
+Se hace al implementar, apartado por apartado, manteniendo el mismo registro descriptivo. Un punto de atención: "ingeniería" como sector se traduce como *engineering firms / technical offices*, no como *engineering* a secas, para que no se confunda con la actividad de Braced.
 
-## 5. Qué cambia respecto a la web actual (resumen)
+## 5. Estilo visual (referencia para la implementación)
 
-| Ahora | Propuesta |
+Base **Fundición** con toques de **Alta Visibilidad**, aplicado con contención: el tono descriptivo manda y el estilo acompaña.
+
+| Elemento | Decisión |
 |---|---|
-| Mensaje genérico "empresas que ganan" | Mensaje sectorial: fábricas, constructoras, maquinaria |
-| Qué hacemos y Capacidades casi duplicadas | Qué hacemos = beneficios · Capacidades = servicios |
-| 5 casos, 2 fuera de foco | 3 casos, todos industriales y 100% Braced |
-| Know-how ML/optimización invisible | Explícito en Capacidades como capacidad demostrable |
-| Sin ángulo diferencial escrito | "Hablamos los dos idiomas" en Cómo trabajamos |
-| Vocabulario abstracto (operación, datos, procesos) | Vocabulario de planta (órdenes, partes, OEE, ERP, BIM, CNC) |
+| Fondo | Oscuro cálido (#141110) con un segundo tono para bloques (#1a1614) |
+| Texto | Crema (#ece5dc); secundario (#b8b0a6); atenuado (#7d766d) |
+| Acento | Naranja brasa (#ff6a00) en sólido para índice activo, marcas y enlaces; gradiente ámbar→rojo solo en la llave del logotipo |
+| Titulares | Space Grotesk 600/700 |
+| Texto corrido | IBM Plex Sans 400/500 |
+| Etiquetas, numerales del índice, pie | Barlow Condensed 600/700, mayúsculas |
+| Elementos de Alta Visibilidad | Una franja naranja/negro sobre el pie; paneles de borde grueso en Sectores; numerales del índice. Nada más. |
+| Logotipo | La llave `{` en gradiente brasa; se mantiene como única continuidad con la web actual |
+| Movimiento | Ninguno más allá de transiciones suaves; sin partículas, sin fundidos entre pantallas |
 
-## 6. Pendiente de decidir
+## 6. Qué desaparece respecto a la web actual
 
-- [ ] **Variante de hero** (A / B / C) — recomendación: A
-- [ ] Métricas de resultado por caso (si existen y se pueden publicar)
-- [ ] "tu fábrica" vs "tu operación" en el cierre de Contacto
-- [ ] Traducción EN definitiva (se hace al implementar, todo va con `data-es`/`data-en`)
+- Navegación por pantallas completas con fundidos y rueda capturada; canvas de partículas; orbes.
+- "Las empresas que ganan…", "Tu maquinaria ya es digital…", "20 minutos para ver si encajamos", botones con brillo.
+- Tarjetas de beneficios y la duplicidad "Qué hacemos / Capacidades".
+- Casos de trading cuantitativo y agentes conversacionales.
+- Paleta cian/violeta y tipografía Inter.
 
-## 7. Ideas para más adelante (no bloquean)
+## 7. Pendientes
 
-- Mini sección **"Quiénes somos"** con caras/perfiles: en venta de servicios de integración profunda, la ausencia total de personas es el mayor déficit de confianza de la web.
-- **FAQ** breve sobre el modelo de trabajo (¿equipo dedicado? ¿proyecto cerrado? ¿mantenimiento?) — la versión legacy la tenía y es de lo primero que pregunta un prospecto.
-- Reencuadre industrial de los agentes conversacionales como caso o capacidad.
-- Logos o testimonios de clientes cuando sea posible publicarlos.
+- [ ] Texto real de "La empresa" (equipo, trayectoria, sede).
+- [ ] Un trabajo propio del sector Ingeniería, si existe.
+- [ ] Nombrar clientes en las fichas, si es posible.
+- [ ] Capturas o diagramas de los sistemas (opcional en esta estructura).
+- [ ] Confirmar que se mantiene el enlace de agenda en Contacto.
+- [ ] Traducción EN.
+- [ ] `web-assets-prompts.md` está escrito para la paleta y el tono anteriores: revisar prompts y guiones cuando se cierre el estilo.

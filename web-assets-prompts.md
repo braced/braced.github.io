@@ -1,3 +1,5 @@
+> **Nota (revisión pendiente):** este documento se escribió para la paleta cian/violeta y el tono comercial anteriores. La dirección actual es la de `web-industrial.md` (estilo Fundición + Alta Visibilidad, tono descriptivo, cuatro sectores). Los prompts de imagen valen cambiando el bloque de estilo; los guiones de locución hay que reescribirlos sin lenguaje de ventas.
+
 # Braced Engineering — Prompts para contenido visual y audio
 
 Prompts cortos y listos para copiar, para generar los assets de la web industrial (ver `web-industrial.md`). Herramientas: **Canva** (infografías y composición), **generadores de imagen** (Midjourney / DALL·E / Ideogram / Canva AI), **generadores de vídeo** (Runway / Kling / Sora) y **ElevenLabs** (locución).
