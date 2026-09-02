@@ -145,4 +145,4 @@ Base **Fundición** con toques de **Alta Visibilidad**, aplicado con contención
 - [ ] Capturas o diagramas de los sistemas (opcional en esta estructura).
 - [ ] Confirmar que se mantiene el enlace de agenda en Contacto.
 - [ ] Traducción EN.
-- [ ] `web-assets-prompts.md` está escrito para la paleta y el tono anteriores: revisar prompts y guiones cuando se cierre el estilo.
+- [x] `web-assets-prompts.md` actualizado a la paleta, la tipografía y el tono actuales.

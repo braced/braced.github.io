@@ -1,25 +1,42 @@
-> **Nota (revisión pendiente):** este documento se escribió para la paleta cian/violeta y el tono comercial anteriores. La dirección actual es la de `web-industrial.md` (estilo Fundición + Alta Visibilidad, tono descriptivo, cuatro sectores). Los prompts de imagen valen cambiando el bloque de estilo; los guiones de locución hay que reescribirlos sin lenguaje de ventas.
-
 # Braced Engineering — Prompts para contenido visual y audio
 
-Prompts cortos y listos para copiar, para generar los assets de la web industrial (ver `web-industrial.md`). Herramientas: **Canva** (infografías y composición), **generadores de imagen** (Midjourney / DALL·E / Ideogram / Canva AI), **generadores de vídeo** (Runway / Kling / Sora) y **ElevenLabs** (locución).
+Prompts cortos, listos para copiar, alineados con la web nueva (`index-nuevo.html`, contenidos en `web-industrial.md`): estilo Fundición con toques de Alta Visibilidad, tono descriptivo, cuatro sectores al mismo nivel.
 
-Los prompts de imagen y vídeo van en inglés (los modelos responden mejor); los guiones de locución, en español.
+Herramientas: **Canva** (infografías y composición), **generadores de imagen** (Midjourney / DALL·E / Ideogram / Canva AI), **generadores de vídeo** (Runway / Kling / Sora) y **ElevenLabs** (locución). Los prompts de imagen y vídeo van en inglés (los modelos responden mejor); los guiones de locución, en español.
+
+**Punto de partida importante:** la web nueva es una página de texto. No necesita imágenes para funcionar. Lo único que pide de verdad son dos cosas reales, no generadas: una fotografía del equipo u oficina (apartado 01) y, si se quiere, capturas o diagramas de los sistemas en las fichas de Trabajos (apartado 05). Casi todo lo que sigue es material para LinkedIn, propuestas y presentaciones.
 
 ---
 
 ## 0. Bloque de estilo de marca
 
-Añadir **al final de todo prompt de imagen o vídeo** para mantener coherencia:
+Añadir **al final de todo prompt de imagen o vídeo**:
 
 ```
-dark background (#0a0a0a), cyan (#00b4d8) and violet (#7b2ff7) accent lighting,
-minimal high-end tech aesthetic, cinematic, no text, no logos, no people's faces
+warm dark background (#141110), single ember-orange accent (#ff6a00) used sparingly,
+sober documentary look, natural light, no neon, no holograms, no HUD overlays,
+no text, no logos, no people
 ```
+
+Paleta y tipografía de referencia (para Canva y composición):
+
+| | |
+|---|---|
+| Fondo | #141110 · bloques #1a1614 · pie #0b0908 |
+| Texto | #ece5dc · secundario #b8b0a6 · atenuado #7d766d |
+| Acento | #ff6a00 (marcas) · #ff9f1c (texto sobre oscuro) |
+| Gradiente brasa | #ffb347 → #ff4d00, **solo** en la llave del logotipo |
+| Titulares | Space Grotesk 500/600 |
+| Texto | IBM Plex Sans 400/500 |
+| Etiquetas y numerales | Barlow Condensed 600/700, mayúsculas |
+| Detalle Alta Visibilidad | Franja naranja/negro a 45° (solo como remate, nunca como fondo) |
 
 Reglas:
 
-- **Nunca texto dentro de la imagen** — el texto lo pone la web (y así sirve para ES y EN).
+- **Nunca texto dentro de la imagen generada** — el texto lo pone Canva o la web (y así sirve para ES y EN).
+- **Nunca personas generadas por IA.** Ni para la web ni para redes: una foto de "equipo" falsa es un problema de credibilidad y de honestidad. La foto del equipo es real o no hay foto.
+- Documental, no cinematográfico: la imagen describe un entorno de trabajo, no dramatiza un problema.
+- El naranja aparece en un solo punto de la imagen o en ninguno; nunca baña la escena.
 - Generar 3-4 variantes por prompt y elegir; guardar seed/estilo si la herramienta lo permite.
 - Exportar imágenes a **WebP** (≤300 KB) y vídeos a **MP4 H.264 sin audio** (≤4 MB para loops).
 
@@ -27,185 +44,173 @@ Reglas:
 
 ## 1. Imágenes
 
-### Fondos de sección
+### Logotipo (avatar, favicon grande, cabeceras de redes)
 
-**Hero (alternativa/complemento al canvas de partículas):**
+**Llave en metal incandescente:**
 ```
-Abstract network of glowing cyan particles and thin connecting lines forming
-a large curly brace { symbol, floating in dark space, subtle depth of field
-```
-
-**Qué hacemos — el hueco oficina/planta:**
-```
-Split scene: engineering office with CAD screens on the left, factory floor
-with heavy machinery on the right, connected by a single glowing cyan data
-stream bridging both worlds
+A single curly brace { symbol forged in dark steel, edges glowing ember orange
+as if just out of the furnace, centered on a warm charcoal background, studio
+macro shot, shallow depth of field
 ```
 
-**Cómo trabajamos — integración:**
+**Llave mecanizada (versión fría):**
 ```
-Silhouettes of an engineer with a tablet standing on a factory walkway
-overlooking automated production lines, thin cyan HUD lines highlighting
-machines below
-```
-
-**Capacidades — planta conectada:**
-```
-Dark factory floor at night, CNC machines and robotic arms with faint cyan
-light trails connecting them to a floating minimal dashboard hologram
+A curly brace { symbol machined from dark anodised aluminium, fine tool marks
+visible, one thin ember-orange edge highlight, centered, warm charcoal background
 ```
 
-**Contacto — cierre:**
+### Sectores (cabeceras de posts o de futuras páginas por sector)
+
+Cuatro escenas al mismo nivel, mismo encuadre y misma luz, para que se lean como una serie.
+
+**Construcción:**
 ```
-Single glowing cyan thread of light crossing a dark industrial hall,
-leading toward a bright point on the horizon, calm and minimal
+Site office desk with printed drawings, a measuring tape and a tablet showing a
+building model, construction site out of focus through the window, late afternoon
 ```
 
-### Ilustraciones para tarjetas de casos
-
-**Plataforma BIM-a-Fabricación:**
+**Ingeniería:**
 ```
-Architectural BIM wireframe model morphing into a real fabricated steel
-module on a production line, left half wireframe cyan, right half solid metal
+Technical office at dusk, two large monitors with CAD drawings, a printed plan
+set with revision stamps on the desk, quiet and orderly
 ```
 
-**CRM de reparación multi-actor:**
+**Fabricación:**
 ```
-Industrial gearbox on a workshop bench, glowing route lines on a dark map
-connecting client, regional workshop and logistics truck icons
-```
-
-**Análisis de licitaciones con IA:**
-```
-Stack of dense technical documents dissolving into clean structured rows of
-glowing data, dark desk scene, cyan highlights
+Metal fabrication workshop, a CNC machine mid-cut with a small orange coolant
+glow, finished parts stacked on a pallet with paper tags, overhead work lights
 ```
 
-### Conceptos de capacidad (para social o futuras secciones)
-
-**Mantenimiento predictivo:**
+**Maquinaria y activos:**
 ```
-Close-up of an industrial turbine with a translucent holographic overlay of
-sensor waveforms, one waveform pulsing violet as an anomaly warning
+Maintenance bay with a heavy industrial gearbox on a stand, tool trolley and a
+laptop open on a bench, one work lamp lighting the component
 ```
 
-**Trazabilidad:**
+### Fichas de Trabajos (solo si no hay capturas reales)
+
+Prefiere siempre una captura del sistema o un diagrama propio. Si no se pueden publicar, una imagen abstracta que describa el sistema, sin inventar pantallas:
+
+**Plataforma BIM-a-fabricación:**
 ```
-Factory conveyor belt with metal parts, each part with a small floating
-cyan digital tag, long perspective line into the dark
+Close-up of a prefabricated building element on a factory trolley with a paper
+routing tag, its BIM wireframe shown faintly on a monitor in the background
 ```
 
-**Del plano a la máquina:**
+**Gestión de reparación de componentes:**
 ```
-Technical blueprint lines lifting off paper and flowing through the air
-into a CNC machine that is cutting the exact same part
+Repair workshop shelving with tagged industrial components awaiting dispatch,
+a printed job card clipped to the front of each crate
 ```
+
+**Análisis de licitaciones públicas:**
+```
+A desk with a thick stack of public tender documents beside a monitor showing
+a plain structured table, reading lamp, neutral office
+```
+
+### Equipo y oficina (apartado 01)
+
+**No generar.** Fotografía real del equipo o del espacio de trabajo, en luz natural, sin retoque de estilo. Si de momento no la hay, el apartado va solo con texto: la web ya está preparada para eso.
 
 ---
 
 ## 2. Infografías (Canva)
 
-Briefs cortos; usar fondo #0a0a0a, tipografía Inter, acentos #00b4d8 y #7b2ff7. Textos siempre editables (bilingüe).
+Briefs cortos, en el tono de la web: describen, no venden. Fondo #141110, Space Grotesk para títulos, IBM Plex Sans para texto, Barlow Condensed para etiquetas y numerales. Textos siempre editables (bilingüe). Formato base 1080×1350 para LinkedIn y 1920×1080 para presentaciones.
 
-**A. Las islas de información → el sistema**
-- Izquierda: 4 islas desconectadas: "ERP" · "Excel de planificación" · "Planos" · "Planta".
-- Derecha: las mismas piezas conectadas a un nodo central "Tu sistema".
-- Título: *"De islas de información a un solo sistema"*.
+**A. La empresa en una ficha**
+- Título: *Braced Engineering*.
+- Tres filas etiqueta/valor, exactamente las de la web: **Actividad** · **Especialización** · **Sectores** (textos en `web-industrial.md` §3, apartado 01).
+- Sin imagen. La llave del logotipo arriba a la izquierda.
 
-**B. El proceso en 3 pasos**
-- Línea horizontal con 3 hitos: **01 Entendemos → 02 Construimos → 03 Evolucionamos**.
-- Una frase de 6-8 palabras bajo cada hito (sacarlas de `web-industrial.md` §4.3).
+**B. Cinco áreas de trabajo**
+- Lista numerada 01–05 con título y una línea de descripción: Sistemas de gestión internos · Integración · Datos e indicadores · Análisis e IA aplicada · Infraestructura y mantenimiento.
+- Numerales en Barlow Condensed naranja; el resto en crema.
 
-**C. Mapa de capacidades**
-- Grid 3×2 con icono + título de las 6 capacidades (§4.4).
-- Estilo iconos: línea fina cian, sin relleno, esquinas redondeadas.
+**C. Cuatro sectores**
+- Cuadrícula 2×2 con borde grueso (2 px, crema al 22 %), como en la web: nombre del sector, línea "a quién" en condensada atenuada, tres o cuatro líneas de "qué hacemos".
+- Los cuatro con el mismo peso visual: ni tamaño ni color distinguen a ninguno.
 
-**D. Flujo plano → máquina**
-- Diagrama de flujo: "Modelo BIM/CAD → Sistema Braced → Órdenes de fabricación → CNC/PLC → Pieza fabricada".
-- Debajo, una capa transversal: "Trazabilidad e indicadores en tiempo real".
+**D. Cómo trabajamos**
+- Un párrafo (el de la web, §3 apartado 04) y debajo tres columnas con línea superior naranja: **Análisis** · **Desarrollo** · **Mantenimiento y evolución**.
 
-**E. Antes / Después**
-- Dos columnas: "Hoy" (Excel, correos, dobles introducciones, datos a mes vencido) vs "Con Braced" (una fuente de verdad, flujo automático, datos en vivo).
-- Máximo 4 filas, texto corto.
+**E. Plantilla de ficha de trabajo**
+- Cabecera: nombre del sistema. Cuerpo: descripción de tres o cuatro líneas. Pie: cuatro campos con etiqueta condensada — Sector · Alcance · Integraciones · Cliente.
+- Una plantilla, tres instancias (las fichas de la web). Si el cliente no se puede nombrar, el campo se omite; nunca "confidencial" ni "gran empresa del sector".
 
 ---
 
 ## 3. Vídeos
 
-### Loops de fondo (5-10 s, sin audio, para hero o secciones)
+### Loop de fondo (5-10 s, sin audio; para cabecera de redes, no para la web)
 
 ```
-Seamless loop: cyan particles drifting in dark space slowly assembling into
-a glowing curly brace symbol, then gently dispersing
+Seamless loop: a dark steel curly brace symbol slowly rotating a few degrees,
+its edges glowing ember orange, warm charcoal background, no other elements
 ```
 
-```
-Seamless loop: slow dolly across a dark automated factory line, robotic arms
-moving, faint cyan light pulses traveling along the machines
-```
+### Vídeo de presentación (30-40 s, LinkedIn y propuestas)
 
-```
-Seamless loop: minimal dashboard hologram with live charts floating above a
-dark factory floor, numbers ticking, subtle violet glow
-```
-
-### Vídeo de presentación (30-45 s, para web o LinkedIn)
-
-Escenas de 6-8 s cada una (generar por separado y montar):
+Cuatro escenas documentales de 6-8 s, misma luz y ritmo, sin tensión ni "antes/después". Generar por separado y montar sobre el Guión 2.
 
 1. ```
-   Dark screen, a single cyan line draws a curly brace symbol
+   Slow push-in on a technical office desk: printed drawings, a monitor with a
+   CAD model, morning light
    ```
 2. ```
-   Engineering office at night, CAD screens glowing, papers and
-   spreadsheets piling up, slight tension in the atmosphere
+   Handheld walk along a fabrication line, parts with paper tags moving on a
+   conveyor, one CNC machine working
    ```
 3. ```
-   The same data flowing as light through cables into factory machines
-   that start moving in sync, relief and order
+   A maintenance bay: an engineer's hands (no face) placing a tagged component
+   on a bench next to an open laptop
    ```
 4. ```
-   Wide shot of a calm, synchronized smart factory with a minimal
-   floating dashboard, cyan and violet accents, confident tone
+   Static shot of a plain dashboard on a monitor in a site office, out of
+   focus, a window with a construction site behind
    ```
 
-Cierre: logo Braced sobre negro (usar `img/brand/logo.svg`, no generarlo).
+Cierre: logotipo Braced sobre #141110 (usar `img/brand/logo.svg`, no generarlo) y, debajo, en condensada: *Construcción · Ingeniería · Fabricación · Maquinaria y activos*.
 
 ---
 
 ## 4. Locuciones (ElevenLabs)
 
-**Configuración sugerida:** voz es-ES adulta, tono sobrio y seguro (perfil "narración corporativa", no comercial agresivo). Stability ~50 %, similarity ~75 %, style bajo. Generar también versión EN con la voz equivalente en inglés.
+**Configuración sugerida:** voz es-ES adulta, registro de narración informativa (documental, no publicitario). Stability ~55 %, similarity ~75 %, style mínimo, sin énfasis. Versión EN con una voz equivalente en inglés británico o neutro.
 
-**Guión 1 — Presentación de marca (~20 s):**
-> En la mayoría de empresas industriales, la información vive en islas. El ERP no sabe qué pasa en planta. Los planos se traducen a mano. Y la planificación depende de un Excel. En Braced construimos el sistema que lo une. Software a la altura de tu ingeniería.
+Los guiones son el texto de la web leído en voz alta. No se añade nada que la web no diga.
+
+**Guión 1 — La empresa (~25 s):**
+> Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria; los integramos con su oficina técnica, sus equipos y sus datos, y los mantenemos en producción.
 
 **Guión 2 — Voz en off del vídeo de presentación (~35 s):**
-> Tu maquinaria ya es digital. Tus procesos, todavía no. *(pausa)* En Braced nos integramos en tu organización: empezamos pisando la planta, construimos el sistema que conecta tu oficina técnica con tus máquinas, y lo mantenemos vivo mientras tu negocio crece. *(pausa)* Del plano a la máquina, sin fricción. Braced Engineering. Veinte minutos para ver si encajamos.
+> Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. *(pausa)* Desarrollamos sistemas de gestión internos, integramos ERP, oficina técnica y maquinaria, y trabajamos con los datos de operación. *(pausa)* Trabajamos integrados en la organización del cliente: análisis sobre el terreno, desarrollo iterativo con entregas periódicas, y mantenimiento del sistema en producción. *(pausa)* Construcción, ingeniería, fabricación, maquinaria y activos.
 
-**Guión 3 — Caso bandera BIM-a-Fabricación (~20 s):**
-> Del modelo arquitectónico a la máquina en planta, sin pasos manuales. Nuestra plataforma BIM-a-fabricación gestiona todo el ciclo de la construcción industrializada: planos, órdenes, logística y automatización de maquinaria. Un solo sistema, trazabilidad total.
+**Guión 3 — Cómo trabajamos (~20 s):**
+> Trabajamos integrados en la organización del cliente. Un proyecto empieza con un análisis de la operación sobre el terreno. A partir de ahí se define el sistema y se desarrolla de forma iterativa, con entregas periódicas. Una vez en producción, nos ocupamos de su mantenimiento y de su evolución.
 
-**Guión 1 EN (para redes / versión inglesa):**
-> In most industrial companies, information lives on islands. The ERP doesn't know what happens on the floor. Drawings are translated by hand. Planning lives in a spreadsheet. At Braced, we build the system that brings it together. Software that matches your engineering.
+**Guión 1 EN:**
+> Braced Engineering is a software engineering company specialised in the industrial and construction sectors. We develop the internal systems that construction, engineering, manufacturing and machinery companies run on; we integrate them with their technical office, their equipment and their data, and keep them in production.
 
 ---
 
 ## 5. Dónde va cada asset
 
-| Asset | Ubicación | Formato |
+| Asset | Destino | Formato |
 |---|---|---|
-| Fondos de sección | Detrás de cada pantalla (sustituyen/complementan orbes) | WebP 1920×1080, ≤300 KB |
-| Ilustraciones de casos | Tarjetas de la sección Casos | WebP 800×600 |
-| Infografías A y E | Sección Qué hacemos / material comercial y LinkedIn | PNG/WebP; en web, mejor rehacer como SVG |
-| Infografías B, C, D | Refuerzo de Cómo/Capacidades y propuestas comerciales | ídem |
-| Loops de vídeo | Fondo del hero (desktop; en móvil, imagen estática) | MP4 H.264 sin audio, ≤4 MB, con póster WebP |
-| Vídeo presentación + Guión 2 | LinkedIn, propuestas, y opcionalmente sección Cómo | MP4 1080p con subtítulos |
-| Guiones 1 y 3 | Audio para vídeos sociales / demos | MP3 |
+| Foto real de equipo u oficina | Web, apartado 01 (sustituye al recuadro "pendiente") | WebP 900×600, ≤200 KB |
+| Capturas o diagramas de los sistemas | Web, fichas del apartado 05 (opcional) | WebP 1200×800 |
+| Llave en metal | Avatar y cabecera de LinkedIn, favicon grande | PNG 1024×1024 |
+| Imágenes de sector | Posts de LinkedIn; futuras páginas por sector si las hubiera | WebP 1600×1000 |
+| Infografías A–E | LinkedIn, propuestas, presentaciones | PNG/PDF; editables en Canva |
+| Loop de la llave | Cabecera de vídeo en redes | MP4 sin audio, ≤4 MB |
+| Vídeo de presentación + Guión 2 | LinkedIn, propuestas | MP4 1080p con subtítulos ES/EN |
+| Guiones 1 y 3 | Audio para vídeos cortos o presentaciones | MP3 |
 
-## 6. Notas rápidas
+## 6. Notas
 
-- La web ya tiene una identidad fuerte (canvas de partículas + orbes): cualquier imagen debe **sumarse a ese lenguaje**, no competir con él. Ante la duda: más oscuro, más simple.
-- Los loops de vídeo de fondo solo en desktop y comprimidos; en móvil se sirve imagen (misma regla que ya sigue el canvas actual).
-- Las infografías con texto: mantener siempre el archivo editable en Canva para poder sacar la versión EN.
-- Si una imagen generada muestra maquinaria de una marca reconocible, descartarla.
+- La web no lleva vídeo de fondo ni imágenes decorativas: el estilo se sostiene con tipografía, retícula y el naranja bien dosificado. Añadir imágenes "para llenar" iría contra el diseño.
+- Cualquier imagen generada que muestre maquinaria de una marca reconocible, se descarta.
+- Las infografías con texto se mantienen editables en Canva para sacar la versión EN sin regenerar.
+- Todo texto que aparezca en un asset sale de `web-industrial.md`; si hace falta una frase nueva, se escribe en el mismo registro: describe, no vende.
