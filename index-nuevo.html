@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Braced Engineering — Ingeniería de software para construcción, ingeniería e industria</title>
+  <meta name="description" content="Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos, integramos y mantenemos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria.">
+  <meta property="og:title" content="Braced Engineering">
+  <meta property="og:description" content="Ingeniería de software especializada en los sectores industrial y de la construcción.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://bracedeng.com/">
+  <link rel="icon" type="image/svg+xml" href="img/brand/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="img/brand/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #141110;
+      --bg2: #1a1614;
+      --footer: #0b0908;
+      --ink: #ece5dc;
+      --ink2: #b8b0a6;
+      --dim: #7d766d;
+      --line: rgba(236,229,220,0.14);
+      --line2: rgba(236,229,220,0.22);
+      --accent: #ff6a00;
+      --accent2: #ff9f1c;
+      --accent-hover: #ffc46b;
+      --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+      --display: 'Space Grotesk', 'Segoe UI', Arial, sans-serif;
+      --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+      --nav-h: 64px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--sans); font-size: 16px; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent2); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { color: var(--accent-hover); }
+    h1, h2, h3 { font-family: var(--display); margin: 0; font-weight: 600; letter-spacing: -0.01em; }
+    p { margin: 0; }
+    .label {
+      font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em;
+    }
+    .wrap { max-width: 1440px; margin: 0 auto; padding: 0 56px; }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 20;
+      background: var(--bg); border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; height: var(--nav-h); gap: 24px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+    .brand:hover { color: var(--ink); }
+    .brand-name { font-family: var(--display); font-size: 17px; font-weight: 600; letter-spacing: -0.01em; white-space: nowrap; }
+    .nav-right { display: flex; align-items: center; gap: 26px; }
+    .nav-links { display: flex; align-items: center; gap: 26px; }
+    .nav-link {
+      font-family: var(--cond); font-size: 15px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink2); text-decoration: none; white-space: nowrap;
+    }
+    .nav-link:hover { color: var(--ink); }
+    .lang-btn {
+      font-family: var(--cond); font-size: 13px; font-weight: 700; letter-spacing: 0.1em;
+      background: transparent; border: 1px solid rgba(236,229,220,0.25); color: var(--ink2);
+      padding: 4px 9px; cursor: pointer; line-height: 1.4;
+    }
+    .lang-btn:hover { color: var(--ink); border-color: var(--ink2); }
+    .portal {
+      font-family: var(--cond); font-size: 15px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--ink); text-decoration: none; border: 1.5px solid rgba(255,106,0,0.6); padding: 7px 14px; white-space: nowrap;
+    }
+    .portal:hover { color: var(--ink); border-color: var(--accent); }
+
+    /* LAYOUT */
+    .layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; padding-top: 56px; padding-bottom: 72px; }
+    .toc { position: sticky; top: calc(var(--nav-h) + 24px); align-self: start; }
+    .toc-panel { border: 1.5px solid var(--line2); background: var(--bg2); padding: 22px 24px; }
+    .toc-title { font-size: 13px; letter-spacing: 0.16em; color: var(--dim); }
+    .toc-list { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+    .toc-item {
+      display: flex; gap: 14px; align-items: baseline; text-decoration: none; color: var(--ink2);
+      padding: 4px 0 4px 12px; margin-left: -15px; border-left: 3px solid transparent; font-size: 15px;
+    }
+    .toc-item:hover { color: var(--ink); }
+    .toc-num { font-family: var(--cond); font-size: 15px; font-weight: 700; color: var(--dim); }
+    .toc-item.active { color: var(--ink); font-weight: 500; border-left-color: var(--accent); }
+    .toc-item.active .toc-num { color: var(--accent); }
+
+    .content { display: flex; flex-direction: column; gap: 60px; min-width: 0; }
+    .sec { scroll-margin-top: calc(var(--nav-h) + 24px); }
+    .sec-head { display: flex; gap: 16px; align-items: baseline; border-bottom: 1px solid var(--line2); padding-bottom: 12px; }
+    .sec-num { font-family: var(--cond); font-size: 16px; font-weight: 700; color: var(--accent2); }
+    .sec-head h2 { font-size: 26px; }
+    .lede { font-family: var(--display); font-size: 27px; font-weight: 500; line-height: 1.4; letter-spacing: -0.01em; max-width: 920px; margin-top: 24px; }
+    .facts {
+      display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 12px 28px; margin-top: 28px; max-width: 920px;
+      padding-top: 20px; border-top: 1px solid var(--line); font-size: 15px; line-height: 1.6;
+    }
+    .facts .label { font-size: 15px; color: var(--accent2); }
+    .facts dd { margin: 0; }
+    .facts { margin-bottom: 0; }
+    .team { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 32px; margin-top: 28px; max-width: 920px; }
+    .body-text { color: var(--ink2); max-width: 800px; margin-top: 20px; }
+    .pending { color: var(--dim); font-style: italic; }
+    .placeholder {
+      height: 130px; border: 1.5px dashed rgba(236,229,220,0.3);
+      background: repeating-linear-gradient(45deg, var(--bg2) 0, var(--bg2) 8px, var(--bg) 8px, var(--bg) 16px);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--cond); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim);
+    }
+
+    .rows { display: flex; flex-direction: column; margin-top: 14px; max-width: 800px; }
+    .row { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(236,229,220,0.12); line-height: 1.6; }
+    .row:last-child { border-bottom: 0; }
+    .row-term { font-family: var(--display); font-size: 15px; font-weight: 600; color: var(--ink); }
+    .row-desc { font-size: 14.5px; color: var(--ink2); }
+
+    .sectors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
+    .sector { border: 2px solid var(--line2); background: var(--bg2); padding: 22px 24px; }
+    .sector h3 { font-size: 19px; }
+    .sector-who { font-family: var(--cond); font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); margin-top: 4px; }
+    .sector-desc { font-size: 14px; line-height: 1.6; color: var(--ink2); margin-top: 12px; }
+
+    .phases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 22px; max-width: 800px; }
+    .phase { border-top: 2px solid var(--accent); padding-top: 12px; }
+    .phase h3 { font-size: 15px; }
+    .phase p { font-size: 13.5px; line-height: 1.55; color: var(--ink2); margin-top: 4px; }
+
+    .sheets { display: flex; flex-direction: column; gap: 14px; margin-top: 22px; }
+    .sheet { border: 1.5px solid var(--line2); background: var(--bg2); padding: 22px 26px; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 28px; }
+    .sheet h3 { font-size: 18px; }
+    .sheet-desc { font-size: 14px; line-height: 1.65; color: var(--ink2); margin-top: 8px; }
+    .sheet-meta { border-left: 1px solid rgba(236,229,220,0.18); padding-left: 20px; font-size: 13px; line-height: 1.9; }
+    .meta-label { font-family: var(--cond); font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--dim); display: inline-block; width: 104px; }
+
+    .contact-lines { margin-top: 20px; color: var(--ink2); line-height: 1.9; }
+
+    /* FOOTER */
+    .stripe { height: 6px; background: repeating-linear-gradient(-45deg, var(--accent) 0, var(--accent) 12px, var(--bg) 12px, var(--bg) 24px); }
+    .footer { background: var(--footer); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 0; flex-wrap: wrap; }
+    .footer-inner, .footer-inner a { font-family: var(--cond); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); text-decoration: none; }
+    .footer-inner a:hover { color: var(--ink2); }
+    .footer-links { display: flex; gap: 22px; }
+    .footer-inner a.footer-mail { color: var(--accent); }
+    .footer-inner a.footer-mail:hover { color: var(--accent2); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .wrap { padding: 0 32px; }
+      .layout { grid-template-columns: 240px minmax(0, 1fr); gap: 40px; }
+      .nav-links { gap: 18px; }
+      .nav-link { font-size: 14px; }
+    }
+    @media (max-width: 900px) {
+      :root { --nav-h: 56px; }
+      .wrap { padding: 0 20px; }
+      .nav-links { display: none; }
+      .nav-right { gap: 12px; }
+      .portal { font-size: 13px; padding: 6px 10px; }
+      .layout { display: block; padding-top: 0; padding-bottom: 56px; }
+      .toc { position: sticky; top: var(--nav-h); z-index: 10; margin: 0 -20px; background: var(--bg); border-bottom: 1px solid var(--line); }
+      .toc-panel { border: 0; background: var(--bg); padding: 0 20px; }
+      .toc-title { display: none; }
+      .toc-list { flex-direction: row; gap: 0; margin: 0; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+      .toc-list::-webkit-scrollbar { display: none; }
+      .toc-item { flex: 0 0 auto; margin: 0; padding: 12px 14px 10px 0; border-left: 0; border-bottom: 3px solid transparent; font-size: 14px; gap: 8px; margin-right: 10px; white-space: nowrap; }
+      .toc-item.active { border-bottom-color: var(--accent); }
+      .content { gap: 48px; padding-top: 36px; }
+      .sec { scroll-margin-top: calc(var(--nav-h) + 56px); }
+      .sec-head h2 { font-size: 22px; }
+      .lede { font-size: 21px; }
+      .facts { grid-template-columns: 1fr; gap: 4px 0; }
+      .facts .label { margin-top: 10px; }
+      .facts .label:first-child { margin-top: 0; }
+      .team { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; gap: 4px; }
+      .sectors { grid-template-columns: 1fr; }
+      .phases { grid-template-columns: 1fr; }
+      .sheet { grid-template-columns: 1fr; padding: 20px; gap: 16px; }
+      .sheet-meta { border-left: 0; padding-left: 0; border-top: 1px solid rgba(236,229,220,0.18); padding-top: 12px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+    }
+    @media (max-width: 420px) {
+      .brand-name { font-size: 15px; }
+      .portal { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="ember" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#ffb347"></stop>
+        <stop offset="1" stop-color="#ff4d00"></stop>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a href="#la-empresa" class="brand" aria-label="Braced Engineering">
+        <svg width="15" height="28" viewBox="0 0 24 48" fill="none" aria-hidden="true"><path d="M4 6 C4 6 9 6 11 6 C15 6 17 9 17 13 L17 19 C17 23 19 24 22 24 C19 24 17 25 17 29 L17 35 C17 39 15 42 11 42 C9 42 4 42 4 42" stroke="url(#ember)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span class="brand-name">Braced Engineering</span>
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#la-empresa" class="nav-link" data-es="La empresa" data-en="The company">La empresa</a>
+          <a href="#que-hacemos" class="nav-link" data-es="Qué hacemos" data-en="What we do">Qué hacemos</a>
+          <a href="#sectores" class="nav-link" data-es="Sectores" data-en="Sectors">Sectores</a>
+          <a href="#como-trabajamos" class="nav-link" data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</a>
+          <a href="#trabajos" class="nav-link" data-es="Trabajos" data-en="Work">Trabajos</a>
+          <a href="#contacto" class="nav-link" data-es="Contacto" data-en="Contact">Contacto</a>
+        </nav>
+        <button id="lang-toggle" class="lang-btn" type="button" aria-label="Change language">EN</button>
+        <a href="https://console.bracedeng.com/" target="_blank" rel="noopener noreferrer" class="portal" data-es="Acceso clientes" data-en="Client access">Acceso clientes</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap layout">
+
+    <aside class="toc" aria-label="Índice">
+      <div class="toc-panel">
+        <div class="toc-title label" data-es="Índice" data-en="Contents">Índice</div>
+        <ol class="toc-list">
+          <li><a href="#la-empresa" class="toc-item"><span class="toc-num">01</span><span data-es="La empresa" data-en="The company">La empresa</span></a></li>
+          <li><a href="#que-hacemos" class="toc-item"><span class="toc-num">02</span><span data-es="Qué hacemos" data-en="What we do">Qué hacemos</span></a></li>
+          <li><a href="#sectores" class="toc-item"><span class="toc-num">03</span><span data-es="Sectores" data-en="Sectors">Sectores</span></a></li>
+          <li><a href="#como-trabajamos" class="toc-item"><span class="toc-num">04</span><span data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</span></a></li>
+          <li><a href="#trabajos" class="toc-item"><span class="toc-num">05</span><span data-es="Trabajos" data-en="Work">Trabajos</span></a></li>
+          <li><a href="#contacto" class="toc-item"><span class="toc-num">06</span><span data-es="Contacto" data-en="Contact">Contacto</span></a></li>
+        </ol>
+      </div>
+    </aside>
+
+    <div class="content">
+
+      <!-- 01 LA EMPRESA -->
+      <section class="sec" id="la-empresa">
+        <div class="sec-head"><span class="sec-num">01</span><h2 data-es="La empresa" data-en="The company">La empresa</h2></div>
+        <h1 class="lede" data-es="Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, sus equipos y sus datos, y los mantenemos en producción." data-en="Braced Engineering is a software engineering company specialised in the industrial and construction sectors. We develop the internal systems that construction, engineering, manufacturing and machinery companies run on, integrate them with their technical office, their equipment and their data, and keep them in production.">Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, sus equipos y sus datos, y los mantenemos en producción.</h1>
+        <dl class="facts">
+          <dt class="label" data-es="Actividad" data-en="Activity">Actividad</dt>
+          <dd data-es="Desarrollo, integración y mantenimiento de software a medida." data-en="Development, integration and maintenance of custom software.">Desarrollo, integración y mantenimiento de software a medida.</dd>
+          <dt class="label" data-es="Especialización" data-en="Specialisation">Especialización</dt>
+          <dd data-es="Sistemas de operación internos para empresas industriales y de construcción; integración con CAD/BIM, ERP y maquinaria; datos e IA aplicada a la operación." data-en="Internal operating systems for industrial and construction companies; integration with CAD/BIM, ERP and machinery; data and AI applied to operations.">Sistemas de operación internos para empresas industriales y de construcción; integración con CAD/BIM, ERP y maquinaria; datos e IA aplicada a la operación.</dd>
+          <dt class="label" data-es="Sectores" data-en="Sectors">Sectores</dt>
+          <dd data-es="Construcción · Ingeniería · Fabricación · Maquinaria y activos" data-en="Construction · Engineering · Manufacturing · Machinery and assets">Construcción · Ingeniería · Fabricación · Maquinaria y activos</dd>
+        </dl>
+        <div class="team">
+          <p class="body-text" style="margin-top:0"><span data-es="Braced Engineering está formada por ingenieros de software con experiencia en entornos de ingeniería e industria." data-en="Braced Engineering is made up of software engineers with experience in engineering and industrial environments.">Braced Engineering está formada por ingenieros de software con experiencia en entornos de ingeniería e industria.</span> <span class="pending" data-es="[Pendiente: equipo, trayectoria y sede, redactados con datos reales en el mismo tono.]" data-en="[Pending: team, background and location, written with real data in the same tone.]">[Pendiente: equipo, trayectoria y sede, redactados con datos reales en el mismo tono.]</span></p>
+          <div class="placeholder" data-es="Equipo / oficina — pendiente" data-en="Team / office — pending">Equipo / oficina — pendiente</div>
+        </div>
+      </section>
+
+      <!-- 02 QUÉ HACEMOS -->
+      <section class="sec" id="que-hacemos">
+        <div class="sec-head"><span class="sec-num">02</span><h2 data-es="Qué hacemos" data-en="What we do">Qué hacemos</h2></div>
+        <p class="body-text" data-es="Desarrollamos y mantenemos el software que una empresa utiliza para operar. Nuestro trabajo se concentra en cinco áreas:" data-en="We develop and maintain the software a company uses to operate. Our work concentrates on five areas:">Desarrollamos y mantenemos el software que una empresa utiliza para operar. Nuestro trabajo se concentra en cinco áreas:</p>
+        <div class="rows">
+          <div class="row"><span class="row-term" data-es="Sistemas de gestión internos" data-en="Internal management systems">Sistemas de gestión internos</span><span class="row-desc" data-es="Plataformas que centralizan la operación de una empresa: proyectos, órdenes, activos y documentación. Sustituyen hojas de cálculo y herramientas desconectadas." data-en="Platforms that centralise a company's operations: projects, orders, assets and documentation. They replace spreadsheets and disconnected tools.">Plataformas que centralizan la operación de una empresa: proyectos, órdenes, activos y documentación. Sustituyen hojas de cálculo y herramientas desconectadas.</span></div>
+          <div class="row"><span class="row-term" data-es="Integración" data-en="Integration">Integración</span><span class="row-desc" data-es="Conexión entre ERP, oficina técnica (CAD, BIM), maquinaria y sistemas de terceros." data-en="Connection between ERP, technical office (CAD, BIM), machinery and third-party systems.">Conexión entre ERP, oficina técnica (CAD, BIM), maquinaria y sistemas de terceros.</span></div>
+          <div class="row"><span class="row-term" data-es="Datos e indicadores" data-en="Data and indicators">Datos e indicadores</span><span class="row-desc" data-es="Cuadros de mando e informes sobre los datos de operación." data-en="Dashboards and reports on operational data.">Cuadros de mando e informes sobre los datos de operación.</span></div>
+          <div class="row"><span class="row-term" data-es="Análisis e IA aplicada" data-en="Analysis and applied AI">Análisis e IA aplicada</span><span class="row-desc" data-es="Modelos sobre datos de equipos y documentación: mantenimiento predictivo, optimización de parámetros de operación, extracción de datos de documentos." data-en="Models on equipment data and documentation: predictive maintenance, optimisation of operating parameters, data extraction from documents.">Modelos sobre datos de equipos y documentación: mantenimiento predictivo, optimización de parámetros de operación, extracción de datos de documentos.</span></div>
+          <div class="row"><span class="row-term" data-es="Infraestructura y mantenimiento" data-en="Infrastructure and maintenance">Infraestructura y mantenimiento</span><span class="row-desc" data-es="Despliegue, monitorización y evolución continua de los sistemas que desarrollamos." data-en="Deployment, monitoring and continuous evolution of the systems we develop.">Despliegue, monitorización y evolución continua de los sistemas que desarrollamos.</span></div>
+        </div>
+      </section>
+
+      <!-- 03 SECTORES -->
+      <section class="sec" id="sectores">
+        <div class="sec-head"><span class="sec-num">03</span><h2 data-es="Sectores" data-en="Sectors">Sectores</h2></div>
+        <div class="sectors">
+          <div class="sector">
+            <h3 data-es="Construcción" data-en="Construction">Construcción</h3>
+            <div class="sector-who" data-es="Constructoras · promotoras · construcción industrializada" data-en="Contractors · developers · industrialised construction">Constructoras · promotoras · construcción industrializada</div>
+            <p class="sector-desc" data-es="Gestión de proyectos y obra: mediciones y certificaciones, control de costes, documentación y versiones de planos. Análisis de licitaciones públicas. En construcción industrializada, sistemas que conectan el modelo BIM con la fabricación." data-en="Project and site management: measurements and certifications, cost control, drawing documentation and versions. Public tender analysis. In industrialised construction, systems that connect the BIM model with manufacturing.">Gestión de proyectos y obra: mediciones y certificaciones, control de costes, documentación y versiones de planos. Análisis de licitaciones públicas. En construcción industrializada, sistemas que conectan el modelo BIM con la fabricación.</p>
+          </div>
+          <div class="sector">
+            <h3 data-es="Ingeniería" data-en="Engineering">Ingeniería</h3>
+            <div class="sector-who" data-es="Ingenierías · oficinas técnicas · consultoras técnicas" data-en="Engineering firms · technical offices · technical consultancies">Ingenierías · oficinas técnicas · consultoras técnicas</div>
+            <p class="sector-desc" data-es="Gestión documental y de versiones de proyectos, automatización de cálculos y entregables, integración con CAD y BIM. Herramientas internas que sustituyen a hojas de cálculo compartidas y a procesos manuales de revisión." data-en="Document and version management for projects, automation of calculations and deliverables, integration with CAD and BIM. Internal tools that replace shared spreadsheets and manual review processes.">Gestión documental y de versiones de proyectos, automatización de cálculos y entregables, integración con CAD y BIM. Herramientas internas que sustituyen a hojas de cálculo compartidas y a procesos manuales de revisión.</p>
+          </div>
+          <div class="sector">
+            <h3 data-es="Fabricación" data-en="Manufacturing">Fabricación</h3>
+            <div class="sector-who" data-es="Fabricantes · talleres · plantas de producción" data-en="Manufacturers · workshops · production plants">Fabricantes · talleres · plantas de producción</div>
+            <p class="sector-desc" data-es="Órdenes de fabricación, trazabilidad de piezas y lotes, control de producción e indicadores. Integración con máquinas (CNC, PLC) y con el ERP existente." data-en="Manufacturing orders, traceability of parts and batches, production control and indicators. Integration with machines (CNC, PLC) and with the existing ERP.">Órdenes de fabricación, trazabilidad de piezas y lotes, control de producción e indicadores. Integración con máquinas (CNC, PLC) y con el ERP existente.</p>
+          </div>
+          <div class="sector">
+            <h3 data-es="Maquinaria y activos" data-en="Machinery and assets">Maquinaria y activos</h3>
+            <div class="sector-who" data-es="Fabricantes de maquinaria · mantenedores · gestores de flotas" data-en="Machinery manufacturers · maintenance providers · fleet operators">Fabricantes de maquinaria · mantenedores · gestores de flotas</div>
+            <p class="sector-desc" data-es="Gestión de mantenimiento, reparaciones y componentes; datos de sensores y de operación; modelos de mantenimiento predictivo y de optimización de parámetros." data-en="Maintenance, repair and component management; sensor and operating data; predictive maintenance and parameter optimisation models.">Gestión de mantenimiento, reparaciones y componentes; datos de sensores y de operación; modelos de mantenimiento predictivo y de optimización de parámetros.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 04 CÓMO TRABAJAMOS -->
+      <section class="sec" id="como-trabajamos">
+        <div class="sec-head"><span class="sec-num">04</span><h2 data-es="Cómo trabajamos" data-en="How we work">Cómo trabajamos</h2></div>
+        <p class="body-text" data-es="Trabajamos integrados en la organización del cliente. Un proyecto empieza con un análisis de la operación sobre el terreno. A partir de ahí se define el sistema y se desarrolla de forma iterativa, con entregas periódicas. Una vez en producción, nos ocupamos de su mantenimiento y de su evolución." data-en="We work embedded in the client's organisation. A project starts with an on-site analysis of the operation. From there the system is defined and developed iteratively, with periodic deliveries. Once in production, we take care of its maintenance and evolution.">Trabajamos integrados en la organización del cliente. Un proyecto empieza con un análisis de la operación sobre el terreno. A partir de ahí se define el sistema y se desarrolla de forma iterativa, con entregas periódicas. Una vez en producción, nos ocupamos de su mantenimiento y de su evolución.</p>
+        <div class="phases">
+          <div class="phase"><h3 data-es="Análisis" data-en="Analysis">Análisis</h3><p data-es="Procesos, datos y sistemas existentes." data-en="Existing processes, data and systems.">Procesos, datos y sistemas existentes.</p></div>
+          <div class="phase"><h3 data-es="Desarrollo" data-en="Development">Desarrollo</h3><p data-es="Iterativo, con entregas periódicas." data-en="Iterative, with periodic deliveries.">Iterativo, con entregas periódicas.</p></div>
+          <div class="phase"><h3 data-es="Mantenimiento y evolución" data-en="Maintenance and evolution">Mantenimiento y evolución</h3><p data-es="Soporte continuo del sistema en producción." data-en="Continuous support of the system in production.">Soporte continuo del sistema en producción.</p></div>
+        </div>
+      </section>
+
+      <!-- 05 TRABAJOS -->
+      <section class="sec" id="trabajos">
+        <div class="sec-head"><span class="sec-num">05</span><h2 data-es="Trabajos" data-en="Work">Trabajos</h2></div>
+        <div class="sheets">
+          <article class="sheet">
+            <div>
+              <h3 data-es="Plataforma BIM-a-fabricación" data-en="BIM-to-manufacturing platform">Plataforma BIM-a-fabricación</h3>
+              <p class="sheet-desc" data-es="Sistema de gestión de la fabricación industrializada de edificios. A partir del modelo BIM genera las órdenes de fabricación, gestiona la logística de los elementos y automatiza la maquinaria de planta. Incluye el tratamiento de la geometría 3D de los elementos." data-en="Management system for the industrialised manufacturing of buildings. From the BIM model it generates the manufacturing orders, manages the logistics of the elements and automates the plant machinery. Includes the processing of the elements' 3D geometry.">Sistema de gestión de la fabricación industrializada de edificios. A partir del modelo BIM genera las órdenes de fabricación, gestiona la logística de los elementos y automatiza la maquinaria de planta. Incluye el tratamiento de la geometría 3D de los elementos.</p>
+            </div>
+            <div class="sheet-meta">
+              <div><span class="meta-label" data-es="Sector" data-en="Sector">Sector</span><span data-es="Construcción industrializada" data-en="Industrialised construction">Construcción industrializada</span></div>
+              <div><span class="meta-label" data-es="Alcance" data-en="Scope">Alcance</span><span data-es="Sistema completo" data-en="Complete system">Sistema completo</span></div>
+              <div><span class="meta-label" data-es="Integraciones" data-en="Integrations">Integraciones</span><span data-es="BIM, maquinaria" data-en="BIM, machinery">BIM, maquinaria</span></div>
+              <div><span class="meta-label" data-es="Cliente" data-en="Client">Cliente</span><span class="pending" data-es="[pendiente]" data-en="[pending]">[pendiente]</span></div>
+            </div>
+          </article>
+          <article class="sheet">
+            <div>
+              <h3 data-es="Gestión de reparación de componentes" data-en="Component repair management">Gestión de reparación de componentes</h3>
+              <p class="sheet-desc" data-es="Sistema que gestiona el ciclo de reparación de componentes entre los clientes, los talleres regionales y la logística: recepción, diagnóstico, reparación, envío y trazabilidad de cada componente a lo largo del proceso." data-en="System that manages the component repair cycle between clients, regional workshops and logistics: reception, diagnosis, repair, dispatch and traceability of each component throughout the process.">Sistema que gestiona el ciclo de reparación de componentes entre los clientes, los talleres regionales y la logística: recepción, diagnóstico, reparación, envío y trazabilidad de cada componente a lo largo del proceso.</p>
+            </div>
+            <div class="sheet-meta">
+              <div><span class="meta-label" data-es="Sector" data-en="Sector">Sector</span><span data-es="Maquinaria y activos" data-en="Machinery and assets">Maquinaria y activos</span></div>
+              <div><span class="meta-label" data-es="Alcance" data-en="Scope">Alcance</span><span data-es="CRM a medida" data-en="Custom CRM">CRM a medida</span></div>
+              <div><span class="meta-label" data-es="Integraciones" data-en="Integrations">Integraciones</span><span data-es="Logística" data-en="Logistics">Logística</span></div>
+              <div><span class="meta-label" data-es="Cliente" data-en="Client">Cliente</span><span class="pending" data-es="[pendiente]" data-en="[pending]">[pendiente]</span></div>
+            </div>
+          </article>
+          <article class="sheet">
+            <div>
+              <h3 data-es="Análisis de licitaciones públicas" data-en="Public tender analysis">Análisis de licitaciones públicas</h3>
+              <p class="sheet-desc" data-es="Herramienta que extrae y estructura los datos de licitaciones públicas anteriores (importes, adjudicatarios, condiciones) a partir de la documentación original, para el análisis de nuevas oportunidades." data-en="Tool that extracts and structures data from previous public tenders (amounts, awardees, conditions) from the original documentation, for the analysis of new opportunities.">Herramienta que extrae y estructura los datos de licitaciones públicas anteriores (importes, adjudicatarios, condiciones) a partir de la documentación original, para el análisis de nuevas oportunidades.</p>
+            </div>
+            <div class="sheet-meta">
+              <div><span class="meta-label" data-es="Sector" data-en="Sector">Sector</span><span data-es="Construcción · Contratación pública" data-en="Construction · Public procurement">Construcción · Contratación pública</span></div>
+              <div><span class="meta-label" data-es="Alcance" data-en="Scope">Alcance</span><span data-es="Herramienta de análisis" data-en="Analysis tool">Herramienta de análisis</span></div>
+              <div><span class="meta-label" data-es="Integraciones" data-en="Integrations">Integraciones</span><span data-es="Documentación, OCR" data-en="Documentation, OCR">Documentación, OCR</span></div>
+              <div><span class="meta-label" data-es="Cliente" data-en="Client">Cliente</span><span class="pending" data-es="[pendiente]" data-en="[pending]">[pendiente]</span></div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 06 CONTACTO -->
+      <section class="sec" id="contacto">
+        <div class="sec-head"><span class="sec-num">06</span><h2 data-es="Contacto" data-en="Contact">Contacto</h2></div>
+        <div class="contact-lines">
+          <div><a href="mailto:team@bracedeng.com">team@bracedeng.com</a></div>
+          <div><span data-es="Para una primera conversación se puede " data-en="For a first conversation you can ">Para una primera conversación se puede </span><a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1_0a6VAWvtBOOEXyGWpRZndUF5JMsPYWCyfMzKnBmCU-4DpqT5-PepYsnTuoADAac-2KjOHlAj" target="_blank" rel="noopener noreferrer" data-es="reservar un hueco directamente en la agenda" data-en="book a slot directly in the calendar">reservar un hueco directamente en la agenda</a><span>.</span></div>
+          <div><span data-es="Clientes: " data-en="Clients: ">Clientes: </span><a href="https://console.bracedeng.com/" target="_blank" rel="noopener noreferrer">console.bracedeng.com</a></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div class="stripe" aria-hidden="true"></div>
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <span>&copy; 2026 Braced Engineering</span>
+      <div class="footer-links">
+        <a href="legal.html" data-es="Aviso legal" data-en="Legal notice">Aviso legal</a>
+        <a href="privacidad.html" data-es="Privacidad" data-en="Privacy">Privacidad</a>
+        <a href="cookies.html" data-es="Cookies" data-en="Cookies">Cookies</a>
+      </div>
+      <a href="mailto:team@bracedeng.com" class="footer-mail">team@bracedeng.com</a>
+    </div>
+  </footer>
+
+  <script>
+  (() => {
+    // --- Idioma ---
+    const TITLES = {
+      es: 'Braced Engineering — Ingeniería de software para construcción, ingeniería e industria',
+      en: 'Braced Engineering — Software engineering for construction, engineering and industry'
+    };
+    const langBtn = document.getElementById('lang-toggle');
+    let lang = 'es';
+
+    function setLang(next) {
+      lang = next;
+      document.documentElement.lang = lang;
+      document.title = TITLES[lang];
+      langBtn.textContent = lang === 'es' ? 'EN' : 'ES';
+      langBtn.setAttribute('aria-label', lang === 'es' ? 'Switch to English' : 'Cambiar a español');
+      document.querySelectorAll('[data-es]').forEach(el => {
+        const text = el.getAttribute('data-' + lang);
+        if (text !== null && el.children.length === 0) el.textContent = text;
+      });
+      try { localStorage.setItem('braced_lang', lang); } catch (e) {}
+    }
+
+    let saved = null;
+    try { saved = localStorage.getItem('braced_lang'); } catch (e) {}
+    setLang(saved === 'en' ? 'en' : 'es');
+    langBtn.addEventListener('click', () => setLang(lang === 'es' ? 'en' : 'es'));
+
+    // --- Índice: marca la sección visible ---
+    const sections = Array.from(document.querySelectorAll('.sec'));
+    const tocItems = Array.from(document.querySelectorAll('.toc-item'));
+    const byId = Object.fromEntries(tocItems.map(a => [a.getAttribute('href').slice(1), a]));
+    let current = null;
+
+    function navOffset() {
+      const nav = document.querySelector('.nav');
+      const toc = document.querySelector('.toc');
+      const mobile = window.matchMedia('(max-width: 900px)').matches;
+      return nav.offsetHeight + (mobile ? toc.offsetHeight : 0) + 32;
+    }
+
+    function updateActive() {
+      const offset = navOffset();
+      let active = sections[0];
+      for (const s of sections) {
+        if (s.getBoundingClientRect().top - offset <= 0) active = s;
+      }
+      // Al final de la página, marca la última
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) {
+        active = sections[sections.length - 1];
+      }
+      if (active === current) return;
+      current = active;
+      tocItems.forEach(a => { a.classList.remove('active'); a.removeAttribute('aria-current'); });
+      const item = byId[active.id];
+      if (item) {
+        item.classList.add('active');
+        item.setAttribute('aria-current', 'true');
+        if (window.matchMedia('(max-width: 900px)').matches && item.scrollIntoView) {
+          item.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+        }
+      }
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => { updateActive(); ticking = false; });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    window.addEventListener('load', updateActive);
+    updateActive();
+  })();
+  </script>
+</body>
+</html>
