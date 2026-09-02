@@ -2,7 +2,7 @@
 
 Estado de la propuesta tras tres rondas de exploración:
 
-- **Estructura:** S1 — "Índice" (perfil de empresa con índice fijo y contenido en prosa y listas).
+- **Estructura:** S1 — "Índice" (perfil de empresa con índice fijo y contenido en prosa y listas). La empresa va primero.
 - **Tono:** descriptivo. La web describe qué empresa es Braced, en qué está especializada, qué hace, para quién y cómo. No vende nada.
 - **Alcance:** construcción, ingeniería, fabricación, maquinaria y activos — cuatro sectores al mismo nivel.
 - **Estilo visual:** Fundición con toques de Alta Visibilidad, aplicado con contención (ver §5).
@@ -16,7 +16,7 @@ Las exploraciones (rondas 1–3 y la propuesta visual anterior) siguen en el can
 1. **Describir, no vender.** Sin eslóganes, sin titulares de "dolor", sin llamadas a la acción imperativas, sin superlativos ni adjetivos de valor. Los verbos de acción que quedan son etiquetas de navegación ("Ver ficha", "reservar en la agenda").
 2. **Especialización y actividad explícitas en la primera frase.** Quien llegue a la web tiene que saber en un párrafo qué tipo de empresa es, en qué está especializada y qué hace exactamente.
 3. **Ningún sector domina.** El vocabulario cambia según el sector (mediciones y certificaciones, versiones de proyecto, órdenes y trazabilidad, mantenimiento y flotas); "planta" no es la palabra por defecto.
-4. **Solo trabajos 100 % Braced.** El conocimiento procedente de proyectos privativos (optimización de parámetros de maquinaria, mantenimiento predictivo) se describe como capacidad en "Qué hacemos", sin sector ni contexto identificable.
+4. **Solo trabajos 100 % Braced.** El conocimiento procedente de proyectos privativos (optimización de parámetros de maquinaria, mantenimiento predictivo) se describe como capacidad en "Qué hacemos" (02), sin sector ni contexto identificable.
 5. **Nada inventado.** Donde falte un dato real (equipo, sede, cliente, cifras) va un marcador `[pendiente]`, nunca un relleno.
 
 ## 2. Estructura
@@ -25,19 +25,18 @@ Página única con **scroll natural** (se abandona la navegación por pantallas 
 
 | # | Apartado | Contenido |
 |---|---|---|
-| — | Presentación | Un párrafo descriptivo + ficha Actividad / Especialización / Sectores |
-| 01 | Qué hacemos | Introducción + cinco áreas de trabajo |
-| 02 | Sectores | Cuatro sectores, descritos en paralelo |
-| 03 | Cómo trabajamos | Un párrafo + tres fases |
-| 04 | Trabajos | Tres fichas de proyecto con datos |
-| 05 | La empresa | Quiénes somos `[pendiente]` |
+| 01 | La empresa | Párrafo descriptivo (qué empresa es, especialización) + ficha Actividad / Especialización / Sectores + equipo y trayectoria `[pendiente]` |
+| 02 | Qué hacemos | Introducción + cinco áreas de trabajo |
+| 03 | Sectores | Cuatro sectores, descritos en paralelo |
+| 04 | Cómo trabajamos | Un párrafo + tres fases |
+| 05 | Trabajos | Tres fichas de proyecto con datos |
 | 06 | Contacto | Email, agenda, acceso de clientes |
 
 Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" (portal `console.bracedeng.com`). Sin botón de contacto destacado: Contacto es un apartado más.
 
 ## 3. Textos (ES)
 
-### Presentación
+### 01 — La empresa
 
 > Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, su maquinaria y sus datos, y los mantenemos en producción.
 
@@ -47,7 +46,11 @@ Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" 
 | **Especialización** | Sistemas de operación internos para empresas industriales y de construcción; integración con CAD/BIM, ERP y maquinaria; datos e IA aplicada a la operación. |
 | **Sectores** | Construcción · Ingeniería · Fabricación · Maquinaria y activos |
 
-### 01 — Qué hacemos
+> Braced Engineering está formada por ingenieros de software con experiencia en entornos de ingeniería e industria. `[pendiente: equipo, trayectoria, sede — redactar con datos reales, en el mismo tono descriptivo]`
+
+Opcional: fotografía del equipo u oficina. Si no la hay, el apartado va solo con texto.
+
+### 02 — Qué hacemos
 
 > Desarrollamos y mantenemos el software que una empresa utiliza para operar. Nuestro trabajo se concentra en cinco áreas:
 
@@ -59,7 +62,7 @@ Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" 
 | **Análisis e IA aplicada** | Modelos sobre datos de equipos y documentación: mantenimiento predictivo, optimización de parámetros de operación, extracción de datos de documentos. |
 | **Infraestructura y mantenimiento** | Despliegue, monitorización y evolución continua de los sistemas que desarrollamos. |
 
-### 02 — Sectores
+### 03 — Sectores
 
 | Sector | A quién | Qué hacemos |
 |---|---|---|
@@ -68,7 +71,7 @@ Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" 
 | **Fabricación** | Fabricantes, talleres, plantas de producción | Órdenes de fabricación, trazabilidad de piezas y lotes, control de producción e indicadores. Integración con máquinas (CNC, PLC) y con el ERP existente. |
 | **Maquinaria y activos** | Fabricantes de maquinaria, mantenedores, gestores de flotas | Gestión de mantenimiento, reparaciones y componentes; datos de sensores y de operación; modelos de mantenimiento predictivo y de optimización de parámetros. |
 
-### 03 — Cómo trabajamos
+### 04 — Cómo trabajamos
 
 > Trabajamos integrados en la organización del cliente. Un proyecto empieza con un análisis de la operación sobre el terreno. A partir de ahí se define el sistema y se desarrolla de forma iterativa, con entregas periódicas. Una vez en producción, nos ocupamos de su mantenimiento y de su evolución.
 
@@ -78,7 +81,7 @@ Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" 
 | **Desarrollo** | Iterativo, con entregas periódicas. |
 | **Mantenimiento y evolución** | Soporte continuo del sistema en producción. |
 
-### 04 — Trabajos
+### 05 — Trabajos
 
 Fichas de proyecto: qué es el sistema, sector, alcance, integraciones. Sin adjetivos. El cliente se nombra solo si se puede.
 
@@ -94,13 +97,7 @@ Sector: Activos industriales · Alcance: CRM a medida · Integraciones: Logísti
 Herramienta que extrae y estructura los datos de licitaciones públicas anteriores (importes, adjudicatarios, condiciones) a partir de la documentación original, para el análisis de nuevas oportunidades.
 Sector: Construcción · Contratación pública · Alcance: Herramienta de análisis · Tecnología: Extracción de datos, OCR · Cliente: `[pendiente]`
 
-Fuera de la web: trading cuantitativo y agentes conversacionales (fuera de foco); optimización de perforación y mantenimiento predictivo de turbinas (privativos; descritos como capacidad en 01).
-
-### 05 — La empresa
-
-> Braced Engineering está formada por ingenieros de software con experiencia en entornos de ingeniería e industria. `[pendiente: equipo, trayectoria, sede — redactar con datos reales, en el mismo tono descriptivo]`
-
-Opcional: fotografía del equipo u oficina. Si no la hay, el apartado va solo con texto.
+Fuera de la web: trading cuantitativo y agentes conversacionales (fuera de foco); optimización de perforación y mantenimiento predictivo de turbinas (privativos; descritos como capacidad en 02).
 
 ### 06 — Contacto
 
