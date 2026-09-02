@@ -38,7 +38,7 @@ Navegación superior: los seis apartados, selector de idioma, "Acceso clientes" 
 
 ### 01 — La empresa
 
-> Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, su maquinaria y sus datos, y los mantenemos en producción.
+> Braced Engineering es una empresa de ingeniería de software especializada en los sectores industrial y de la construcción. Desarrollamos los sistemas internos con los que operan empresas de construcción, ingeniería, fabricación y maquinaria, los integramos con su oficina técnica, sus equipos y sus datos, y los mantenemos en producción.
 
 | | |
 |---|---|
@@ -91,18 +91,18 @@ Sector: Construcción industrializada · Alcance: Sistema completo · Integracio
 
 **Gestión de reparación de componentes**
 Sistema que gestiona el ciclo de reparación de componentes entre los clientes, los talleres regionales y la logística: recepción, diagnóstico, reparación, envío y trazabilidad de cada componente a lo largo del proceso.
-Sector: Activos industriales · Alcance: CRM a medida · Integraciones: Logística · Cliente: `[pendiente]`
+Sector: Maquinaria y activos · Alcance: CRM a medida · Integraciones: Logística · Cliente: `[pendiente]`
 
 **Análisis de licitaciones públicas**
 Herramienta que extrae y estructura los datos de licitaciones públicas anteriores (importes, adjudicatarios, condiciones) a partir de la documentación original, para el análisis de nuevas oportunidades.
-Sector: Construcción · Contratación pública · Alcance: Herramienta de análisis · Tecnología: Extracción de datos, OCR · Cliente: `[pendiente]`
+Sector: Construcción · Contratación pública · Alcance: Herramienta de análisis · Integraciones: Documentación, OCR · Cliente: `[pendiente]`
 
 Fuera de la web: trading cuantitativo y agentes conversacionales (fuera de foco); optimización de perforación y mantenimiento predictivo de turbinas (privativos; descritos como capacidad en 02).
 
 ### 06 — Contacto
 
 - team@bracedeng.com
-- Para una primera conversación se puede reservar directamente en la agenda. *(enlace actual de Google Calendar)*
+- Para una primera conversación se puede reservar un hueco directamente en la agenda. *(enlace actual de Google Calendar)*
 - Clientes: console.bracedeng.com
 
 ### Pie
