@@ -333,6 +333,12 @@
     }
     @media (max-width: 768px) { .punch-grid { grid-template-columns: 1fr; gap: 12px; } }
 
+    /* --- QUÉ HACEMOS: 4 tarjetas --- */
+    #que-hacemos .section-inner { max-width: 1100px; }
+    #que-hacemos .punch-grid { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    #que-hacemos .punch-item { padding: 32px 22px; }
+    @media (max-width: 1000px) and (min-width: 769px) { #que-hacemos .punch-grid { grid-template-columns: repeat(2, 1fr); } }
+
     /* --- PILLARS (WOW) --- */
     .pillars {
       display: grid; grid-template-columns: repeat(3, 1fr);
@@ -510,7 +516,8 @@
       background: linear-gradient(90deg, transparent, var(--accent), transparent);
       border-radius: 2px;
     }
-    .contact-inner h2 { margin-bottom: 12px; }
+    .contact-inner h2 { margin-bottom: 28px; }
+    #contacto .contact-email { font-size: 1.15rem; }
     .contact-sub { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 48px; }
     .contact-actions { display: flex; flex-direction: column; align-items: center; gap: 28px; }
     .contact-email { font-size: 0.82rem; color: var(--text-muted); }
@@ -638,6 +645,9 @@
       .punch-item h3 { font-size: 0.88rem; margin-bottom: 4px; }
       .punch-item p { font-size: 0.76rem; }
 
+      #que-hacemos .punch-grid { grid-template-columns: 1fr; gap: 12px; }
+      #que-hacemos .punch-item { padding: 24px 20px; }
+
       /* Pillars */
       .pillars { grid-template-columns: 1fr; gap: 10px; margin-top: 28px; }
       .pillar { padding: 24px 20px; }
@@ -676,6 +686,32 @@
       #particle-canvas { display: none; }
     }
 
+    /* --- COOKIE BANNER --- */
+    .cookie-banner {
+      position: fixed; left: 16px; right: 16px; bottom: 16px; z-index: 200;
+      max-width: 720px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 14px 18px; border-radius: 10px;
+      background: rgba(17,17,17,0.96); border: 1px solid var(--border);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      font-size: 0.8rem; color: var(--text);
+    }
+    .cookie-banner[hidden] { display: none; }
+    .cookie-banner a { color: var(--accent); text-decoration: none; margin-left: 6px; font-weight: 600; }
+    .cookie-banner a:hover { text-decoration: underline; }
+    .cookie-buttons { display: flex; gap: 8px; flex-shrink: 0; }
+    .cookie-btn {
+      font-family: inherit; font-size: 0.78rem; font-weight: 600; cursor: pointer;
+      padding: 7px 18px; border-radius: 6px;
+      background: rgba(0,180,216,0.06); color: var(--text-bright);
+      border: 1px solid rgba(0,180,216,0.3); transition: all 0.2s;
+    }
+    .cookie-btn:hover { border-color: var(--accent); color: var(--accent); }
+    @media (max-width: 600px) {
+      .cookie-banner { flex-direction: column; align-items: stretch; gap: 12px; }
+      .cookie-btn { flex: 1; }
+    }
+
     @media (max-width: 380px) {
       .hero h1 { font-size: clamp(1.1rem, 5vw, 1.5rem); }
       .hero-brand { font-size: 1.2rem; }
@@ -698,13 +734,13 @@
       </a>
       <div class="nav-links">
         <button id="lang-toggle" class="lang-btn" aria-label="Change language">EN</button>
-        <a href="#contacto" class="nav-cta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span data-es="Contáctanos" data-en="Contact us">Contáctanos</span></a>
-        <a href="https://console.bracedeng.com/" target="_blank" rel="noopener noreferrer" class="nav-portal"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span data-es="Acceso Clientes" data-en="Client Access">Acceso Clientes</span></a>
+        <a href="#contacto" class="nav-cta" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span data-es="Contáctanos" data-en="Contact us">Contáctanos</span></a>
+        <a href="https://console.bracedeng.com/" target="_blank" rel="noopener noreferrer" class="nav-portal" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:6px"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span data-es="Acceso Clientes" data-en="Client Access">Acceso Clientes</span></a>
       </div>
       <!-- Mobile nav buttons -->
       <div class="nav-right-mobile">
         <button id="lang-toggle-mobile" class="nav-mobile-lang" aria-label="Change language">EN</button>
-        <a href="#contacto" class="nav-mobile-cta" data-es="Contacto" data-en="Contact">Contacto</a>
+        <a href="#contacto" class="nav-mobile-cta" style="display:none" data-es="Contacto" data-en="Contact">Contacto</a>
       </div>
     </div>
   </nav>
@@ -715,8 +751,6 @@
     <button class="side-dot" data-section="1"></button>
     <button class="side-dot" data-section="2"></button>
     <button class="side-dot" data-section="3"></button>
-    <button class="side-dot" data-section="4"></button>
-    <button class="side-dot" data-section="5"></button>
   </div>
 
   <div class="snap-container" id="snap-container">
@@ -731,8 +765,8 @@
           <span class="hero-brand">Braced</span>
         </div>
         <h1 id="hero-title" class="reveal reveal-d1"></h1>
-        <p class="hero-sub reveal reveal-d2" data-es="Ingeniería de software que se integra en tu empresa y la impulsa." data-en="Software engineering that integrates into your company and drives it forward.">Ingeniería de software que se integra en tu empresa y la impulsa.</p>
-        <div class="hero-cta-wrap reveal reveal-d3">
+        <p class="hero-sub reveal reveal-d2" data-es="La columna vertebral de empresas de software y de empresas que dependen del software." data-en="The backbone of software companies and software-dependent businesses.">La columna vertebral de empresas de software y de empresas que dependen del software.</p>
+        <div class="hero-cta-wrap reveal reveal-d3" style="display:none">
           <a href="#contacto" class="btn-glow" id="hero-cta">Hablar con nosotros</a>
         </div>
       </div>
@@ -747,77 +781,34 @@
       <div class="orb orb-1"></div>
       <div class="section-inner">
         <div class="section-label reveal" data-es="Qué hacemos" data-en="What we do">Qué hacemos</div>
-        <h2 class="reveal reveal-d1" data-es="Convertimos tu operación en un sistema inteligente." data-en="We turn your operations into an intelligent system.">Convertimos tu operación en un sistema inteligente.</h2>
-        <p class="body-text reveal reveal-d2" data-es="No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir." data-en="We don't build generic software — we build the infrastructure your business needs to operate, scale, and compete.">No construimos software genérico — construimos la infraestructura que tu negocio necesita para operar, escalar y competir.</p>
+        <h2 class="reveal reveal-d1" data-es="Operaciones de empresas convertidas en sistemas inteligentes." data-en="Company operations turned into intelligent systems.">Operaciones de empresas convertidas en sistemas inteligentes.</h2>
+        <p class="body-text reveal reveal-d2" data-es="Construimos y mantenemos la infraestructura con la que nuestros clientes operan, escalan y compiten." data-en="We build and maintain the infrastructure our clients use to operate, scale and compete.">Construimos y mantenemos la infraestructura con la que nuestros clientes operan, escalan y compiten.</p>
         <div class="punch-grid">
           <div class="punch-item reveal reveal-d1">
             <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h5"/></svg></div>
             <h3 data-es="Datos estructurados" data-en="Structured data">Datos estructurados</h3>
-            <p data-es="Tu información unificada, accesible y lista para actuar." data-en="Your information unified, accessible, and ready to act on.">Tu información unificada, accesible y lista para actuar.</p>
+            <p data-es="Unificamos los datos de las empresas para que sean accesibles y estén listos para aprovecharse." data-en="We unify company data to make it accessible and ready to leverage.">Unificamos los datos de las empresas para que sean accesibles y estén listos para aprovecharse.</p>
           </div>
           <div class="punch-item reveal reveal-d2">
             <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/><path d="M9.5 9c1 0 1.5.5 2.5 1.5S13 12 14.5 12c-1.5 0-2 .5-3 1.5S10.5 15 9.5 15"/></svg></div>
             <h3 data-es="Procesos automatizados" data-en="Automated processes">Procesos automatizados</h3>
-            <p data-es="Sin tareas manuales. Tu equipo se centra en lo que importa." data-en="No manual tasks. Your team focuses on what matters.">Sin tareas manuales. Tu equipo se centra en lo que importa.</p>
+            <p data-es="Automatizamos tareas manuales para que los equipos se centren en su trabajo." data-en="We automate manual tasks so teams can focus on their work.">Automatizamos tareas manuales para que los equipos se centren en su trabajo.</p>
           </div>
           <div class="punch-item reveal reveal-d3">
-            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg></div>
-            <h3 data-es="Decisiones informadas" data-en="Informed decisions">Decisiones informadas</h3>
-            <p data-es="Métricas en tiempo real que guían cada paso del negocio." data-en="Real-time metrics guiding every business decision.">Métricas en tiempo real que guían cada paso del negocio.</p>
+            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M8 9v11"/><path d="M11.5 13h6M11.5 16h4"/></svg></div>
+            <h3 data-es="Interfaces a medida" data-en="Tailored frontends">Interfaces a medida</h3>
+            <p data-es="Creamos interfaces personalizadas para cada rol de la organización." data-en="We build custom interfaces for every role in the organization.">Creamos interfaces personalizadas para cada rol de la organización.</p>
+          </div>
+          <div class="punch-item reveal reveal-d4">
+            <div class="punch-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14.2c2.8.4 5 2.8 5 5.8"/></svg></div>
+            <h3 data-es="Integrados en el equipo" data-en="Embedded in the team">Integrados en el equipo</h3>
+            <p data-es="Trabajamos dentro de la organización de nuestros clientes, como parte de su equipo." data-en="We work inside our clients' organizations, as part of their team.">Trabajamos dentro de la organización de nuestros clientes, como parte de su equipo.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 3. CÓMO -->
-    <section class="snap-section" id="como">
-      <div class="orb orb-2"></div>
-      <div class="orb orb-3"></div>
-      <div class="section-inner">
-        <div class="section-label reveal" data-es="Cómo" data-en="How">Cómo</div>
-        <h2 class="reveal reveal-d1" data-es="Nos integramos en tu organización." data-en="We integrate into your organization.">Nos integramos en tu organización.</h2>
-        <p class="body-text reveal reveal-d2" data-es="Analizamos la operación. Construimos el sistema. Lo mantenemos vivo." data-en="We analyze operations. Build the system. Keep it alive.">Analizamos la operación. Construimos el sistema. Lo mantenemos vivo.</p>
-        <div class="pillars">
-          <div class="pillar reveal">
-            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-            <div class="pillar-num">01</div>
-            <h3 data-es="Entendemos" data-en="Understand">Entendemos</h3>
-            <p data-es="Nos sumergimos en tu operación. Mapeamos procesos, detectamos fricción y definimos exactamente qué construir para generar impacto real." data-en="We dive into your operations. Map processes, detect friction, and define exactly what to build to generate real impact.">Nos sumergimos en tu operación. Mapeamos procesos, detectamos fricción y definimos exactamente qué construir para generar impacto real.</p>
-          </div>
-          <div class="pillar reveal reveal-d1">
-            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            <div class="pillar-num">02</div>
-            <h3 data-es="Construimos" data-en="Build">Construimos</h3>
-            <p data-es="Desarrollamos tecnología sólida, iterativa, integrada con tu equipo. Cada sprint entrega valor real, no demos vacías." data-en="We develop solid, iterative technology, integrated with your team. Every sprint delivers real value, not empty demos.">Desarrollamos tecnología sólida, iterativa, integrada con tu equipo. Cada sprint entrega valor real, no demos vacías.</p>
-          </div>
-          <div class="pillar reveal reveal-d2">
-            <svg class="pillar-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="1"><path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
-            <div class="pillar-num">03</div>
-            <h3 data-es="Evolucionamos" data-en="Evolve">Evolucionamos</h3>
-            <p data-es="El sistema crece contigo. Mantenimiento continuo, nuevas capacidades, adaptación a medida que tu negocio escala." data-en="The system grows with you. Continuous maintenance, new capabilities, adaptation as your business scales.">El sistema crece contigo. Mantenimiento continuo, nuevas capacidades, adaptación a medida que tu negocio escala.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. CAPACIDADES -->
-    <section class="snap-section" id="capacidades">
-      <div class="orb orb-4"></div>
-      <div class="section-inner">
-        <div class="section-label reveal" data-es="Capacidades" data-en="Capabilities">Capacidades</div>
-        <h2 class="reveal reveal-d1" data-es="Lo que construimos." data-en="What we build.">Lo que construimos.</h2>
-        <div class="cap-grid">
-          <div class="cap-item reveal"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8M8 11h5"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Sistemas operativos a medida" data-en="Custom operating systems">Sistemas operativos a medida</h4><p data-es="Plataformas internas que centralizan datos, flujos y decisiones de tu negocio en un solo lugar." data-en="Internal platforms that centralize data, workflows, and business decisions in one place.">Plataformas internas que centralizan datos, flujos y decisiones de tu negocio en un solo lugar.</p></div></div>
-          <div class="cap-item reveal reveal-d1"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Automatización de procesos" data-en="Process automation">Automatización de procesos</h4><p data-es="Eliminamos tareas manuales y repetitivas. Tu equipo se centra en lo que importa." data-en="We eliminate manual, repetitive tasks. Your team focuses on what matters.">Eliminamos tareas manuales y repetitivas. Tu equipo se centra en lo que importa.</p></div></div>
-          <div class="cap-item reveal reveal-d1"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 12h6M15 7.5l-6 3M15 16.5l-6-3"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Integración de datos" data-en="Data integration">Integración de datos</h4><p data-es="Conectamos tus fuentes de información para que fluyan sin fricción entre sistemas." data-en="We connect your data sources so information flows seamlessly between systems.">Conectamos tus fuentes de información para que fluyan sin fricción entre sistemas.</p></div></div>
-          <div class="cap-item reveal reveal-d2"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M3 3v18h18"/><path d="M7 16l4-6 4 3 5-7"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Reporting en tiempo real" data-en="Real-time reporting">Reporting en tiempo real</h4><p data-es="Dashboards y métricas vivas que reflejan el estado real de tu operación." data-en="Live dashboards and metrics that reflect the real state of your operations.">Dashboards y métricas vivas que reflejan el estado real de tu operación.</p></div></div>
-          <div class="cap-item reveal reveal-d2"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M12 2a7 7 0 017 7c0 3-2 5-3 7h-8c-1-2-3-4-3-7a7 7 0 017-7z"/><path d="M9 18h6M10 21h4"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="IA aplicada" data-en="Applied AI">IA aplicada</h4><p data-es="Modelos, agentes y análisis predictivo integrados en tu flujo de trabajo diario." data-en="Models, agents, and predictive analytics integrated into your daily workflow.">Modelos, agentes y análisis predictivo integrados en tu flujo de trabajo diario.</p></div></div>
-          <div class="cap-item reveal reveal-d3"><svg class="cap-icon" viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="0.8"><path d="M4 14a1 1 0 01-1-1V5a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1"/><path d="M2 18h20M8 18v2h8v-2"/></svg><span class="cap-dot" style="margin-top:6px"></span><div class="cap-content"><h4 data-es="Infraestructura y soporte" data-en="Infrastructure & support">Infraestructura y soporte</h4><p data-es="Cloud, DevOps, monitorización y mantenimiento continuo de todo lo que construimos." data-en="Cloud, DevOps, monitoring, and continuous maintenance of everything we build.">Cloud, DevOps, monitorización y mantenimiento continuo de todo lo que construimos.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. CASOS -->
+    <!-- 3. CASOS -->
     <section class="snap-section" id="casos">
       <div class="orb orb-1"></div>
       <div class="orb orb-2"></div>
@@ -829,33 +820,39 @@
             <div class="portfolio-sector" data-es="Construcción industrializada" data-en="Industrialized construction">Construcción industrializada</div>
             <h3 data-es="Plataforma BIM-a-Fabricación" data-en="BIM-to-Manufacturing Platform">Plataforma BIM-a-Fabricación</h3>
             <p data-es="Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta." data-en="Complete industrialized manufacturing management: from architectural plans to plant machine automation.">Gestión completa de la fabricación industrializada: desde planos arquitectónicos hasta la automatización de máquinas en planta.</p>
-            <div class="portfolio-tags"><span>Automatización</span><span>Integración de máquinas</span><span>Logística</span><span>Geometría 3D</span></div>
+            <div class="portfolio-tags"><span data-es="Automatización" data-en="Automation">Automatización</span><span data-es="Integración de máquinas" data-en="Machine integration">Integración de máquinas</span><span data-es="Logística" data-en="Logistics">Logística</span><span data-es="Geometría 3D" data-en="3D geometry">Geometría 3D</span></div>
           </div>
           <div class="portfolio-card reveal reveal-d1">
             <div class="portfolio-sector" data-es="Gestión de activos industriales" data-en="Industrial asset management">Gestión de activos industriales</div>
             <h3 data-es="CRM de reparación multi-actor" data-en="Multi-actor repair CRM">CRM de reparación multi-actor</h3>
             <p data-es="CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística." data-en="Custom CRM orchestrating the full component repair cycle between clients, regional workshops, and logistics.">CRM a medida que orquesta el ciclo completo de reparación de componentes entre clientes, talleres regionales y logística.</p>
-            <div class="portfolio-tags"><span>CRM a medida</span><span>Multi-actor</span><span>Trazabilidad</span></div>
+            <div class="portfolio-tags"><span data-es="CRM a medida" data-en="Custom CRM">CRM a medida</span><span data-es="Multi-actor" data-en="Multi-party">Multi-actor</span><span data-es="Trazabilidad" data-en="Traceability">Trazabilidad</span></div>
           </div>
           <div class="portfolio-card reveal reveal-d2">
             <div class="portfolio-sector" data-es="Contratación pública" data-en="Public procurement">Contratación pública</div>
             <h3 data-es="Análisis de licitaciones con IA" data-en="AI tender analysis">Análisis de licitaciones con IA</h3>
             <p data-es="Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades." data-en="Automatically extracts and structures data from past tenders to evaluate new opportunities.">Extrae y estructura automáticamente datos de licitaciones pasadas para evaluar nuevas oportunidades.</p>
-            <div class="portfolio-tags"><span>IA</span><span>Extracción de datos</span><span>OCR</span></div>
+            <div class="portfolio-tags"><span data-es="IA" data-en="AI">IA</span><span data-es="Extracción de datos" data-en="Data extraction">Extracción de datos</span><span data-es="OCR" data-en="OCR">OCR</span></div>
           </div>
           <div class="portfolio-card reveal">
             <div class="portfolio-sector">Fintech</div>
             <h3 data-es="Trading cuantitativo con agentes" data-en="Quantitative trading with agents">Trading cuantitativo con agentes</h3>
             <p data-es="Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo con agentes autónomos en mercado." data-en="Platform to design, test, and optimize quantitative trading strategies with autonomous agents in the market.">Plataforma para diseñar, probar y optimizar estrategias de trading cuantitativo con agentes autónomos en mercado.</p>
-            <div class="portfolio-tags"><span>Agentes autónomos</span><span>Optimización</span><span>Simulación</span></div>
+            <div class="portfolio-tags"><span data-es="Agentes autónomos" data-en="Autonomous agents">Agentes autónomos</span><span data-es="Optimización" data-en="Optimization">Optimización</span><span data-es="Simulación" data-en="Simulation">Simulación</span></div>
           </div>
           <div class="portfolio-card reveal reveal-d1">
             <div class="portfolio-sector" data-es="Interacción con usuarios" data-en="User interaction">Interacción con usuarios</div>
             <h3 data-es="Agentes conversacionales multicanal" data-en="Multichannel conversational agents">Agentes conversacionales multicanal</h3>
             <p data-es="Agentes autónomos que interactúan por voz, WhatsApp y Telegram. Califican leads y ejecutan acciones sin intervención humana." data-en="Autonomous agents that interact via voice, WhatsApp, and Telegram. They qualify leads and execute actions without human intervention.">Agentes autónomos que interactúan por voz, WhatsApp y Telegram. Califican leads y ejecutan acciones sin intervención humana.</p>
-            <div class="portfolio-tags"><span>IA conversacional</span><span>Multicanal</span><span>Voz</span></div>
+            <div class="portfolio-tags"><span data-es="IA conversacional" data-en="Conversational AI">IA conversacional</span><span data-es="Multicanal" data-en="Multichannel">Multicanal</span><span data-es="Voz" data-en="Voice">Voz</span></div>
           </div>
-          <div class="portfolio-card portfolio-cta-card reveal reveal-d2">
+          <div class="portfolio-card reveal reveal-d2">
+            <div class="portfolio-sector" data-es="Ingeniería estructural" data-en="Structural engineering">Ingeniería estructural</div>
+            <h3 data-es="Herramientas de ingeniería estructural" data-en="Structural engineering tools">Herramientas de ingeniería estructural</h3>
+            <p data-es="Herramientas específicas para cálculos complejos en ingenierías punteras." data-en="Purpose-built tools for complex calculations at leading engineering firms.">Herramientas específicas para cálculos complejos en ingenierías punteras.</p>
+            <div class="portfolio-tags"><span data-es="Cálculo estructural" data-en="Structural analysis">Cálculo estructural</span><span data-es="Eurocódigo" data-en="Eurocode">Eurocódigo</span><span data-es="Solvers" data-en="Solvers">Solvers</span></div>
+          </div>
+          <div class="portfolio-card portfolio-cta-card reveal reveal-d2" style="display:none">
             <h3 data-es="El tuyo es el siguiente." data-en="Yours is next.">El tuyo es el siguiente.</h3>
             <p data-es="¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos." data-en="Got a critical process running on spreadsheets, emails, or disconnected tools? Tell us.">¿Tienes un proceso crítico que depende de hojas de cálculo, correos o herramientas desconectadas? Cuéntanos.</p>
             <a href="#contacto" class="portfolio-cta-link" data-es="Hablemos →" data-en="Let's talk →">Hablemos →</a>
@@ -864,16 +861,13 @@
       </div>
     </section>
 
-    <!-- 6. CONTACTO -->
+    <!-- 4. CONTACTO -->
     <section class="snap-section" id="contacto">
       <div class="contact-inner">
         <div class="contact-divider reveal"></div>
-        <h2 class="reveal reveal-d1" data-es="Construimos el sistema que impulsa tu empresa." data-en="We build the system that drives your company.">Construimos el sistema que impulsa tu empresa.</h2>
-        <p class="contact-sub reveal reveal-d2" data-es="20 minutos para ver si encajamos." data-en="20 minutes to see if we're a fit.">20 minutos para ver si encajamos.</p>
-        <div class="contact-actions reveal reveal-d3">
-          <a href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ1_0a6VAWvtBOOEXyGWpRZndUF5JMsPYWCyfMzKnBmCU-4DpqT5-PepYsnTuoADAac-2KjOHlAj" target="_blank" rel="noopener noreferrer" class="btn-glow" data-es="Agendar conversación" data-en="Schedule a conversation">Agendar conversación</a>
+        <h2 class="reveal reveal-d1" data-es="Escríbenos al mail." data-en="Reach us by mail.">Escríbenos al mail.</h2>
+        <div class="contact-actions reveal reveal-d2">
           <div class="contact-email">
-            <span data-es="o escríbenos a " data-en="or write to us at ">o escríbenos a </span>
             <span class="email-copy-wrap">
               <a href="mailto:team@bracedeng.com" class="email-link">team@bracedeng.com</a>
               <button class="email-copy-btn" id="copy-email-btn" aria-label="Copy email">
@@ -888,14 +882,26 @@
         <div class="footer-inner">
           <span>&copy; 2026 Braced Engineering</span>
           <div class="footer-links">
-            <a href="legal.html">Aviso Legal</a>
-            <a href="privacidad.html">Privacidad</a>
+            <a href="legal.html" data-es="Aviso Legal" data-en="Legal Notice">Aviso Legal</a>
+            <a href="privacidad.html" data-es="Privacidad" data-en="Privacy">Privacidad</a>
             <a href="cookies.html">Cookies</a>
           </div>
         </div>
       </div>
     </section>
 
+  </div>
+
+  <!-- COOKIE BANNER (Google Analytics only loads after consent) -->
+  <div id="cookie-banner" class="cookie-banner" hidden>
+    <p>
+      <span data-es="Usamos Google Analytics para contar visitas. Solo se activa si lo aceptas." data-en="We use Google Analytics to count visits. It only runs if you accept.">Usamos Google Analytics para contar visitas. Solo se activa si lo aceptas.</span>
+      <a href="cookies.html" data-es="Más información" data-en="More info">Más información</a>
+    </p>
+    <div class="cookie-buttons">
+      <button id="cookie-reject" class="cookie-btn" data-es="Rechazar" data-en="Reject">Rechazar</button>
+      <button id="cookie-accept" class="cookie-btn" data-es="Aceptar" data-en="Accept">Aceptar</button>
+    </div>
   </div>
 
   <script>
@@ -1108,6 +1114,13 @@
     // Wheel: each tick = +1/-1 section, cooldown prevents multi-fire per gesture
     let wheelCooldown = false;
     document.addEventListener('wheel', (e) => {
+      // If the active section is taller than the screen, scroll it before changing section
+      const active = sections[targetSection];
+      if (active.scrollHeight > active.clientHeight + 5) {
+        const atTop = active.scrollTop <= 5;
+        const atBottom = active.scrollTop + active.clientHeight >= active.scrollHeight - 5;
+        if ((e.deltaY > 0 && !atBottom) || (e.deltaY < 0 && !atTop)) return;
+      }
       e.preventDefault();
       if (wheelCooldown) return;
       if (Math.abs(e.deltaY) > 30) {
@@ -1174,8 +1187,8 @@
       const navCtaSpan = navCta.querySelector('span');
       if (navCtaSpan) navCtaSpan.textContent = lang === 'es' ? 'Contáctanos' : 'Contact us';
       heroTitle.innerHTML = lang === 'es'
-        ? 'Las empresas que ganan operan sobre sistemas que entienden su negocio.<br><span class="accent">Construimos el tuyo.</span>'
-        : 'Winning companies run on systems that understand their business.<br><span class="accent">We build yours.</span>';
+        ? 'La era de la IA crece sobre<br><span class="accent">cimientos sólidos.</span>'
+        : 'The AI era grows on<br><span class="accent">solid foundations.</span>';
       heroCta.textContent = lang === 'es' ? 'Hablar con nosotros' : 'Talk to us';
       document.documentElement.lang = lang;
       document.querySelectorAll('[data-es]').forEach(el => {
@@ -1200,6 +1213,38 @@
           setTimeout(() => copiedEl.classList.remove('show'), 2000);
         });
       });
+    }
+
+    // --- Cookie consent & Google Analytics ---
+    const CONSENT_KEY = 'braced_cookie_consent';
+    const GA_ID = 'G-JBMBCNVEHT';
+
+    function loadGoogleAnalytics() {
+      if (window.gtag) return;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+    }
+
+    let consent = null;
+    try { consent = localStorage.getItem(CONSENT_KEY); } catch (e) {}
+    if (consent === 'accepted') {
+      loadGoogleAnalytics();
+    } else if (consent !== 'rejected') {
+      const banner = document.getElementById('cookie-banner');
+      const decide = (value) => {
+        try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
+        banner.hidden = true;
+        if (value === 'accepted') loadGoogleAnalytics();
+      };
+      banner.hidden = false;
+      document.getElementById('cookie-accept').addEventListener('click', () => decide('accepted'));
+      document.getElementById('cookie-reject').addEventListener('click', () => decide('rejected'));
     }
   })();
   </script>
