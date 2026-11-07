@@ -534,6 +534,15 @@
       transition: all 0.2s; padding-bottom: 1px;
     }
     .contact-email .email-link:hover { color: var(--accent); border-color: var(--accent); }
+    .contact-social { margin-top: 36px; }
+    .social-link {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.82rem; color: var(--text-muted); text-decoration: none;
+      padding: 8px 16px; border: 1px solid rgba(0,180,216,0.15); border-radius: 8px;
+      background: rgba(0,180,216,0.04); transition: all 0.2s;
+    }
+    .social-link svg { color: var(--accent); }
+    .social-link:hover { color: var(--text); border-color: var(--accent); background: rgba(0,180,216,0.1); }
     .email-copy-wrap { display: inline-flex; align-items: center; gap: 8px; position: relative; }
     .email-copy-btn {
       background: rgba(0,180,216,0.06); border: 1px solid rgba(0,180,216,0.15);
@@ -879,6 +888,12 @@
             </span>
           </div>
         </div>
+        <div class="contact-social reveal reveal-d3">
+          <a href="https://www.youtube.com/@bracedeng" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>
+            <span data-es="Míranos en Braced TV" data-en="Watch Braced TV">Míranos en Braced TV</span>
+          </a>
+        </div>
       </div>
       <div class="footer-bar">
         <div class="footer-inner">
@@ -887,6 +902,7 @@
             <a href="legal.html" data-es="Aviso Legal" data-en="Legal Notice">Aviso Legal</a>
             <a href="privacidad.html" data-es="Privacidad" data-en="Privacy">Privacidad</a>
             <a href="cookies.html">Cookies</a>
+            <a href="https://www.youtube.com/@bracedeng" target="_blank" rel="noopener noreferrer">YouTube</a>
           </div>
         </div>
       </div>
